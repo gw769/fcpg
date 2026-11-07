@@ -1,0 +1,24 @@
+{
+  "schema": "v21-reviewed-camera-exclusions-v1",
+  "review_id": "fish-recorded-colour-bands-20260927-v1",
+  "dataset_root": "/data/experiments/v21-dino-clockfix-20260925-QNOV8G/raw-fish",
+  "review_basis": "Original frames visually reviewed; user approved omitting damaged exposures. Keep all q/actions and the other camera.",
+  "exposures": [
+    {
+      "episode": 0,
+      "endpoint": 373,
+      "local_frame": 373,
+      "view": "column",
+      "reason": "large horizontal colour band in original Column image",
+      "evidence": "column-readout-audit/id00373.png; sequential PyAV/OpenCV identical"
+    },
+    {
+      "episode": 1,
+      "endpoint": 939,
+      "local_frame": 361,
+      "view": "column",
+      "reason": "large horizontal purple band in original Column image",
+      "evidence": "purple-frame-independent-audit/report.json; FFmpeg/OpenH264/NVIDIA raw YUV identical"
+    }
+  ]
+}

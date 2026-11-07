@@ -1,0 +1,87 @@
+# Robot hardware configuration for SO-101 manipulator.
+# All device-specific parameters live here — not in code.
+
+robot:
+  name: "so101_feetech"
+  joint_count: 6
+
+  # Joint definitions with normalized range [0, 100]
+  joints:
+    - name: "base_yaw"
+      index: 0
+      range_normalized: [0, 100]
+      range_physical_deg: [-180, 180]
+      motor_id: 1
+    - name: "shoulder_pitch"
+      index: 1
+      range_normalized: [0, 100]
+      range_physical_deg: [-180, 180]
+      motor_id: 2
+    - name: "elbow_pitch"
+      index: 2
+      range_normalized: [0, 100]
+      range_physical_deg: [-180, 180]
+      motor_id: 3
+    - name: "wrist_roll"
+      index: 3
+      range_normalized: [0, 100]
+      range_physical_deg: [-180, 180]
+      motor_id: 4
+    - name: "wrist_pitch"
+      index: 4
+      range_normalized: [0, 100]
+      range_physical_deg: [-180, 180]
+      motor_id: 5
+    - name: "gripper"
+      index: 5
+      range_normalized: [0, 100]
+      range_physical_deg: [0, 100]  # gripper opening percentage
+      motor_id: 6
+
+  # Motor bus configuration
+  bus:
+    adapter_class: adapters.so101.bus.FeetechBusAdapter
+    port: /dev/ttyUSB0
+    baudrate: 1000000
+    motor_ids: [1, 2, 3, 4, 5, 6]
+    write_retries: 4                   # transient ACK tolerance
+
+  # Controller
+  controller:
+    adapter_class: adapters.so101.controller.SO101RobotController
+    commands_per_chunk: 5
+    command_period_s: 0.04             # 25 Hz
+
+  # Kinematics
+  kinematics:
+    adapter_class: adapters.so101.kinematics.SO101Kinematics
+    mujoco_model_path: null            # resolved from package
+    anchor_names: ["center", "fixed_tip", "moving_tip"]
+
+  # Safety checker
+  safety:
+    adapter_class: adapters.so101.safety.SO101SafetyChecker
+
+  # Gripper calibration (runtime-populated)
+  gripper:
+    open_position: null                # measured during calibration
+    closed_position: null              # measured during calibration
+    span: null                         # computed from above
+
+# Cameras attached to this robot
+cameras:
+  - role: column
+    adapter_class: adapters.so101.camera.OpenCVCameraAdapter
+    device_alias: /dev/v4l/by-id/usb-Jieli_Technology_USB_Composite_Device-video-index0
+    width: 640
+    height: 480
+    fourcc: YUYV
+    fps: 30
+
+  - role: wrist
+    adapter_class: adapters.so101.camera.OpenCVCameraAdapter
+    device_alias: /dev/v4l/by-id/usb-XHH-260202-H_Integrated_Camera-video-index0
+    width: 640
+    height: 480
+    fourcc: MJPG
+    fps: 30

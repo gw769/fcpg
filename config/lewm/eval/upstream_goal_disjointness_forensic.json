@@ -1,0 +1,60 @@
+{
+  "protocol": "fcpg_lewm_upstream_goal_disjointness_forensic_v1",
+  "proof_scope": "data_and_gate_l1_lewm_only",
+  "upgrade_g0_eligibility": false,
+  "metaworld": {
+    "version": "3.1.1",
+    "sawyer_source_size_bytes": 32464,
+    "sawyer_source_sha256": "4282580b80befc557f67d25acffffec737ad0dae2c440601be76fc09139f351d"
+  },
+  "gate_l1_split_manifest": {
+    "path": "config/lewm/splits/gate_l1_camera_train_val_seed3072.json",
+    "size_bytes": 34381,
+    "sha256": "f3448ef472bd93975126c203556094ad65229a714d58236a53b11b281768e299"
+  },
+  "historical_sources": {
+    "pick": {
+      "task_name": "pick-place-v3",
+      "path": "data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz",
+      "size_bytes": 1176424313,
+      "sha256": "b096658222c6a9f766255537cd7ed9c5b0a270e4b6f73bd0e19e895823d55a8a",
+      "row_count": 30000,
+      "episode_count": 300
+    },
+    "button": {
+      "task_name": "button-press-v3",
+      "path": "data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz",
+      "size_bytes": 1198642733,
+      "sha256": "96367fc99314a738fd14d6239637736ba56041be6dd901d2e7101c9308901f75",
+      "row_count": 30000,
+      "episode_count": 300
+    },
+    "reach": {
+      "task_name": "reach-v3",
+      "path": "data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz",
+      "size_bytes": 1171286646,
+      "sha256": "0bfd531e50ff571cdb27d69a02122677a95603c629b5810cfdc57a4a93108ea7",
+      "row_count": 30000,
+      "episode_count": 300
+    },
+    "push": {
+      "task_name": "push-v3",
+      "path": "data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz",
+      "size_bytes": 1175076159,
+      "sha256": "a31e163dd8b982db7c81a87009a6413db4bb901d5473e3fba93b6e04c663f8c6",
+      "row_count": 30000,
+      "episode_count": 300
+    }
+  },
+  "counterfactual_v2_store": {
+    "path": "outputs/lewm_counterfactual_v2/development_seed8192",
+    "result_sha256": "fc1b45ab0d9c0cfe8c3a7b619e9c8a4735a7893fd8887240bf8371a4c9a93390",
+    "manifest_size_bytes": 49486,
+    "manifest_sha256": "cbe48ed83ad03ed76b9282d3b5a1b33277655b60bcacbe15f8e6ee1c1981ee61",
+    "rows_per_task": 30,
+    "episodes_per_task": 10
+  },
+  "output": {
+    "path": "outputs/lewm_counterfactual_v2/forensics/development_seed8192_goal_disjointness_forensic_v1.json"
+  }
+}

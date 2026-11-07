@@ -1,0 +1,22 @@
+schema_version: 1
+status: development_only
+seed: 9518
+batch_size: 192
+num_workers: 0
+sigreg_weight: 0.02
+
+sources:
+  - name: heldout_visual_occlusion_step_rotation5_anchor1
+    path: data/lewm_anchor_persistent/heldout/visual_occlusion_step_rotation5_anchor1_4tasks5eps_seed9517.npz
+    correction_cache: data/grounding_cache/lewm_anchor_persistent/heldout/visual_occlusion_step_rotation5_anchor1_4tasks5eps_seed9517_shared4task_seed0
+
+contract:
+  q_true_used: false
+  occlusion_mode: visual
+  occluded_anchor_index: 1
+  occlusion_length_frames: 5
+  interpretation: >-
+    The model receives the visually occluded RGB observation and frozen FCPG
+    correction. Dropout and recovery masks are evaluation annotations only.
+    Recovery metrics test post-occlusion dynamics; they do not claim that LeWM
+    predicts the exogenous camera step or reconstructs an invisible keypoint.

@@ -1,0 +1,33 @@
+{
+  "schema": "v21-visual-completion-labels-v1",
+  "dataset": "local/my_first_task_clean_v1",
+  "fps": 30,
+  "frame_coordinates": "episode_local_half_open",
+  "reviewer": "Codex visual review 2026-09-25",
+  "review_method": "Dual-view contact sheets at 2-second spacing, then release at 0.5-second spacing. Only inspected frames are labelled; all other frames remain unknown. This is not dense completion acceptance.",
+  "default_label": "unknown",
+  "sealed_episode": 2,
+  "goal": {"episode": 1, "frame": 555, "reference": "fish-ep1-f555-visually-released-in-box", "verified": true},
+  "episodes": {
+    "0": {
+      "role": "train",
+      "incomplete_frames": [0, 60, 120, 180, 240, 300, 360, 420, 435],
+      "complete_frames": [465, 495, 510, 525, 540, 555, 570],
+      "evidence": "Before release fish visible on table or held; from frame465 fish lies separately inside box while empty jaws withdraw. Frame450 transition and frame480 column corruption left unknown."
+    },
+    "1": {
+      "role": "train",
+      "incomplete_frames": [0, 60, 120, 180, 240, 300, 360, 420, 480],
+      "complete_frames": [555, 570, 585, 600, 615, 630, 645, 675],
+      "evidence": "Frame540 release transition left unknown; frame555 shows separated fish on box floor and open empty jaws in both views. Frame660 corrupted column left unknown."
+    },
+    "3": {
+      "role": "development",
+      "incomplete_frames": [0, 60, 120, 180, 240, 255],
+      "complete_frames": [285, 300, 315, 330, 345, 360],
+      "evidence": "Frame270 falling transition left unknown. Frame285 fish rests inside box and jaws are visibly empty, followed by withdrawal."
+    }
+  },
+  "dense_completion_review_complete": false,
+  "runtime_phase_labels": false
+}

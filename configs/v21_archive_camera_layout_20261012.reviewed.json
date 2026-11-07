@@ -1,0 +1,924 @@
+{
+ "reviewed": [
+  {
+   "episode": 18269,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11436,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 37,
+   "frames": 16,
+   "still": [
+    0.96484375,
+    0.43359375
+   ],
+   "pairs": 9,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 21784,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11376,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 117,
+   "frames": 16,
+   "still": [
+    0.82421875,
+    0.17578125
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 32560,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11403,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 80,
+   "frames": 16,
+   "still": [
+    0.84375,
+    0.2109375
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 75,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 13198,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 101,
+   "frames": 16,
+   "still": [
+    0.84765625,
+    0.19140625
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 21324,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 13253,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 111,
+   "frames": 16,
+   "still": [
+    0.77734375,
+    0.18359375
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 37462,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 13279,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 141,
+   "frames": 16,
+   "still": [
+    0.8359375,
+    0.1875
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 40,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11076,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 67,
+   "frames": 16,
+   "still": [
+    0.3515625,
+    0.82421875
+   ],
+   "pairs": 6,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 11311,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11033,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 56,
+   "frames": 16,
+   "still": [
+    0.37890625,
+    0.828125
+   ],
+   "pairs": 12,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 35678,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 11060,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 0,
+   "dev_rows": 83,
+   "frames": 16,
+   "still": [
+    0.21875,
+    0.76953125
+   ],
+   "pairs": 12,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 6,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 5175,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 63,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.20703125,
+    0.62109375
+   ],
+   "pairs": 6,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 19241,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 262,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 92,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.3828125,
+    0.75
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 37517,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 8007,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 51,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.74609375,
+    0.84375
+   ],
+   "pairs": 12,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 25,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 556,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 69,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.19921875,
+    0.796875
+   ],
+   "pairs": 10,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 19441,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 240,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 109,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.3046875,
+    0.875
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 37463,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 188,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 352,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.20703125,
+    0.8203125
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 61,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 216,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 196,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.81640625,
+    0.890625
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 19022,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 709,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 172,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.7421875,
+    0.87109375
+   ],
+   "pairs": 12,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 37412,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 194,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 67,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.7890625,
+    0.8984375
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 288,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 0,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 48,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.26953125,
+    0.8671875
+   ],
+   "pairs": 10,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 36533,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 504,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 51,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.23828125,
+    0.73046875
+   ],
+   "pairs": 8,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 7849,
+   "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+   "source_episode": 929,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 176,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.26171875,
+    0.80078125
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 24373,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 1,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 51,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.82421875,
+    0.90625
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 34814,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 207,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 189,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.7421875,
+    0.84765625
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 8331,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 598,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 61,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.8046875,
+    0.890625
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 19855,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+   "source_episode": 0,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 50,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.23046875,
+    0.8828125
+   ],
+   "pairs": 7,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 35158,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+   "source_episode": 142,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 196,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.265625,
+    0.84375
+   ],
+   "pairs": 9,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 29908,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+   "source_episode": 297,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 216,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.21875,
+    0.828125
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 14076,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+   "source_episode": 1,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 59,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.1953125,
+    0.79296875
+   ],
+   "pairs": 5,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 19630,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+   "source_episode": 150,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 18,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.609375,
+    0.85546875
+   ],
+   "pairs": 2,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 26485,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+   "source_episode": 297,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 6,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.5625,
+    0.953125
+   ],
+   "pairs": 6,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 12731,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+   "source_episode": 0,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 36,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.46484375,
+    0.9140625
+   ],
+   "pairs": 6,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 37211,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+   "source_episode": 147,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 69,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.2890625,
+    0.828125
+   ],
+   "pairs": 10,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 30112,
+   "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+   "source_episode": 288,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 72,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.25390625,
+    0.91796875
+   ],
+   "pairs": 12,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 7980,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+   "source_episode": 0,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 50,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.23046875,
+    0.8828125
+   ],
+   "pairs": 7,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 400,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+   "source_episode": 134,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 66,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.3125,
+    0.78515625
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 12890,
+   "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+   "source_episode": 289,
+   "slot_views": [
+    "observation.images.wrist_left",
+    "observation.images.desk_view"
+   ],
+   "train_rows": 240,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.2109375,
+    0.76171875
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "episode": 29979,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 2759,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 106,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.9296875,
+    0.2265625
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 31937,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 2799,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 90,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.94921875,
+    0.234375
+   ],
+   "pairs": 13,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 33941,
+   "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+   "source_episode": 2840,
+   "slot_views": [
+    "observation.images.left_wrist_0_rgb",
+    "observation.images.base_0_rgb"
+   ],
+   "train_rows": 138,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.91015625,
+    0.21484375
+   ],
+   "pairs": 15,
+   "physical_roles": [
+    "external",
+    "wrist"
+   ]
+  },
+  {
+   "episode": 24171,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 611,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 4,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    null,
+    null
+   ],
+   "pairs": 0,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 7585,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 712,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 49,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.8046875,
+    0.90625
+   ],
+   "pairs": 14,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  },
+  {
+   "episode": 7346,
+   "dataset_root": "/data/so101/raw_expand/bv_so101",
+   "source_episode": 791,
+   "slot_views": [
+    "observation.images.wrist",
+    "observation.images.top"
+   ],
+   "train_rows": 35,
+   "dev_rows": 0,
+   "frames": 16,
+   "still": [
+    0.84765625,
+    0.93359375
+   ],
+   "pairs": 9,
+   "physical_roles": [
+    "external",
+    "external"
+   ]
+  }
+ ],
+ "fish": [
+  {
+   "demo": 0,
+   "still": [
+    0.49609375,
+    0.71875
+   ],
+   "pairs": 18,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "demo": 1,
+   "still": [
+    0.4140625,
+    0.66796875
+   ],
+   "pairs": 19,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  },
+  {
+   "demo": 3,
+   "still": [
+    0.5625,
+    0.65625
+   ],
+   "pairs": 17,
+   "physical_roles": [
+    "wrist",
+    "external"
+   ]
+  }
+ ]
+}

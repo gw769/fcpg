@@ -1,0 +1,549 @@
+{
+ "rule": {
+  "wrist_below": 0.45,
+  "external_above": 0.72,
+  "min_pairs": 5
+ },
+ "reviewed": {
+  "agree": 37,
+  "undecided": 5
+ },
+ "train_rows": {
+  "in order (wrist, external)": {
+   "rows": 156259,
+   "share": 0.5745,
+   "episodes": 2002
+  },
+  "no wrist (external+external)": {
+   "rows": 43623,
+   "share": 0.1604,
+   "episodes": 508
+  },
+  "swapped (external, wrist)": {
+   "rows": 22724,
+   "share": 0.0835,
+   "episodes": 294
+  },
+  "undecided": {
+   "rows": 49394,
+   "share": 0.1816,
+   "episodes": 2108
+  },
+  "total": 272000
+ },
+ "dev_rows": {
+  "in order (wrist, external)": {
+   "rows": 12996,
+   "share": 0.2707,
+   "episodes": 227
+  },
+  "no wrist (external+external)": {
+   "rows": 1095,
+   "share": 0.0228,
+   "episodes": 24
+  },
+  "swapped (external, wrist)": {
+   "rows": 28329,
+   "share": 0.5902,
+   "episodes": 193
+  },
+  "undecided": {
+   "rows": 5580,
+   "share": 0.1163,
+   "episodes": 256
+  },
+  "total": 48000
+ },
+ "rows_by_dataset_root": {
+  "raw_expand/so101_pi05_base_dataset": {
+   "undecided": 30704,
+   "in order (wrist, external)": 29938,
+   "swapped (external, wrist)": 51053,
+   "no wrist (external+external)": 4025
+  },
+  "raw_expand/IRA_full_merged_so101": {
+   "in order (wrist, external)": 37302,
+   "undecided": 5494,
+   "no wrist (external+external)": 120
+  },
+  "raw_expand/bv_so101": {
+   "no wrist (external+external)": 40120,
+   "undecided": 2435
+  },
+  "raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2": {
+   "in order (wrist, external)": 12481,
+   "undecided": 1485,
+   "no wrist (external+external)": 18
+  },
+  "raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2": {
+   "in order (wrist, external)": 12899,
+   "undecided": 1059
+  },
+  "raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged": {
+   "in order (wrist, external)": 12390,
+   "no wrist (external+external)": 21,
+   "undecided": 1149
+  },
+  "raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged": {
+   "undecided": 2062,
+   "in order (wrist, external)": 11384,
+   "no wrist (external+external)": 106
+  },
+  "raw_expand/real_so101_record_v3": {
+   "in order (wrist, external)": 6880,
+   "undecided": 241
+  },
+  "raw_expand/armnetbench_v01_lerobot_so101": {
+   "undecided": 1136,
+   "in order (wrist, external)": 2445,
+   "no wrist (external+external)": 115
+  },
+  "raw_expand/so101_merged_20260701_fixed": {
+   "in order (wrist, external)": 451,
+   "undecided": 461
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h52m_Lego_Plate_ColorID_blue_1": {
+   "in order (wrist, external)": 461,
+   "undecided": 35
+  },
+  "raw_expand/so101_60_new": {
+   "undecided": 137,
+   "no wrist (external+external)": 16,
+   "in order (wrist, external)": 343
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h52m_Desk_Cleanup_1": {
+   "undecided": 60,
+   "in order (wrist, external)": 436
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h28m_Sort_Lego_Color_green_var_1": {
+   "in order (wrist, external)": 450,
+   "undecided": 46
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h12m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 475,
+   "undecided": 6
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h18m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 471,
+   "undecided": 10
+  },
+  "/data/so101-data-disk/lerobot/so101/hf-raw/so101_declutter_v1": {
+   "undecided": 245,
+   "in order (wrist, external)": 235
+  },
+  "raw_expand/so101_stack_cups": {
+   "undecided": 480
+  },
+  "raw_expand/SO101_PickAndPlace_Fruit": {
+   "in order (wrist, external)": 266,
+   "undecided": 214
+  },
+  "raw_expand/so101_60_haribot": {
+   "undecided": 62,
+   "in order (wrist, external)": 418
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_multi_3": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_2": {
+   "in order (wrist, external)": 445,
+   "undecided": 35
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_multi_5": {
+   "undecided": 70,
+   "in order (wrist, external)": 410
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h12m_Sort_Lego_Color_green_1": {
+   "undecided": 96,
+   "in order (wrist, external)": 384
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h29m_Sort_Lego_Color_blue_1": {
+   "in order (wrist, external)": 450,
+   "undecided": 30
+  },
+  "raw_expand/LeRobot_SO101_Pick_Place/task1-single-sponge-no-distractors/fixed-locations": {
+   "in order (wrist, external)": 363,
+   "undecided": 117
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-13h24m_Sort_Lego_Color_yellow_plate_1": {
+   "in order (wrist, external)": 423,
+   "undecided": 57
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h58m_Lego_Plate_ColorID_blue_1": {
+   "in order (wrist, external)": 421,
+   "undecided": 59
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h42m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 477,
+   "undecided": 3
+  },
+  "raw_expand/IRA_collection_so101/2026_05_25-14h02m_Desk_Cleanup_V2_1": {
+   "in order (wrist, external)": 351,
+   "undecided": 129
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h47m_Sort_Lego_Color_yellow_1": {
+   "in order (wrist, external)": 357,
+   "undecided": 123
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_5": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h28m_Desk_Cleanup_1": {
+   "undecided": 13,
+   "in order (wrist, external)": 467
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h13m_Sort_Lego_Color_yellow_var_1_merging_does_not_work": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_4": {
+   "undecided": 112,
+   "in order (wrist, external)": 368
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-14h48m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-13h56m_Sort_Lego_Color_green_1": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/SO101_StackBlock_80epi": {
+   "in order (wrist, external)": 368,
+   "undecided": 112
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-12h46m_Sort_Lego_Color_red_plate_1": {
+   "in order (wrist, external)": 443,
+   "undecided": 37
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_multi_4": {
+   "in order (wrist, external)": 465,
+   "undecided": 15
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h18m_Lego_Plate_ColorID_red_1": {
+   "undecided": 47,
+   "in order (wrist, external)": 433
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h04m_Sort_Lego_Color_yellow_var_1": {
+   "in order (wrist, external)": 480
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h32m_Desk_Cleanup_1_merging_does_not_work": {
+   "in order (wrist, external)": 435,
+   "undecided": 45
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h45m_Lego_Plate_ColorID_green_1": {
+   "in order (wrist, external)": 406,
+   "undecided": 74
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_07_08-16h31m_Desk_Cleanup_var_1": {
+   "no wrist (external+external)": 16,
+   "in order (wrist, external)": 439,
+   "undecided": 25
+  },
+  "raw_expand/LeRobot_SO101_Pick_Place/task3-single-sponge-with-distractors/random-locations": {
+   "undecided": 92,
+   "in order (wrist, external)": 388
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h23m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 387,
+   "undecided": 79
+  },
+  "raw_expand/IRA_collection_so101/2026_05_25-15h40m_Sort_chess_by_color_1": {
+   "in order (wrist, external)": 352,
+   "undecided": 113
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-13h09m_Sort_Lego_Color_blue_plate_1": {
+   "undecided": 83,
+   "in order (wrist, external)": 381
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_07_08-16h46m_Desk_Cleanup_var_1": {
+   "in order (wrist, external)": 353,
+   "undecided": 111
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-16h37m_Sort_Lego_Color_multi_1_maybe_corrupt": {
+   "undecided": 112,
+   "in order (wrist, external)": 352
+  },
+  "raw_expand/so101_pick_cube": {
+   "undecided": 205,
+   "in order (wrist, external)": 204,
+   "no wrist (external+external)": 55
+  },
+  "raw_expand/so101_gba_direct_manipulation": {
+   "undecided": 173,
+   "in order (wrist, external)": 291
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-14h37m_Desk_Cleanup_1": {
+   "undecided": 57,
+   "in order (wrist, external)": 407
+  },
+  "raw_expand/IRA_collection_so101/2026_05_14-15h36m_Put_Ball_on_Plate_1": {
+   "in order (wrist, external)": 306,
+   "undecided": 158
+  },
+  "raw_expand/IRA_lego_so101/2026_06_11-20h12m_Sort_Lego_Color_red_1": {
+   "in order (wrist, external)": 415,
+   "undecided": 49
+  },
+  "raw_expand/so101_pick_place_v2": {
+   "in order (wrist, external)": 130,
+   "undecided": 334
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h37m_Sort_Lego_Color_yellow_1": {
+   "in order (wrist, external)": 404,
+   "no wrist (external+external)": 2,
+   "undecided": 58
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-13h17m_Sort_Lego_Color_yellow_plate_1": {
+   "in order (wrist, external)": 350,
+   "undecided": 114
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h40m_Lego_Plate_ColorID_green_1": {
+   "undecided": 72,
+   "in order (wrist, external)": 392
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h41m_Sort_Lego_Color_blue_var_1": {
+   "in order (wrist, external)": 415,
+   "undecided": 49
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-13h37m_Sort_Lego_Color_green_plate_1": {
+   "undecided": 112,
+   "in order (wrist, external)": 352
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_5": {
+   "in order (wrist, external)": 316,
+   "undecided": 148
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h22m_Sort_Lego_Color_blue_1": {
+   "in order (wrist, external)": 412,
+   "undecided": 52
+  },
+  "raw_expand/so101_chess17": {
+   "in order (wrist, external)": 352,
+   "undecided": 112
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h04m_Sort_Lego_Color_green_1": {
+   "in order (wrist, external)": 369,
+   "undecided": 95
+  },
+  "raw_expand/so101_cup_bluecircle": {
+   "in order (wrist, external)": 405,
+   "undecided": 59
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-17h36m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 464
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-17h57m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 444,
+   "undecided": 20
+  },
+  "raw_expand/LeRobot_SO101_Pick_Place/task1-single-sponge-no-distractors/random-locations": {
+   "undecided": 132,
+   "in order (wrist, external)": 332
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-16h14m_Sort_Lego_Color_multi_1": {
+   "in order (wrist, external)": 464
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h42m_Desk_Cleanup_1": {
+   "undecided": 107,
+   "in order (wrist, external)": 357
+  },
+  "raw_expand/IRA_lego_so101/2026_06_11-20h20m_Sort_Lego_Color_red_var_1": {
+   "undecided": 42,
+   "in order (wrist, external)": 422
+  },
+  "raw_expand/so101_stack_cubes": {
+   "in order (wrist, external)": 448,
+   "undecided": 16
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h04m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 400,
+   "undecided": 64
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 433,
+   "undecided": 31
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h50m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 458,
+   "undecided": 6
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-15h57m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 421,
+   "undecided": 43
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_07_08-16h22m_Desk_Cleanup_var_1": {
+   "undecided": 35,
+   "in order (wrist, external)": 429
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 464
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-18h34m_Lego_Plate_ColorID_red_1": {
+   "in order (wrist, external)": 308,
+   "undecided": 156
+  },
+  "raw_expand/IRA_lego_so101/2026_06_11-20h02m_Sort_Lego_Color_red_1": {
+   "undecided": 83,
+   "in order (wrist, external)": 381
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-16h26m_Sort_Lego_Color_multi_1": {
+   "undecided": 60,
+   "in order (wrist, external)": 404
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h49m_Sort_Lego_Color_blue_var_1": {
+   "in order (wrist, external)": 449,
+   "undecided": 15
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-12h58m_Sort_Lego_Color_blue_plate_1": {
+   "in order (wrist, external)": 411,
+   "undecided": 53
+  },
+  "raw_expand/IRA_lego_so101/2026_06_11-20h28m_Sort_Lego_Color_red_var_1": {
+   "in order (wrist, external)": 362,
+   "undecided": 102
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_1_redundant": {
+   "undecided": 10,
+   "in order (wrist, external)": 454
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-16h50m_Sort_Lego_Color_multi_1": {
+   "in order (wrist, external)": 386,
+   "undecided": 78
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-16h11m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 431,
+   "undecided": 33
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_4": {
+   "undecided": 112,
+   "in order (wrist, external)": 352
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-17h06m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 362,
+   "undecided": 87
+  },
+  "raw_expand/so101_pickplacepen_box_v1": {
+   "undecided": 74,
+   "in order (wrist, external)": 375
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-18h06m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 449
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_07_08-16h14m_Desk_Cleanup_var_1": {
+   "in order (wrist, external)": 448
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h19m_Sort_Lego_Color_green_var_1": {
+   "in order (wrist, external)": 416,
+   "undecided": 32
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-13h30m_Sort_Lego_Color_green_plate_1": {
+   "undecided": 42,
+   "in order (wrist, external)": 406
+  },
+  "raw_expand/IRA_lego_so101/2026_07_03-12h38m_Sort_Lego_Color_red_plate_1": {
+   "undecided": 51,
+   "in order (wrist, external)": 397
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-14h56m_Sort_Lego_Color_yellow_1": {
+   "in order (wrist, external)": 369,
+   "no wrist (external+external)": 10,
+   "undecided": 69
+  },
+  "raw_expand/so101_cube": {
+   "in order (wrist, external)": 368,
+   "undecided": 80
+  },
+  "raw_expand/so101_tapes_cleanup": {
+   "in order (wrist, external)": 358,
+   "undecided": 90
+  },
+  "raw_expand/LeRobot_SO101_Pick_Place/task3-single-sponge-with-distractors/fixed-locations": {
+   "undecided": 96,
+   "in order (wrist, external)": 352
+  },
+  "raw_expand/IRA_lego_so101/2026_06_11-19h48m_Sort_Lego_Color_red_1": {
+   "in order (wrist, external)": 445,
+   "undecided": 3
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_3": {
+   "in order (wrist, external)": 448
+  },
+  "raw_expand/IRA_collection_so101/2026_05_14-18h12m_Put_Chess_Piece_on_Rubicks_Cube_1": {
+   "undecided": 188,
+   "in order (wrist, external)": 260
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_V2_1_redundant": {
+   "undecided": 51,
+   "in order (wrist, external)": 367,
+   "no wrist (external+external)": 30
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-17h20m_Lego_Plate_ColorID_yellow_1": {
+   "in order (wrist, external)": 367,
+   "undecided": 81
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_multi_1": {
+   "in order (wrist, external)": 443,
+   "undecided": 5
+  },
+  "raw_expand/IRA_lego_so101/2026_07_08-17h01m_Lego_Plate_ColorID_yellow_1": {
+   "in order (wrist, external)": 318,
+   "no wrist (external+external)": 64,
+   "undecided": 66
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_07_08-16h38m_Desk_Cleanup_var_1": {
+   "undecided": 155,
+   "in order (wrist, external)": 293
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-17h24m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 448
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_05_25-14h02m_Desk_Cleanup_2": {
+   "in order (wrist, external)": 438,
+   "undecided": 10
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-15h34m_Sort_Lego_Color_blue_1": {
+   "in order (wrist, external)": 172,
+   "undecided": 276
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_14-17h47m_Desk_Cleanup_1": {
+   "in order (wrist, external)": 418,
+   "undecided": 30
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_3": {
+   "in order (wrist, external)": 352,
+   "undecided": 96
+  },
+  "raw_expand/IRA_lego_so101/2026_06_03-20h21m_Sort_Lego_Color_multi_2": {
+   "in order (wrist, external)": 352,
+   "undecided": 96
+  },
+  "raw_expand/IRA_lego_so101/2026_06_12-16h03m_Sort_Lego_Color_multi_1": {
+   "in order (wrist, external)": 448
+  },
+  "raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1_redundant": {
+   "undecided": 88,
+   "in order (wrist, external)": 328
+  },
+  "raw_expand/pick_cube_so101_dobri": {
+   "undecided": 191,
+   "in order (wrist, external)": 209
+  },
+  "raw_expand/IRA_collection_so101/2026_05_25-19h38m_Waving_1": {
+   "undecided": 204,
+   "in order (wrist, external)": 196
+  },
+  "raw_expand/IRA_collection_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1": {
+   "in order (wrist, external)": 400
+  },
+  "raw_expand/so101_pick_place_batch2": {
+   "undecided": 163,
+   "in order (wrist, external)": 221
+  },
+  "raw_expand/so101_teleop_vials": {
+   "undecided": 227,
+   "in order (wrist, external)": 138
+  },
+  "raw_expand/so101_pen2box": {
+   "undecided": 68,
+   "in order (wrist, external)": 177
+  }
+ }
+}

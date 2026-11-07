@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_continuous_task_a2_v1",
+  "status": "development_late_horizon_screen",
+  "question": "Across a four-task continuous-action panel, do factual executed actions create sufficient same-state future-anchor variation to justify matched action/no-action predictor training?",
+  "tasks": [
+    "pick-place-v3",
+    "drawer-open-v3",
+    "reach-v3",
+    "push-v3"
+  ],
+  "split": {
+    "protocol_seed": 25701,
+    "smoke_episode_namespace": "a2-continuous-smoke",
+    "assignment": "task_local_seeded_episode_permutation",
+    "train_episodes_per_task": 24,
+    "development_episodes_per_task": 12,
+    "test_episodes_per_task": 12
+  },
+  "collection": {
+    "benchmark_seed": 25701,
+    "environment_seed_base": 260000,
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon_steps": 8,
+    "test_instances_not_collected_by_this_protocol": true
+  },
+  "hazard": {
+    "decision_steps_per_episode": 40,
+    "history_steps": 3,
+    "eligible_first_step": 3,
+    "eligible_last_step": 31,
+    "bernoulli_probability": 0.12,
+    "refractory_steps": 5,
+    "maximum_events_per_episode": 3,
+    "condition_on_at_least_one_event": true,
+    "schedule_drawn_before_environment_reset": true,
+    "schedule_independent_of_state_action_reward_and_task_phase": true
+  },
+  "matched_state_branches": {
+    "branch_count": 8,
+    "interruption_horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "motion_delta_rms": 0.15,
+    "preserve_policy_gripper_commands": true
+  },
+  "support_gate": {
+    "split": "development",
+    "train_only_whitening": true,
+    "primary_horizons": [6, 7, 8],
+    "full_horizon_result_is_retained_as_diagnostic": true,
+    "late_horizon_selection_is_development_only": true,
+    "minimum_branch_variance": 0.01,
+    "minimum_episode_macro_informative_fraction_per_task": 0.8,
+    "minimum_development_episodes_per_task": 12,
+    "all_four_tasks_must_pass": true,
+    "model_training_before_gate": false
+  },
+  "authorized_after_support_go": {
+    "matched_factual_and_no_action_screen_steps": 2000,
+    "screen_training_seeds": [25801, 25802, 25803],
+    "bundle_batch_size": 16,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "additional_sigreg_values_allowed": [],
+    "fresh_10000_step_training_requires_2k_screen_go": true
+  }
+}

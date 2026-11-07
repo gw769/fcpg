@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "protocol": "fk-deform-attn-seed0-development-multitask-paired-v1",
+  "claim_scope": {
+    "name": "seed0-development-controlled-comparison",
+    "training_seeds": [
+      0
+    ],
+    "development_only": true,
+    "cross_seed_generalization_supported": false,
+    "ci_scope": "episode-paired-within-fixed-tasks-only"
+  },
+  "inputs": {
+    "residual_checkpoint": "outputs/fk_deform_attn/matched_policy_only_pair_seed0/policy_only_residual_best.pt",
+    "deform_checkpoint": "outputs/fk_deform_attn/matched_policy_only_pair_seed0/fk_deform_attn_best.pt",
+    "policy_contract_checkpoint": "outputs/action_chunk/lewm_stage1/shared_4task_seed0_lp0_sig0_b2048/fcpg_action_chunk_best.pt",
+    "fcpg_corrector_checkpoint": "outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt",
+    "checkpoint_schema_version": 2,
+    "checkpoint_state": "best"
+  },
+  "comparison": {
+    "variants": [
+      "policy_only_residual",
+      "fk_deform_attn"
+    ],
+    "difference_order": "fk_deform_attn-minus-policy_only_residual",
+    "structural_attribution": "policy-only shared residual stencil versus independent deformable readout",
+    "supervised_fcpg_scope": "side-note-only system context excluded from structural statistics"
+  },
+  "tasks": [
+    {
+      "key": "pick",
+      "name": "pick-place-v3"
+    },
+    {
+      "key": "button",
+      "name": "button-press-v3"
+    },
+    {
+      "key": "reach",
+      "name": "reach-v3"
+    },
+    {
+      "key": "push",
+      "name": "push-v3"
+    }
+  ],
+  "conditions": [
+    {
+      "id": "clean",
+      "perturbation": "clean",
+      "severity": 0.0,
+      "unit": "none"
+    },
+    {
+      "id": "rotation_5deg",
+      "perturbation": "rotation",
+      "severity": 5.0,
+      "unit": "degrees"
+    },
+    {
+      "id": "rotation_10deg",
+      "perturbation": "rotation",
+      "severity": 10.0,
+      "unit": "degrees"
+    },
+    {
+      "id": "translation_2cm",
+      "perturbation": "translation",
+      "severity": 2.0,
+      "unit": "centimeters"
+    },
+    {
+      "id": "translation_4cm",
+      "perturbation": "translation",
+      "severity": 4.0,
+      "unit": "centimeters"
+    }
+  ],
+  "evaluation": {
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon": 100,
+    "action_steps": 8,
+    "episodes_per_task": 20,
+    "task_index_namespace": {
+      "id": "fkda-seed0-dev-ti-20260718-v1",
+      "base": 1726071,
+      "task_stride": 100,
+      "episode_stride": 1,
+      "metaworld_effective_modulus": 50
+    },
+    "env_seed_namespace": {
+      "id": "fkda-seed0-dev-env-20260718-v1",
+      "base": 1726071800,
+      "task_stride": 1000,
+      "episode_stride": 1
+    },
+    "camera_rng_namespace": {
+      "rotation_base": 1826071800,
+      "translation_base": 1926071800,
+      "task_stride": 1000,
+      "episode_stride": 1,
+      "shared_direction_across_axis_severities": true
+    },
+    "freshness_guard": {
+      "forbid_task_index_at_or_below": 1000000,
+      "forbid_env_seed_at_or_below": 300000000,
+      "reuse_physical_identity_across_camera_conditions": true,
+      "claim_novel_mt1_parameter_instances": false
+    },
+    "pairing": {
+      "same_task_index": true,
+      "same_env_seed": true,
+      "same_camera_offset": true,
+      "same_initial_physical_state_hash": true,
+      "same_initial_view_hash": true,
+      "variant_execution_order": "alternate-by-pair-index"
+    },
+    "amp": true,
+    "device": "auto"
+  },
+  "statistics": {
+    "bootstrap_samples": 20000,
+    "bootstrap_seed": 20260718,
+    "confidence_level": 0.95,
+    "bootstrap_design": "episode-paired-stratified-within-fixed-task",
+    "task_handling": "four-fixed-tasks-not-resampled",
+    "seed_handling": "single-seed0-no-seed-resampling",
+    "auc": {
+      "rotation_degrees": [
+        0.0,
+        5.0,
+        10.0
+      ],
+      "translation_centimeters": [
+        0.0,
+        2.0,
+        4.0
+      ],
+      "rule": "per-episode-trapezoid-divided-by-maximum-severity",
+      "shared_clean_episode": true
+    },
+    "clean_noninferiority": {
+      "candidate": "fk_deform_attn",
+      "baseline": "policy_only_residual",
+      "margin_success_probability": -0.05,
+      "one_sided_confidence_level": 0.95,
+      "decision_rule": "paired_task_macro_lower_bound_strictly_above_margin"
+    }
+  },
+  "coordinate_diagnostic": {
+    "name": "attention_barycenter_epe_px",
+    "coordinate_source": "PolicyReadoutOutput.sample_points_px weighted by attention_weights",
+    "reference": "q_true projected from actual evaluation camera",
+    "reference_is_model_input": false,
+    "validity_mask": "in-front-of-camera-and-in-image",
+    "primary_timepoint": "first-inference-latest-history-frame",
+    "on_policy_rollout_metric": "descriptive-only-because-trajectories-diverge",
+    "fail_closed": true,
+    "unqualified_keypoint_epe_claim_supported": false
+  },
+  "artifacts": {
+    "output_root": "outputs/fk_deform_attn/seed0_development_multitask_eval",
+    "pair_directory": "pairs",
+    "rollout_csv": "paired_rollouts.csv",
+    "statistics_json": "seed0_development_statistics.json"
+  }
+}

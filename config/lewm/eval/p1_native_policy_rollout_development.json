@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_p1_native_known_drop_policy_development_v1",
+  "classification": "development_only_not_confirmatory",
+  "task": "pick-place-v3",
+  "camera": "corner",
+  "width": 224,
+  "height": 224,
+  "benchmark_seed": 41901,
+  "environment_seed_base": 860000,
+  "physical_episode_count": 30,
+  "task_instance_indices": [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+  ],
+  "drop_start_decisions": [
+    7, 9, 6, 8, 9, 6, 8, 7, 6, 8,
+    7, 9, 8, 7, 9, 6, 7, 6, 9, 8,
+    9, 8, 6, 7, 8, 9, 7, 6, 6, 9
+  ],
+  "drop_duration_decisions": 6,
+  "horizon_raw_steps": 335,
+  "action_steps_per_decision": 5,
+  "occlusion_radius_px": 24,
+  "occlusion_value_uint8": 0,
+  "camera_condition": "nominal",
+  "known_sensor_validity_only": true,
+  "source_fresh_gate_config": "config/lewm/eval/p1_native_complementary_fresh.json",
+  "methods": [
+    "clean_native",
+    "measurement",
+    "hold_last",
+    "geometry_hold",
+    "visual_cv",
+    "complementary_factual",
+    "complementary_no_action"
+  ],
+  "development_model_seeds": [15801],
+  "full_model_seeds_after_development_go": [15801, 15802, 15803],
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 41990,
+  "output_dir": "outputs/lewm_p1_native_policy_rollout/development_seed41901",
+  "claim_boundaries": {
+    "selector": false,
+    "unknown_corruption": false,
+    "clean_recovery_native_bypass_must_be_exact": true,
+    "q_true_use": "external corruption renderer and offline action-distance label only",
+    "hidden_clean_use": "same-state offline action reference only",
+    "development_result_is_publication_confirmation": false
+  }
+}

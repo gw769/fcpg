@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_grounded_lewm_gate_l1_matrix",
+  "checkpoints": {
+    "nominal": "outputs/lewm_grounded/gate_l1_nominal_sig002_seed3072/lewm_grounded_latest.pt",
+    "fcpg": "outputs/lewm_grounded/gate_l1_fcpg_sig002_seed3072/lewm_grounded_latest.pt"
+  },
+  "conditions": {
+    "clean": {
+      "role": "clean",
+      "data": "data/lewm_gate_l1_test/paired_v2/clean_4tasks_30eps_224_seed9100.npz",
+      "correction_cache": "data/grounding_cache/lewm_gate_l1_test_v2/clean_shared4task_seed0_sig0",
+      "oracle_target_cache": "data/oracle_target/lewm_gate_l1_test_v2/clean",
+      "pairing_report": null,
+      "rollout_steps": 5,
+      "expected_windows": 7800
+    },
+    "rotation5": {
+      "role": "primary_drift",
+      "data": "data/lewm_gate_l1_test/paired_v2/rotation5_4tasks_30eps_224_seed9100.npz",
+      "correction_cache": "data/grounding_cache/lewm_gate_l1_test_v2/rotation5_shared4task_seed0_sig0",
+      "oracle_target_cache": "data/oracle_target/lewm_gate_l1_test_v2/rotation5",
+      "pairing_report": "results/lewm_gate_l1/data_pairing/rotation5_vs_clean.json",
+      "rollout_steps": 5,
+      "expected_windows": 7800
+    },
+    "translation4": {
+      "role": "primary_drift",
+      "data": "data/lewm_gate_l1_test/paired_v2/translation4_4tasks_30eps_224_seed9100.npz",
+      "correction_cache": "data/grounding_cache/lewm_gate_l1_test_v2/translation4_shared4task_seed0_sig0",
+      "oracle_target_cache": "data/oracle_target/lewm_gate_l1_test_v2/translation4",
+      "pairing_report": "results/lewm_gate_l1/data_pairing/translation4_vs_clean.json",
+      "rollout_steps": 5,
+      "expected_windows": 7800
+    },
+    "rotation10": {
+      "role": "stress_only",
+      "data": "data/lewm_gate_l1_test/paired_v2/rotation10_4tasks_30eps_224_seed9100.npz",
+      "correction_cache": "data/grounding_cache/lewm_gate_l1_test_v2/rotation10_shared4task_seed0_sig0",
+      "oracle_target_cache": "data/oracle_target/lewm_gate_l1_test_v2/rotation10",
+      "pairing_report": "results/lewm_gate_l1/data_pairing/rotation10_vs_clean.json",
+      "rollout_steps": 10,
+      "expected_windows": 4800
+    }
+  },
+  "evaluation": {
+    "split": "all",
+    "batch_size": 64,
+    "num_workers": 0,
+    "max_batches": null,
+    "cell_bootstrap_samples": 1000,
+    "bootstrap_seed": 3072,
+    "expected_tasks": [
+      "pick-place-v3",
+      "button-press-v3",
+      "reach-v3",
+      "push-v3"
+    ],
+    "expected_episodes_per_task": 30,
+    "result_dir": "outputs/lewm_grounded/gate_l1_matrix_seed3072"
+  },
+  "summary": {
+    "primary_conditions": ["rotation5", "translation4"],
+    "clean_condition": "clean",
+    "stress_condition": "rotation10",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 3072,
+    "thresholds": {
+      "relative_improvement_min": 0.10,
+      "clean_regression_max": 0.05,
+      "task_direction_min": 3,
+      "rank_ratio_min": 0.90,
+      "per_task_rank_ratio_min": 0.80,
+      "effective_rank_absolute_min": 8.0,
+      "participation_ratio_absolute_min": 4.0
+    }
+  }
+}

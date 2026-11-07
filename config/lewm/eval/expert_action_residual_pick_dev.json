@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "protocol": "lewm-expert-action-residual-pick-v1",
+  "task": "pick-place-v3",
+  "camera": "corner",
+  "width": 224,
+  "height": 224,
+  "action_steps_per_decision": 5,
+  "drop_duration_decisions": 6,
+  "drop_start_min_decision": 6,
+  "drop_start_max_decision": 10,
+  "occlusion_radius_px": 24,
+  "occlusion_value_uint8": 0,
+  "occlusion_center_key": "q_nominal",
+  "model_seed": 15801,
+  "source_fresh_gate_config": "config/lewm/eval/p1_native_complementary_fresh.json",
+  "splits": {
+    "train": {
+      "benchmark_seed": 63101,
+      "environment_seed_base": 970000,
+      "task_index_base": 0,
+      "episodes": 30,
+      "schedule_seed": 63103,
+      "output": "outputs/lewm_expert_action_residual_pick/train.npz"
+    },
+    "development": {
+      "benchmark_seed": 63201,
+      "environment_seed_base": 980000,
+      "task_index_base": 30,
+      "episodes": 15,
+      "schedule_seed": 63203,
+      "output": "outputs/lewm_expert_action_residual_pick/development.npz"
+    }
+  },
+  "training": {
+    "steps": 2000,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "hidden_dim": 128,
+    "seeds": [63301, 63302, 63303],
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 63390,
+    "output_dir": "outputs/lewm_expert_action_residual_pick/matched_heads_2k"
+  },
+  "rollout": {
+    "classification": "fresh_pick_large_effect_development_control_screen",
+    "benchmark_seed": 63401,
+    "environment_seed_base": 990000,
+    "task_index_base": 0,
+    "episodes": 30,
+    "schedule_seed": 63403,
+    "horizon_raw_steps": 335,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 63490,
+    "output_dir": "outputs/lewm_expert_action_residual_pick/fresh_rollout_30eps"
+  }
+}

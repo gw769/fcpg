@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_phase_schedule_a4c_v4",
+  "status": "collection_protocol_ready",
+  "base_contract": "action_branch_active_control_a4.json",
+  "question": "Can one shared seven-task LeWM learn action-conditioned transitions across the complete active task trajectory when data are sampled by task phase?",
+  "proposal_schedule": {
+    "materialized_before_branch_execution": true,
+    "uses_expert_replay_for_collection_design": true,
+    "uses_branch_outcomes": false,
+    "sampling": "phase_contact_progress_success_boundary_stratified",
+    "proposals_per_episode": 12,
+    "minimum_raw_step": 10,
+    "maximum_raw_step": "full_expert_trajectory_minus_horizon",
+    "minimum_separation_raw_steps": 5,
+    "branch_horizon_raw_steps": 40,
+    "required_phase_ids": {
+      "drawer-retrieve-v0": [
+        "pull_open",
+        "lift_after_open",
+        "move_above_block",
+        "descend",
+        "grasp",
+        "lift_block",
+        "transport_above",
+        "lower",
+        "release"
+      ],
+      "towel-wipe-v0": [
+        "wipe_right_cycle_0",
+        "wipe_left_cycle_1",
+        "wipe_right_cycle_2",
+        "wipe_left_cycle_3",
+        "wipe_right_cycle_4",
+        "wipe_left_cycle_5",
+        "lift_after_wipe"
+      ]
+    },
+    "require_success_crossing_for_successful_source": true
+  },
+  "matched_state_branches": {
+    "branch_count": 8,
+    "interruption_horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "interruption_horizon_raw_steps": 40,
+    "semantic_bank_before_permutation": [
+      "expert",
+      "reverse",
+      "hold",
+      "half_speed",
+      "transverse_positive",
+      "transverse_negative",
+      "expert_xyz_gripper_open",
+      "expert_xyz_gripper_closed"
+    ],
+    "all_branches_executed_and_saved_after_acceptance": true,
+    "slot_order_randomized_per_snapshot": true
+  }
+}

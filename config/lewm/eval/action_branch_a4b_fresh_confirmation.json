@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_active_control_a4b_fresh_confirmation_v1",
+  "status": "preregistered",
+  "source_a4_v2": {
+    "protocol": "fcpg_action_branch_active_control_a4_v2",
+    "config_path": "config/lewm/eval/action_branch_active_control_a4.json"
+  },
+  "tasks": [
+    "pick-place-v3",
+    "drawer-retrieve-v0",
+    "reach-v3",
+    "push-v3",
+    "door-open-v3",
+    "window-open-v3",
+    "towel-wipe-v0"
+  ],
+  "split": {
+    "manifest_protocol": "fcpg_action_branch_a4b_fresh_candidate_split_v1",
+    "manifest_id": "a4b-fresh-preflight8-final40-seed31401-v1",
+    "manifest_path": "config/lewm/splits/action_branch_a4b_fresh_confirmation_seed31401.json",
+    "split_seed": 31401,
+    "unit": "source_physical_episode",
+    "task_identity_namespace": "a4b-task-instance-v1",
+    "raw_task_index_minimum": 0,
+    "raw_task_index_maximum": 47,
+    "preflight_candidates_per_task": 8,
+    "final_candidates_per_task": 40,
+    "candidate_pools_disjoint": true,
+    "candidate_order_preregistered": true,
+    "candidate_limit_preregistered": true,
+    "old_a4_benchmark_instances_reused": false
+  },
+  "identity_audit": {
+    "legacy_identity_inventory_required": true,
+    "legacy_scopes": [
+      "a4_v2_formal_train",
+      "a4_v2_formal_development",
+      "a4_v2_attempted_test"
+    ],
+    "reset_digest_fields": ["qpos", "qvel", "goal", "task_data"],
+    "persist_episode_uid": true,
+    "persist_reset_physical_state_goal_digest": true,
+    "digest_intersection_must_be_zero": true,
+    "custom_task_fresh_parameters": "a4b_protocol_seeded_continuous_offsets"
+  },
+  "collection": {
+    "benchmark_seed": 31411,
+    "proposal_seed": 31421,
+    "preflight_environment_seed_base": 710000,
+    "final_environment_seed_base": 720000,
+    "environment_seed_task_stride": 100,
+    "camera": "task_registered_a4_camera",
+    "width": 224,
+    "height": 224,
+    "horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "eligible_candidate_definition": "at_least_one_eligible_proposal",
+    "target_eligible_candidates_per_task": 12,
+    "selection": "first_eligible_in_preregistered_order",
+    "future_or_outcome_candidate_filtering_allowed": false
+  },
+  "proposal_schedule": {
+    "drawn_before_environment_reset": true,
+    "independent_of_state_action_reward_task_phase_and_outcomes": true,
+    "sampling": "uniform_without_replacement",
+    "proposals_per_episode": 12,
+    "minimum_raw_step": 3,
+    "maximum_raw_step_inclusive": 160,
+    "minimum_separation_raw_steps": 5
+  },
+  "eligibility_source": {
+    "source_protocol": "fcpg_action_branch_active_control_a4_v2",
+    "reuse": "exact_function_and_thresholds",
+    "allowed_inputs": [
+      "proposal",
+      "complete_history",
+      "success",
+      "ever_success_before",
+      "active_stage",
+      "expert_xyz_norm",
+      "recent_action_rms",
+      "workspace_and_joint_margin",
+      "unexpected_collision",
+      "remaining_raw_steps"
+    ],
+    "history_steps": 3,
+    "minimum_expert_xyz_norm": 0.05,
+    "recent_action_window_raw_steps": 5,
+    "minimum_recent_action_rms": 0.05,
+    "minimum_workspace_and_joint_margin": 0.05,
+    "branch_horizon_raw_steps": 40,
+    "record_every_proposal": true,
+    "collect_all_rejection_reasons": true,
+    "future_or_outcome_row_filtering_allowed": false
+  },
+  "preflight_pool": {
+    "pool": "preflight",
+    "attempt_all_candidates": true,
+    "materialize_branch_bundles": false,
+    "final_pool_access_allowed": false,
+    "complete_result_required_before_final": true
+  },
+  "final_pool": {
+    "pool": "final",
+    "candidate_limit_per_task": 40,
+    "target_eligible_candidates_per_task": 12,
+    "selection": "first_eligible_in_preregistered_order",
+    "stop_after_target_per_task": true,
+    "complete_preflight_result_required": true,
+    "complete_action": "write_exclusive_success_result",
+    "insufficient_candidate_action": "write_exclusive_failure_result",
+    "partial_cache_publish_allowed": false
+  },
+  "endpoint_reuse": {
+    "source_protocol": "fcpg_action_branch_active_control_a4_v2",
+    "training_seeds": [30301, 30302, 30303],
+    "checkpoint_step": 10000,
+    "selection": "fixed_latest",
+    "reuse_frozen_endpoints_allowed": true,
+    "endpoint_retraining_for_a4b_allowed": false,
+    "formal_train_cache_reused": true,
+    "development_checkpoint_or_optimizer_reused": false
+  },
+  "confirmation_gate": {
+    "evaluation_split": "test",
+    "primary_horizons": [6, 7, 8],
+    "primary_metric": "relative_prediction_mse_improvement",
+    "minimum_relative_improvement": 0.1,
+    "paired_ci_lower_must_exceed": 0.0,
+    "bootstrap_unit": "source_physical_episode",
+    "bootstrap_samples": 10000,
+    "task_macro": true,
+    "minimum_positive_tasks": 6,
+    "minimum_positive_seeds": 2,
+    "must_beat_matched_no_action": true,
+    "must_beat_all_seven_wrong_action_shifts": true,
+    "must_beat_hold_last_and_constant_velocity": true
+  }
+}

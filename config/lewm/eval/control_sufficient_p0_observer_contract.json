@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "protocol": "control_sufficient_p0_observer_contract_v1",
+  "classification": "exposed_p0_global_fixed_parameters",
+  "feedback_gain": 1.0,
+  "residual_decay": 1.0,
+  "delta_t": 1.0,
+  "controllability_beta": 1.0,
+  "parameter_source": "pre-registered unit correction with no residual decay; no target, episode, horizon, coordinate, or scored-panel tuning",
+  "frozen_before_offline_label_scoring": true,
+  "target_tuned_per_row": false,
+  "target_tuned_per_horizon": false
+}

@@ -1,0 +1,54 @@
+# Serve configuration — ties robot, workspace, task, and model configs together.
+# This is the single file you edit when deploying on a new machine or
+# switching hardware.  No Python file needs to change.
+
+serve:
+  host: "127.0.0.1"
+  port: 8765
+  mode: hardware              # "hardware" | "simulation" | "dry_run"
+  execute_enabled: true
+  acknowledge_workspace_clear: true
+
+# ── Robot ─────────────────────────────────────────────────────────────────────
+# Path to robot hardware config (relative to repo root or absolute)
+robot_config: configs/robots/so101_example.yaml
+
+# ── Workspace ─────────────────────────────────────────────────────────────────
+workspace_config: configs/workspaces/example.yaml
+
+# Paths that override workspace config nulls
+workspace_overrides:
+  table:
+    z_m: null                 # still derived from training data
+  projection:
+    column:
+      calibration_path: outputs/lerobot/so101/my_first_task_clean_v1_dual_camera_calibration/calibration.json
+    wrist:
+      calibration_path: outputs/lerobot/so101/my_first_task_clean_v1_dual_camera_calibration/calibration.json
+
+# ── Task ──────────────────────────────────────────────────────────────────────
+task_config: configs/tasks/pick_and_place.yaml
+
+# Paths/values that override task config nulls
+task_overrides:
+  planning:
+    motion_planner:
+      dynamics_checkpoint: outputs/lerobot/so101/so101_v9_local_multiscale_seed5131/latest.pt
+      bridge_checkpoint:   outputs/lerobot/so101/my_first_task_clean_v1_fcpg_context_bridge_val2_seed6126_2k/latest.pt
+  perception:
+    gripper_grounding:
+      checkpoint_path: outputs/lerobot/so101/my_first_task_clean_v1_wrist_transfer_seed6120_1k_fixed/step_000250.pt
+    target_tracking:
+      profile_root: outputs/lerobot/so101/realtime_fcpg_lewm_mpc/target_profile
+
+# ── Training report ────────────────────────────────────────────────────────────
+# JSON report from training; used to derive contact/transport/release heights
+# and gripper position percentiles when task config sets them to null.
+home_state_report: outputs/lerobot/so101/real_dual_shadow_fcpg_lewm_20260724_pre_traj02_rank/report.json
+
+# ── Live anchor calibration ────────────────────────────────────────────────────
+live_anchor_calibration: outputs/lerobot/so101/realtime_fcpg_lewm_mpc/live_anchor_calibration.json
+
+# ── Logging ────────────────────────────────────────────────────────────────────
+log_dir: outputs/lerobot/so101/realtime_fcpg_lewm_mpc
+device: cuda:0

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "experiment": "anchor_conditioned_absolute_keypoint_shared_4task_seed0",
+  "variant": "anchor_conditioned_absolute_keypoint",
+  "contract": {
+    "variant": "anchor_conditioned_absolute_keypoint",
+    "model_inputs": [
+      "deployment_rgb_or_frozen_vit_features",
+      "q_nominal_px",
+      "keypoints_xyz_fk",
+      "robot_obs",
+      "keypoint_identity"
+    ],
+    "forbidden_model_inputs": [
+      "q_true",
+      "true_camera_extrinsic",
+      "true_camera_intrinsic"
+    ],
+    "supervision": "q_true_absolute_px_only",
+    "test_q_true_usage": "metrics_only_never_model_input",
+    "coordinate_parameterization": "direct_absolute_tanh_xy_w_minus_1_h_minus_1",
+    "visual_sampling": "q_nominal_centered_square_grid_matching_fcpg",
+    "reliability_output": false
+  },
+  "reference_fcpg": {
+    "checkpoint": "outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt",
+    "corrector_arch": "lewm",
+    "trainable_parameters": 8357658
+  },
+  "data_sources": [
+    {
+      "name": "pick",
+      "path": "data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz",
+      "vision_cache": "data/vision_cache/absolute_keypoint/pick300_rgb_vitb_l11_fp16"
+    },
+    {
+      "name": "button",
+      "path": "data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz",
+      "vision_cache": "data/vision_cache/absolute_keypoint/button300_rgb_vitb_l11_fp16"
+    },
+    {
+      "name": "reach",
+      "path": "data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz",
+      "vision_cache": "data/vision_cache/absolute_keypoint/reach300_rgb_vitb_l11_fp16"
+    },
+    {
+      "name": "push",
+      "path": "data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz",
+      "vision_cache": "data/vision_cache/absolute_keypoint/push300_rgb_vitb_l11_fp16"
+    }
+  ],
+  "split": {
+    "unit": "task-episode",
+    "val_fraction": 0.2,
+    "seed": 0
+  },
+  "budget": {
+    "epochs": 50,
+    "batch_size": 1024,
+    "num_workers": 4,
+    "balance_sources": true,
+    "max_train_episodes_per_source": 0,
+    "episode_selection_seed": 0
+  },
+  "model": {
+    "obs_dim": 4,
+    "num_keypoints": 3,
+    "vision_dim": 256,
+    "model_dim": 256,
+    "model_name": "vit_base_patch16_224.augreg_in1k",
+    "vision_selected_layers": [11],
+    "local_grid_size": 5,
+    "local_radius_px": 24.0,
+    "local_layers": 4,
+    "global_layers": 2,
+    "heads": 8,
+    "mlp_ratio": 4,
+    "dropout": 0.1,
+    "target_trainable_parameters": 8357658,
+    "allow_parameter_padding": false
+  },
+  "optimization": {
+    "seed": 0,
+    "lr": 0.0003,
+    "weight_decay": 0.00001,
+    "warmup_epochs": 3.0,
+    "grad_clip": 1.0,
+    "loss": "smooth_l1_beta_1_absolute_q_true_px"
+  },
+  "output_dir": "outputs/absolute_keypoint/anchor_conditioned_shared_4task_seed0"
+}

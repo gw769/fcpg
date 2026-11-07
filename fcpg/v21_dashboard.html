@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V21 · 双视角执行台</title>
+<style>
+:root{color-scheme:dark;--bg:#111716;--panel:#1a2220;--line:#35433d;--ink:#edf2e8;--muted:#adbaaf;--green:#bbda8a;--orange:#efb367;--blue:#91c0df;--red:#ff9890}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Noto Sans CJK SC","Microsoft YaHei",sans-serif}main{max-width:1500px;margin:auto;padding:26px 30px 60px}h1{font-size:30px;line-height:1.2;margin:8px 0;font-weight:650;letter-spacing:-.5px}h2{font-size:17px;margin:0}h3{font-size:15px;margin:0}p{margin:7px 0}.eyebrow{font:12px "DejaVu Sans Mono",monospace;color:var(--green);letter-spacing:2px}.muted,small{color:var(--muted)}.mono,td{font-family:"DejaVu Sans Mono",monospace}.header{display:flex;justify-content:space-between;gap:24px;align-items:center}.pill{padding:6px 12px;border:1px solid var(--line);border-radius:30px;font:13px "DejaVu Sans Mono",monospace}.good{color:var(--green)}.warn{color:var(--orange)}.bad{color:var(--red)}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px 0}button,select{font:inherit;color:var(--ink);background:#29342f;border:1px solid #566751;border-radius:5px;padding:10px 15px;cursor:pointer}button:hover{border-color:var(--green)}button:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:3px}button:disabled{opacity:.38;cursor:not-allowed}button.primary{color:#192311;background:var(--green);border-color:var(--green)}button.stop{background:#692c2b;border-color:var(--red);color:#fff;margin-left:auto;min-width:135px;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}.panelhead{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}.camera{background:#0c110e;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative}.camera img{width:100%;height:100%;object-fit:contain}.camera .empty{position:absolute;pointer-events:none;color:var(--muted);padding:24px}.foot{padding:12px 16px;border-top:1px solid var(--line);font-size:13px}.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.fact{padding:14px 16px;background:var(--panel);border-left:3px solid var(--green)}.fact strong{display:block;margin-top:4px;font:20px "DejaVu Sans Mono",monospace}.section{margin-top:22px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{padding:12px 13px;text-align:left;border-bottom:1px solid var(--line)}th{font-family:inherit;color:var(--muted);font-weight:500}td.c{color:var(--orange)}td.p{color:var(--blue)}td.a{color:var(--green)}svg{width:100%;height:auto;display:block;background:#141c18}.legend{padding:10px 16px;display:flex;gap:22px;font-size:13px}.error{padding:12px 16px;background:#412523;border:1px solid #a2655e;border-radius:5px;margin-bottom:15px;white-space:pre-wrap}.details{padding:15px 18px}.details summary{cursor:pointer}.details pre{white-space:pre-wrap;word-break:break-all;font-size:12px;color:var(--muted);max-height:360px;overflow:auto}.no-point{margin-top:14px;border-left:3px solid var(--orange);padding:10px 14px;color:var(--muted);background:#23281d}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}a{color:var(--green)}[hidden]{display:none!important}@media(max-width:900px){main{padding:18px 12px}.grid{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}.header{align-items:flex-start;flex-direction:column}button.stop{margin-left:0}.bar{gap:8px}h1{font-size:25px}}
+</style><style>.camera svg.camera-path{position:absolute;inset:0;width:100%;height:100%;background:transparent;pointer-events:none}.camera-path-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin:8px 0 14px}.camera-path-legend .actor{color:#efb367}.camera-path-legend .lewm{color:#91c0df}</style></head><body><main>
+<header class="header"><div><div class="eyebrow">SO-101 / READBACK-ADDRESSED VISUAL MEMORY</div><h1 id="pageTitle">V21 · 双视角执行台</h1><p class="muted" id="pipelineDescription">等待后端报告当前模型链路。控制模型原生 40 步，每次只执行前五步。</p></div><div class="pill" id="connection">连接中</div></header>
+<div class="bar"><button id="preview" class="primary" disabled>更新定位 + 预览 · 不执行</button><button id="candidate-preview" disabled>独立 Actor 候选诊断 · 不执行</button><button id="observe" disabled>只观测</button><button id="plan" disabled>生成可执行计划</button><button id="execute" disabled>执行五步 → STOP</button><button id="target-track" disabled>按质心跟踪一块</button><button id="trial" disabled>连续试验 · 32块</button><button id="fixed-goal-compensate" disabled>固定目标补偿</button><button id="home" disabled>HOME</button><button id="stop" class="stop" disabled>STOP</button></div>
+<section class="section panel"><h2>独立只读候选诊断 · 不参与 CEM 计划</h2><p id="candidateNote">诊断尚未运行；这里只比较独立诊断候选，不是实际 v21_lewm_cem 搜索池、赢家或动作计划。</p><div class="scroll"><table><thead><tr><th>诊断候选</th><th>预计 CM / px</th><th>轴误差 / °</th><th>预计高度 / mm</th><th>不确定性代理 / px</th><th>工程分数</th><th>状态</th></tr></thead><tbody id="candidateRows"></tbody></table></div></section>
+<div class="row" id="policyGrid"><span class="muted">学习策略格子</span><span>当前条件 <strong id="cameraCondition" class="mono">—</strong></span><label>设定 <select id="cameraConditionSelect" aria-label="camera condition" disabled><option value="both_fresh">both_fresh</option><option value="wrist_h0">wrist_h0</option><option value="wrist_cold">wrist_cold</option><option value="external_h0">external_h0</option><option value="external_cold">external_cold</option></select></label></div>
+<p id="cemPlanStatus" class="muted">实际 CEM 配置：等待后端状态。相机条件只决定视图交付，不决定动作倍率。</p>
+<section class="section panel" id="graspCemPanel" hidden><div class="panelhead"><h2>CEM · 距离与蓝白对齐</h2></div><p id="graspCemNote" class="foot"></p><div class="scroll"><table><thead><tr><th>评分项</th><th>本次画面</th><th>执行前 5 步后的预测</th><th>40 步轨迹加权代价 ↓</th></tr></thead><tbody id="graspCemRows"></tbody></table></div></section>
+<div id="error" class="error" role="alert" hidden></div><p id="operation" class="muted" aria-live="polite">页面加载和刷新不产生动作。</p>
+<p id="j3RangeArrival" class="muted" aria-live="polite" hidden></p>
+<p id="trialProgress" class="muted" aria-live="polite">连续试验从 HOME 开始，最多 32 块；STOP 可中止整轮，完成命令不等于抓放成功。</p>
+<p id="targetProgress" class="muted" aria-live="polite">质心跟踪：等待同帧 C 与 M。</p>
+<p id="auxiliaryProgress" class="warn" aria-live="polite" hidden></p>
+<div class="facts"><div class="fact">实际加载权重<strong id="weights">—</strong></div><div class="fact">控制状态<strong id="state">—</strong></div><div class="fact">最近真实读回（约 0–1.0 s）<strong id="history">0 / 10</strong></div><div class="fact">真实读回新鲜度<strong id="qAge">—</strong></div></div>
+<div class="sectionhead"><h2>双视角 · 同帧定位与预览</h2><label>图像来源 <select id="source"><option value="endpoint">同帧定位图 · F/G/M + C</option><option value="live">实时原图 · 不叠旧点</option></select></label></div>
+<p id="sourceNote" class="muted">同帧定位图带采集时间；点击“更新定位 + 预览”刷新，不产生动作。</p>
+<p id="gripperPreview" class="muted">夹爪开合预览：尚未生成。关节位置值不是图像里的指尖坐标。</p>
+<p id="previewMemoryPolicy" class="muted">预览历史隔离状态：等待后端确认。</p>
+<div class="camera-path-legend"><span style="color:#67d6ff">-- LeWM · F 预测路线</span><span style="color:#b0bfff">·· LeWM · G 预测路线</span><span style="color:#ffffff">— FG · 当前图像指尖</span><span style="color:#50beff">-- PF/PG · 预测建议</span><span style="color:#00ffff">— CM · 中点→重心（青）</span><span style="color:#00e6ff">C · 重心</span><span style="color:#00dceb">· M · FG 中点</span><span style="color:#50dc50">— 对称长轴</span><span style="color:#c8b450">— 夹向(⊥轴)</span><span style="color:#48b8ff">◯ 放置区椭圆</span></div>
+<p id="trajectoryHorizon" class="muted">LeWM 轨迹：等待当前预测窗口。</p>
+<div class="row"><label>原始轨迹窗口 <select id="rawHorizon" aria-label="原始轨迹窗口"><option value="5">5 步原始预测</option><option value="40" selected>40 步原生预测 · 高亮前 5 步</option></select></label><label>相机轨迹 <select id="pathMode" aria-label="相机轨迹"><option value="both">原始 + CEM 选中</option><option value="raw">仅原始大幅度</option><option value="selected">仅 CEM 选中 5 步</option></select></label><span style="color:#ffab91">— 原始 LeWM 前 5 步 ·· 后续展望</span><span style="color:#67d6ff">-- CEM 选中 5 步</span></div>
+<p id="rawOutlookNote" class="muted" aria-live="polite">等待限幅前的原始模型预测。</p>
+<p id="cameraTrajectoryNote" class="muted" aria-live="polite">相机轨迹：点击“更新定位 + 预览”。仅叠在预测对应的同帧图上。</p>
+<div class="grid"><article class="panel"><div class="panelhead"><h2>01 · Wrist</h2><span id="wristAge" class="pill">等待读取</span></div><div class="camera"><img id="wristImage" alt="Wrist 摄像头画面"><span id="wristEmpty" class="empty">正在连接 wrist 摄像头…</span></div><div class="foot" id="wristMemory">等待真实图像记忆</div></article><article class="panel"><div class="panelhead"><h2>02 · Column</h2><span id="columnAge" class="pill">等待读取</span></div><div class="camera"><img id="columnImage" alt="Column 摄像头画面"><span id="columnEmpty" class="empty">正在连接 column 摄像头…</span></div><div class="foot" id="columnMemory">等待真实图像记忆</div></article></div>
+<div class="no-point">F/G 与中点 M：Wrist 使用同帧关节读回和自己的 FK 标定；Column 使用独立图像识别。定位来源随同帧观测显示。</div>
+<section class="section panel"><div class="panelhead"><h2>限幅前原始轨迹 · 5 / 40 步</h2><label>关节 <select id="rawJoint" aria-label="原始轨迹关节"><option value="1">J2 · 肩部</option><option value="0">J1</option><option value="2">J3</option><option value="3">J4</option><option value="4">J5</option><option value="5">J6 · 夹爪</option></select></label></div><div class="grid"><div><p class="foot">末端中点俯视路径 · X / Y（米）</p><svg id="rawSpatialChart" viewBox="0 0 600 280" role="img" aria-label="原始与 CEM 选中轨迹的末端俯视对比"></svg></div><div><p class="foot">关节位置随预测时间变化 · 前 0.5 秒高亮</p><svg id="rawJointChart" viewBox="0 0 600 280" role="img" aria-label="原始 5 与 40 步关节预测对比"></svg></div></div><div class="legend"><span style="color:#efb367">— 原始 Actor 目标</span><span style="color:#ffab91">— 原始 LeWM 预测</span><span style="color:#67d6ff">-- CEM 选中 5 步预测</span></div><p class="foot"><span id="nativeModelNote">等待后端确认：控制核 Actor/LeWM horizon 是否为 40。</span></p></section>
+<p id="columnPose" class="muted" hidden></p>
+<p id="actorTarget" class="muted">Actor 重心目标：等待当前输入。</p>
+<p id="targets" class="muted">物体 / 放置区：等待观测</p>
+<section class="section panel"><div class="panelhead"><h2>动作预览与实际执行</h2><div class="row"><select id="recordSource" aria-label="轨迹来源"><option value="execution" selected>上次真实执行 · 最近约 10 步</option><option value="auto">自动 · 最新计划 / 实际执行</option><option value="preview">只读预览 · 不执行</option><option value="plan">可执行计划</option><option value="history">多块事务对照（次要）</option></select><select id="joint" aria-label="显示关节"><option value="5">J6 · 夹爪</option><option value="0">J1</option><option value="1">J2</option><option value="2">J3</option><option value="3">J4</option><option value="4">J5</option></select></div></div><p id="traceLabel" class="foot">点击顶部“更新定位 + 预览”查看模型下一块输出，不解除 STOP。</p><p id="cemTracking" class="foot" hidden></p><svg id="chart" viewBox="0 0 1100 230" role="img" aria-label="选定关节的命令、LeWM 预测和实际读回曲线"></svg><div class="legend"><span style="color:var(--orange)">— Actor 命令</span><span style="color:var(--blue)">-- LeWM 预测</span><span style="color:var(--green)">— 实际读回</span><span id="referenceLegend" style="color:#d4afff" hidden>·· 缩放后 Actor 参考</span></div><div class="scroll"><table><thead><tr><th>读回点</th><th>t / ms</th><th>前一条 Actor 命令 [J1…J6]</th><th>LeWM [J1…J6]</th><th>实际读回 [J1…J6]</th><th>实际 − 预测</th></tr></thead><tbody id="traceBody"><tr><td colspan="6">等待生成只读预览；没有数据时不绘制虚构轨迹。</td></tr></tbody></table></div></section>
+<section class="grid section"><div class="panel details"><h2>实际读回与反馈</h2><p>当前位置 <span id="q" class="mono">—</span></p><p id="feedback">尚未完成执行，不能声称已有执行误差。</p><p id="viewFeedback" class="muted">视觉反馈按视角保留，重复刷新不消费。</p><p class="muted">单位：lerobot_calibrated_position，不是度或毫米。</p></div><div class="panel details"><h2>运行约定</h2><p id="executionPlanning">等待后端报告执行前规划方式。</p><p>HOME 使用原有固定路线与机械保护，完成后清空未建模的 HOME 历史。</p><p>五步结束自动 HOLD/STOP，真实历史继续保留。实体急停优先于网页。</p><p id="task" class="muted">任务：—</p></div></section>
+<details class="panel details section"><summary>模型路径与只读诊断</summary><p id="checkpoint" class="mono"></p><button id="copy">复制诊断</button><pre id="raw">等待状态</pre></details>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id), views=['wrist','column'];let latest=null,busy=false,controlUiGeneration=0,lastError='',frameGeneration=0,connectionFailed=false;const loading={},urls={};
+const CAMERA_CONDITIONS=['both_fresh','wrist_h0','wrist_cold','external_h0','external_cold'];
+const number=(v,d=2)=>Number.isFinite(v)?v.toFixed(d):'—', vector=v=>Array.isArray(v)?v.map(x=>number(x)).join('  '):'—', first=v=>Array.isArray(v)?v[0]:undefined;
+function text(id,value){$(id).textContent=value}function showError(msg){lastError=msg||'';text('error',lastError);$('error').hidden=!lastError}
+const pathNS='http://www.w3.org/2000/svg';let cameraPathKey='',cameraPathData=null,cameraPathBusy=false,nativeDefaultShown=false,recordSourceDefaulted=false;
+function checkpointWeightsLabel(m){
+ const api=m?.weights_version||m?.version||'—',ckpt=String(m?.checkpoint||'');
+ // Live service VERSION is still hardcoded 21.0.2; the disk package for this deploy is 21.0.4.
+ if(/parent-bf16-ep01-deploy|v21\.0\.4|21\.0\.4/.test(ckpt))return '21.0.4';
+ return api;
+}
+function recentReadbackWindow(ex){
+ if(!ex||!Number.isFinite(ex.source_time_s))return {count:0,want:10,samples:[]};
+ const epoch=ex.source_time_s,samples=[];
+ (ex.readback_times_s||[]).forEach((t,i)=>{const q=(ex.measured_q_path||[])[i];if(Number.isFinite(t)&&Array.isArray(q)&&q.length===6)samples.push({t:t-epoch,q,kind:'policy',label:'q'+i});});
+ const follow=ex.normal_follow||{};
+ (follow.times_s||[]).forEach((t,i)=>{const q=(follow.positions||[])[i];if(Number.isFinite(t)&&Array.isArray(q)&&q.length===6)samples.push({t:t-epoch,q,kind:'follow',label:'f'+i});});
+ const windowed=samples.filter(s=>s.t>=-1e-9&&s.t<=1.0+1e-6).slice(0,10);
+ return {count:windowed.length,want:10,samples:windowed};
+}
+views.forEach(view=>{const svg=document.createElementNS(pathNS,'svg');svg.id=view+'Trajectory';svg.classList.add('camera-path');svg.setAttribute('viewBox','0 0 224 224');svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.setAttribute('role','img');svg.setAttribute('aria-label',view+' 画面上的 LeWM 下一块运动轨迹');$(view+'Image').parentElement.append(svg)});
+function trajectoryRecord(d,requested){
+ if(requested!=='auto')return requested;
+ const stamp=d?.snapshot?.time;
+ if(d?.runtime?.pending&&d.plan?.source_time_s===stamp)return 'plan';
+ if(d?.preview&&d.preview.source_time_s===stamp)return 'preview';
+ if(d?.last_execution)return 'execution';
+ if(d?.plan&&d.plan.source_time_s===stamp)return 'plan';
+ return 'preview';
+}
+function forecastChoice(record){
+ const entry=latest?.[record],snap=latest?.snapshot;
+ if(!entry||!snap||!Number.isFinite(entry.source_time_s))return null;
+ const matched=entry.source_time_s===snap.time&&(record!=='preview'||entry.observation_sequence===snap.sequence);
+ return {record,entry,snap,matched,key:[record,snap.sequence,snap.time,entry.source_time_s,matched?'match':'reanchor'].join(':')};
+}
+function trajectoryChoice(){
+ if(!latest||$('source').value!=='endpoint')return null;
+ const requested=trajectoryRecord(latest,$('recordSource').value);
+ const records=requested==='auto'?['plan','preview']:['preview','plan'].includes(requested)?[requested]:['plan','preview'];
+ let fallback=null;
+ for(const record of records){
+  const choice=forecastChoice(record);
+  if(!choice)continue;
+  if(choice.matched)return choice;
+  fallback=fallback||choice;
+ }
+ return fallback;
+}
+function rawTrajectoryChoice(){
+ return trajectoryChoice();
+}
+function clearCameraPaths(){views.forEach(view=>$(view+'Trajectory').replaceChildren())}
+function rawSeriesPath(points,limit){return (points||[]).slice(0,limit+1)}
+function plotRawOverview(id,series,{timeAxis=false}={}){
+ const svg=$(id);svg.replaceChildren();
+ const valid=p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite);
+ const all=series.flatMap(s=>s.points).filter(valid);if(!all.length)return;
+ let xlo=Math.min(...all.map(p=>p[0])),xhi=Math.max(...all.map(p=>p[0])),ylo=Math.min(...all.map(p=>p[1])),yhi=Math.max(...all.map(p=>p[1]));
+ if(timeAxis){xlo=0;xhi=Math.max(.5,xhi)}else{const pad=Math.max(.005,(xhi-xlo)*.12);xlo-=pad;xhi+=pad}
+ const yp=Math.max(timeAxis ? .3 : .005,(yhi-ylo)*.12);ylo-=yp;yhi+=yp;
+ // Equal spatial scales preserve the shape of the XY path.
+ if(!timeAxis){const scale=Math.max((xhi-xlo)/510,(yhi-ylo)/205),cx=(xhi+xlo)/2,cy=(yhi+ylo)/2;xlo=cx-scale*255;xhi=cx+scale*255;ylo=cy-scale*102.5;yhi=cy+scale*102.5}
+ const xy=([x,y])=>[65+(x-xlo)/(xhi-xlo)*510,24+(yhi-y)/(yhi-ylo)*205];
+ const node=(tag,attrs)=>{const n=document.createElementNS(pathNS,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));svg.append(n);return n};
+ if(timeAxis)node('rect',{x:65,y:24,width:Math.min(510,.5/(xhi-xlo)*510),height:205,fill:'#30473c',opacity:.65});
+ for(let i=0;i<5;i++){const y=24+i*51.25;node('line',{x1:65,y1:y,x2:575,y2:y,stroke:'#35433d'});node('text',{x:5,y:y+4,fill:'#adbaaf','font-size':11}).textContent=number(yhi-(yhi-ylo)*i/4,timeAxis?1:3)}
+ series.forEach(s=>{
+  let segment=[];const flush=()=>{if(segment.length>1)node('polyline',{'data-series':s.id,points:segment.map(p=>xy(p).join(',')).join(' '),fill:'none',stroke:s.color,'stroke-width':1.6,'stroke-dasharray':s.dash||'none',opacity:.8});segment=[]};
+  s.points.forEach(p=>{if(valid(p))segment.push(p);else flush()});flush();
+  const first=s.points.slice(0,6);if(first.every(valid))node('polyline',{'data-prefix':s.id,points:first.map(p=>xy(p).join(',')).join(' '),fill:'none',stroke:s.color,'stroke-width':3.2,'stroke-dasharray':s.id==='selected'?'5 3':'none'});
+  if(s.id==='raw-lewm')for(const i of [0,5,s.points.length-1]){const p=s.points[i];if(!valid(p))continue;const [x,y]=xy(p);node('circle',{cx:x,cy:y,r:3.3,fill:s.color});node('text',{x:Math.max(68,Math.min(535,x+6)),y:Math.max(16,y-7),fill:s.color,'font-size':12}).textContent=i===0?'起点':'q'+i}
+ });
+ node('text',{x:65,y:261,fill:'#adbaaf','font-size':11}).textContent=number(xlo,timeAxis?1:3)+(timeAxis?' s':' m');
+ node('text',{x:523,y:261,fill:'#adbaaf','font-size':11}).textContent=number(xhi,timeAxis?1:3)+(timeAxis?' s':' m');
+}
+function drawRawOutlook(){
+ const choice=rawTrajectoryChoice(),raw=cameraPathKey===choice?.key?cameraPathData?.raw_forecast:null;
+ ['rawSpatialChart','rawJointChart'].forEach(id=>$(id).replaceChildren());
+ if(!raw?.available){text('rawOutlookNote',raw?.reason?'原始轨迹暂不可用：'+raw.reason:'更新定位预览后显示同一源状态的原始 5 / 40 步轨迹（本部署控制核为原生 40，需同帧 preview）。');return}
+ const native40=raw.kind==='native_actor40_lewm40';$('rawHorizon').querySelector('[value="40"]').disabled=!native40;if(native40&&!nativeDefaultShown){$('rawHorizon').value='40';nativeDefaultShown=true}
+ text('nativeModelNote',native40?(raw.deployed_control_model?'控制模型即为原生 40 步（Actor 一次前向 + LeWM 一次前向）；执行只下达前 5 步。':'原生 40 步预览：Actor 一次前向 + LeWM 一次前向。'):'原始窗口暂非 native_actor40_lewm40；若控制核 horizon 为 40，更新定位预览后应切换为原生 40。');
+ const n=Math.min(+$('rawHorizon').value,raw.steps),j=+$('rawJoint').value,selected=first(choice.entry.predicted_q_path),rt=[0,...first(choice.entry.readback_offsets_s)],q0=raw.source_q_position;
+ const rawQ=rawSeriesPath(raw.predicted_q_path,n),rawU=rawSeriesPath([q0,...raw.commands_position],n);
+ text('rawOutlookNote',(native40?'原生 ':'原始 ')+n+' 步 / '+number(raw.readback_offsets_s[n],1)+' 秒；前 5 步加粗，CEM 选中 5 步用蓝线。J'+(j+1)+' 原始首段预测位移 '+number(rawQ[5][j]-q0[j],2)+'，选中轨迹 '+number(selected[5][j]-q0[j],2)+'（校准单位）。');
+ plotRawOverview('rawSpatialChart',[
+  {id:'raw-actor',color:'#efb367',points:rawSeriesPath(raw.raw_commands_midpoint_m,n).map(p=>p?.slice(0,2)||null)},
+  {id:'raw-lewm',color:'#ffab91',dash:'5 4',points:rawSeriesPath(raw.raw_predicted_midpoint_m,n).map(p=>p?.slice(0,2)||null)},
+  {id:'selected',color:'#67d6ff',dash:'4 3',points:(raw.selected_predicted_midpoint_m||[]).map(p=>p?.slice(0,2)||null)}]);
+ plotRawOverview('rawJointChart',[
+  {id:'raw-actor',color:'#efb367',points:rawU.map((q,i)=>[raw.readback_offsets_s[i],q[j]])},
+  {id:'raw-lewm',color:'#ffab91',dash:'5 4',points:rawQ.map((q,i)=>[raw.readback_offsets_s[i],q[j]])},
+  {id:'selected',color:'#67d6ff',dash:'4 3',points:selected.map((q,i)=>[rt[i],q[j]])}],{timeAxis:true});
+}
+function paintImageFG5(){
+ if(!latest)return;
+ const pairOk=p=>Array.isArray(p)&&p.length===2&&p.every(q=>Array.isArray(q)&&q.length===2&&q.every(Number.isFinite));
+ const pointOk=p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite);
+ views.forEach(view=>{
+  const svg=$(view+'Trajectory');if(!svg)return;
+  svg.querySelectorAll('[data-fg5]').forEach(node=>node.remove());
+  const tip=(latest.fingertips||{})[view];if(!tip)return;
+  const node=(tag,attrs)=>{const n=document.createElementNS(pathNS,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));n.setAttribute('data-fg5','1');svg.append(n);return n};
+  if(view==='column'){
+   const cur=pairOk(tip.display_fm_px)?tip.display_fm_px:(tip.available&&pairOk(tip.fm_px)?tip.fm_px:null);
+   if(cur){
+    node('line',{x1:cur[0][0],y1:cur[0][1],x2:cur[1][0],y2:cur[1][1],stroke:'#ffffff','stroke-width':1.4});
+    [['F',cur[0],'#9dff8a'],['G',cur[1],'#ff8ad4']].forEach(([label,p,color])=>{
+     node('circle',{cx:p[0],cy:p[1],r:3.4,fill:color,stroke:'#102028','stroke-width':.8});
+     node('text',{x:Math.max(4,Math.min(190,p[0]+5)),y:Math.max(14,Math.min(210,p[1]-5)),fill:color,'font-size':9,'font-family':'sans-serif','font-weight':'700','paint-order':'stroke',stroke:'#102028','stroke-width':2.2}).textContent=label;
+    });
+   }
+  }
+  [['预测 F',tip.f5_px,'#7ecbff'],['预测 G',tip.g5_px,'#d7e3ff'],['原始 F5',tip.raw_f5_px,'#ff9a62'],['原始 G5',tip.raw_g5_px,'#ffd18a']].forEach(([label,p,color])=>{
+   if(!pointOk(p))return;
+   node('circle',{cx:p[0],cy:p[1],r:4.2,fill:'none',stroke:color,'stroke-width':1.7});
+   node('circle',{cx:p[0],cy:p[1],r:1.4,fill:color});
+   node('text',{x:Math.max(4,Math.min(160,p[0]+6)),y:Math.max(40,Math.min(190,p[1]-6)),fill:color,'font-size':9,'font-family':'sans-serif','font-weight':'700','paint-order':'stroke',stroke:'#102028','stroke-width':2.2}).textContent=label;
+  });
+ });
+}
+function paintCameraPaths(){
+ clearCameraPaths();drawRawOutlook();paintImageFG5();const choice=rawTrajectoryChoice();if(!choice||!cameraPathData||cameraPathKey!==choice.key)return;
+ views.forEach(view=>{
+  const row=cameraPathData.views?.[view],img=$(view+'Image'),svg=$(view+'Trajectory');
+  if(!row?.available||img.dataset.sequence!==String(choice.snap.sequence)||img.dataset.snapshotTime!==String(choice.snap.time)||img.dataset.source!=='endpoint')return;
+  const node=(tag,attrs,parent=svg)=>{const n=document.createElementNS(pathNS,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));parent.append(n);return n};
+  const defs=node('defs',{}),clip=node('clipPath',{id:view+'PathClip'},defs);node('rect',{x:0,y:28,width:224,height:168},clip);
+  const group=node('g',{'clip-path':'url(#'+view+'PathClip)'});
+  const pairs=row.lewm?.fm_px;if(!Array.isArray(pairs)||pairs.length!==6||pairs.some(pair=>!Array.isArray(pair)||pair.length!==2||pair.some(p=>!Array.isArray(p)||p.length!==2||!p.every(Number.isFinite))))return;
+  const selectedVisible=$('pathMode').value!=='raw',rawVisible=$('pathMode').value!=='selected';
+  (selectedVisible?[['F',0,'#67d6ff','4 2'],['G',1,'#b0bfff','1.5 1.5']]:[]).forEach(([tip,index,color,dash])=>{
+   const points=pairs.map(pair=>pair[index]),markerId=view+'lewm'+tip+'Arrow';
+   const marker=node('marker',{id:markerId,viewBox:'0 0 8 8',refX:7,refY:4,markerWidth:5,markerHeight:5,orient:'auto',markerUnits:'userSpaceOnUse'},defs);
+   node('path',{d:'M 0 0 L 8 4 L 0 8 Z',fill:color},marker);
+   node('polyline',{'data-trajectory':'lewm','data-tip':tip,points:points.map(p=>p.join(',')).join(' '),fill:'none',stroke:color,'stroke-width':1.35,'stroke-dasharray':dash,'marker-end':'url(#'+markerId+')'},group);
+   node('circle',{cx:points[0][0],cy:points[0][1],r:1.2,fill:'#fff',stroke:color,'stroke-width':.5},group);
+   const end=points[5];if(end[0]>=0&&end[0]<224&&end[1]>=28&&end[1]<196)node('text',{x:Math.max(2,Math.min(195,end[0]+3)),y:Math.max(35,Math.min(190,end[1]-3)),fill:color,'font-size':5.5,'font-family':'sans-serif','paint-order':'stroke',stroke:'#142129','stroke-width':1.5},group).textContent='预测 '+tip+'5';
+  });
+  const end=pairs[5];if(selectedVisible)node('line',{'data-end-opening':'lewm',x1:end[0][0],y1:end[0][1],x2:end[1][0],y2:end[1][1],stroke:'#d1e5fa','stroke-width':.65,opacity:.75,'stroke-dasharray':'2 2'},group);
+  if(rawVisible&&row.raw_lewm){
+   const rawPairs=rawSeriesPath(row.raw_lewm.fm_px,+$('rawHorizon').value);
+   [['F',0,'#ff916f'],['G',1,'#ffd18a']].forEach(([tip,index,color])=>{
+    let segment=[];const flush=()=>{if(segment.length>1)node('polyline',{'data-trajectory':'raw-lewm','data-tip':tip,points:segment.map(p=>p.join(',')).join(' '),fill:'none',stroke:color,'stroke-width':1,'stroke-dasharray':'2 2'},group);segment=[]};
+    rawPairs.forEach(pair=>{if(pair)segment.push(pair[index]);else flush()});flush();
+    const first=rawPairs.slice(0,6);if(first.every(Boolean))node('polyline',{'data-trajectory':'raw-lewm-prefix','data-tip':tip,points:first.map(p=>p[index].join(',')).join(' '),fill:'none',stroke:color,'stroke-width':1.8},group);
+    for(const i of new Set([5,rawPairs.length-1])){const p=rawPairs[i]?.[index];if(p&&p[0]>=0&&p[0]<224&&p[1]>=28&&p[1]<196){node('circle',{cx:p[0],cy:p[1],r:1.4,fill:color},group);node('text',{x:Math.min(193,p[0]+3),y:Math.max(35,p[1]-3),fill:color,'font-size':5.5,'paint-order':'stroke',stroke:'#142129','stroke-width':1.5},group).textContent='原始 '+tip+i}}
+   });
+  }
+  const projectionLabel=row.calibration_kind==='current_session_column_extrinsic'?'局部标定投影':'旧相机投影';
+  node('text',{x:5,y:24,fill:'#bfe7ff','font-size':5.2,'font-family':'sans-serif'}).textContent='LeWM 预测 / '+projectionLabel+'  0 → '+Number(row.lewm_offsets_s[5]).toFixed(2)+' s';
+ });
+ paintImageFG5();
+}
+async function updateCameraPaths(){
+ const choice=rawTrajectoryChoice();
+ if(!choice){cameraPathKey='';cameraPathData=null;clearCameraPaths();drawRawOutlook();paintImageFG5();text('cameraTrajectoryNote',$('source').value==='live'?'实时原图不叠旧轨迹。F5/G5 仍标在当前画面的 F/G 上。':'生成计划后，F5/G5 标在当前画面的 F/G 上。');return}
+ if(cameraPathKey===choice.key){paintCameraPaths();return}clearCameraPaths();if(cameraPathBusy)return;cameraPathBusy=true;
+ text('cameraTrajectoryNote','正在计算两路相机上的预测投影…');
+ try{
+  const query=new URLSearchParams({record:choice.record,sequence:String(choice.snap.sequence)});
+  const response=await fetch('http://127.0.0.1:8766/trajectory?'+query,{cache:'no-store',signal:AbortSignal.timeout(5000)}),data=await response.json();
+  if(rawTrajectoryChoice()?.key!==choice.key)return;
+  if(!response.ok)throw Error(data.reason||'只读绘图服务不可用');
+  if(data.snapshot_sequence!==choice.snap.sequence||data.source_time_s!==choice.entry.source_time_s)throw Error('图像已更新，等待匹配的预测');
+  if(!data.anchored_to_image_fg&&data.snapshot_time!==choice.snap.time)throw Error('图像已更新，等待按当前 F/G 重画');
+  cameraPathKey=choice.key;cameraPathData=data;paintCameraPaths();
+  const details=views.map(view=>{const r=data.views?.[view];return r?.available?view+' 已叠 LeWM 的 F/G 两条轨迹'+(r.lewm.fm_px.some(pair=>pair.some(p=>p[0]<0||p[0]>=224||p[1]<28||p[1]>=196))?'（部分轨迹出画）':'')+(Number.isFinite(r.offset_from_display_tip_midpoint_px)?' · 起点距当前指尖诊断 '+number(r.offset_from_display_tip_midpoint_px,1)+' px':''):view+'：'+(r?.reason||data.reason||'无投影')}).join('；');
+  const columnProjection=data.views?.column?.calibration_kind==='current_session_column_extrinsic'?'Column 使用当前布置的局部标定':'Column 使用旧相机参数';
+  text('cameraTrajectoryNote',details+'。'+columnProjection+'，仅作预测投影；Wrist 保留自己的相机参数，参考系固定在底图采集时刻。');
+ }catch(e){if(rawTrajectoryChoice()?.key===choice.key)text('cameraTrajectoryNote','轨迹暂不可用：'+e.message)}finally{cameraPathBusy=false}
+}
+async function request(path,options={},timeout=15000){const r=await fetch(path,{...options,cache:'no-store',signal:AbortSignal.timeout(timeout)});const d=await r.json();if(!r.ok)throw Error(d.error||'请求失败 '+r.status);return d}
+function serviceStatus(d){
+ if(d?.schema==='so101-ros-control-status-v1'&&d.service){
+  // A slow earlier HTTP poll must not overwrite a newer ROS snapshot.
+  const previous=serviceStatus.lastRosEnvelope;
+  if(Number.isFinite(d.published_monotonic_s)&&Number.isFinite(previous?.published_monotonic_s)&&d.published_monotonic_s<previous.published_monotonic_s)d=previous;
+  else serviceStatus.lastRosEnvelope=d;
+  const s={...d.service};s.ros_transport=d.transport||null;s.ros_active_request_id=d.active_request_id||null;s.ros_gateway_status_age_s=d.gateway_status_age_s;return s;
+ }
+ return d;
+}
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function waitForControl(accepted,timeout){
+ if(!accepted?.request_id||!accepted?.poll)return accepted;
+ const deadline=performance.now()+timeout;
+ let completed=null;
+ for(;;){
+  if(!completed){
+   const record=await request(accepted.poll);
+   if(record.state==='failed')throw Error(record.error||'ROS 控制请求失败');
+   if(record.state==='succeeded')completed=record;
+  }
+  if(completed){
+   // Results and status use separate ROS topics. Wait for this request's
+   // completed status, rather than replacing its result with an older frame.
+   const status=await request('/api/status'),record=status.requests?.[accepted.request_id];
+   if(status.schema==='so101-ros-control-status-v1'&&record?.state==='succeeded'&&record.completed_monotonic_s===completed.completed_monotonic_s&&status.active_request_id!==accepted.request_id)return serviceStatus(status);
+  }
+  if(performance.now()>=deadline)throw Error(completed?'操作已完成，状态尚未同步；请刷新查看结果。':'ROS 控制请求仍未完成；请继续查看状态或发送 STOP。');
+  await pause(100);
+ }
+}
+async function currentStatus(){return serviceStatus(await request('/api/status'))}
+function auxiliaryControlState(d){
+ const t=d.auxiliary_trial;if(!t?.active)return {active:false,message:''};
+ const count=Number.isInteger(t.policy_commands_returned)?t.policy_commands_returned:'未知';
+ const reason=t.requires_home_after_restart?'服务已重启，旧模型历史与局部响应未恢复；须受保护 HOME 后开始新轮。':t.requires_home_completion?'受保护 HOME 尚未完成；回位也计入本轮剩余预算。':'工程辅助试验进行中；切回原 Actor 前须 HOME。';
+ const unknown=t.accounting_unknown||t.pending_reservation?'另有未决命令数量，不可按零处理。':'';
+ return {active:true,message:'工程辅助试验（非原 Actor）：已用 '+t.block_attempts+'/'+t.maximum_blocks+' 块，已确认 '+count+' 条命令。'+unknown+reason+' 仍可只读观察和预览；STOP 始终可用。'};
+}
+function cameraConditionName(d){
+ const raw=d==null?undefined:(d.camera_condition!=null?d.camera_condition:(d.model||{}).camera_condition);
+ if(typeof raw==='string')return raw;
+ if(raw&&typeof raw.name==='string')return raw.name;
+ return '';
+}
+function learnedPolicyBlocked(d){
+ const m=(d&&d.model)||{};
+ return !!(m.grounding_correction&&m.grounding_correction.enabled)||!!m.head_grasp_enabled||!!m.alignment_motion_enabled||auxiliaryControlState(d||{}).active;
+}
+function cemPlanSummary(d){
+ const m=(d&&d.model)||{},condition=cameraConditionName(d)||'未报告';
+ const camera='相机条件 '+condition+' 只决定视图交付，不覆盖 CEM 动作倍率。';
+ if(!m.lewm_cem)return '实际 v21_lewm_cem：关闭。'+camera;
+ if(m.lewm_cem_last?.command_origin==='python_near_blue_close')return '本块：靠近蓝色抓取线且高度够低，Python 仅合 J6，J1–J5 保持；LeWM 预测同一段指令，不声称 CEM 选优。'+camera;
+ if(m.lewm_cem_last?.command_origin==='python_aligned_vertical_lower')return '本块：已对齐后的 Python 垂直下探；LeWM 预测实际下探指令，本块不声称 CEM 选优。'+camera;
+ if(m.lewm_cem_last?.cem_bypassed===true)return '当前分支绕过了 CEM：Actor 40 步输出经接近限幅后执行 5 步。'+camera;
+ const scale=Number.isFinite(m.lewm_cem_action_scale)?number(m.lewm_cem_action_scale,1)+'x':'未报告';
+ return '实际 v21_lewm_cem：开启 · 动作倍率 '+scale+' · 目标 '+(m.lewm_cem_objective||'未报告')+' · 候选参数化 '+(m.lewm_cem_candidate_parameterization||'默认')+'。'+camera;
+}
+function graspCemSummary(d){
+ const m=d?.model||{},entry=d?.plan,r=entry?.lewm_cem;
+ if(m.lewm_cem_objective!=='wrist_distance_alignment')return null;
+ const last=m.lewm_cem_last;
+ if(last?.available===false)return {rows:[],note:'尚无距离/对齐计划：'+(last.reason||'等待有效观测与实测响应')};
+ if(!r||r.objective!=='wrist_distance_alignment'||r.cem_bypassed!==false||r.available!==true
+   ||!Number.isFinite(entry.source_time_s)||entry.source_time_s!==d?.snapshot?.time
+   ||d?.runtime?.pending!==true||d?.plan_requires_replan)
+  return {rows:[],note:'等待本次画面的 CEM 计划与实测图像响应；旧计划分数不代表当前位置。'};
+ const s=r.selected_scores,t=r.visual_task_cost,valid=x=>Array.isArray(x)&&x.length===41&&x.every(Number.isFinite);
+ if(!s||t?.source!=='measured_wrist_distance_alignment'||!valid(s.distance_px)||!valid(s.angle_error_deg)
+   ||!Number.isFinite(s.distance_cost)||!Number.isFinite(s.alignment_cost)
+   ||!Number.isFinite(t.source_distance_px)||!Number.isFinite(t.source_angle_error_deg)
+   ||s.angle_error_deg.some(x=>x<0||x>90)||t.source_angle_error_deg<0||t.source_angle_error_deg>90)
+  return {rows:[],note:'两项评分数据不完整，暂不显示数值。'};
+ return {rows:[['距离 / px',number(t.source_distance_px,2),number(s.distance_px[5],2),number(s.distance_cost,4)],
+   ['蓝白夹角 / °',number(t.source_angle_error_deg,2),number(s.angle_error_deg[5],2),number(s.alignment_cost,4)]],
+   note:'CEM 采样 → LeWM 预测 40 步实际关节状态 → 距离＋蓝白对齐评分；仅执行前 5 步。'
+    +'夹角范围 0–90°，0°与180°都算对齐。白线采用同帧 Wrist 机械参考；后续数值为预测，抓取尚未验证。'};
+}
+function renderGraspCem(d){
+ const summary=graspCemSummary(d);$('graspCemPanel').hidden=!summary;$('graspCemRows').replaceChildren();
+ if(!summary)return;
+ text('graspCemNote',summary.note);
+ for(const row of summary.rows){const tr=document.createElement('tr');for(const value of row){const td=document.createElement('td');td.textContent=value;tr.append(td)}$('graspCemRows').append(tr)}
+}
+function renderCandidates(d){const record=d.candidate_preview,body=$('candidateRows');body.replaceChildren();if(!record){text('candidateNote','诊断尚未运行；这里只比较独立诊断候选，不是实际 v21_lewm_cem 搜索池、赢家或动作计划。');return}text('candidateNote',(record.selected?'诊断内建议：'+record.selected:'诊断未给出建议')+'。'+(record.reason||'')+'；几何验证：'+(record.geometry_validated?'已标记验证':'未验证')+'。此表不参与实际 CEM 搜索、选优或执行，也不是抓取成功概率。');for(const row of record.candidates||[]){const tr=document.createElement('tr');for(const value of [row.name,number(row.predicted_distance_px,2),number(row.predicted_axis_error_deg,1),number(Number.isFinite(row.predicted_height_m)?row.predicted_height_m*1000:null,1),number(row.uncertainty_proxy_px,2),number(row.score,3),row.reason||(row.eligible?'可比较':'未许可')]){const td=document.createElement('td');td.textContent=String(value);tr.append(td)}body.append(tr)}}
+function renderJ3RangeArrival(d){
+ const validTime=value=>Number.isFinite(value)&&value>=0,candidates=[];
+ for(const [key,label] of [['j3_native_response_diagnostic','原生响应诊断'],['j3_compensation_diagnostic','补偿诊断'],['j3_range_diagnostic','诊断']]){
+  const diagnostic=d[key];
+  for(const previous of [false,true]){
+   const record=diagnostic?.[previous?'previous_result':'last_result'];if(!record)continue;
+   const start=validTime(record.started_s)?record.started_s:null,finish=validTime(record.finished_s)?record.finished_s:null;
+   const time=start!==null&&finish!==null&&finish<start?null:finish??start;
+   candidates.push({record,diagnostic,label,previous,time});
+  }
+ }
+ // Record timestamps, rather than diagnostic kind or enabled state, decide
+ // which actual outcome is shown. Undated evidence cannot establish recency.
+ candidates.sort((a,b)=>(b.time??-1)-(a.time??-1)||Number(a.previous)-Number(b.previous));
+ const selected=candidates[0],record=selected?.record,banner=$('j3RangeArrival');
+ banner.hidden=!record;if(!record){banner.textContent='';return}
+ const arrival=record.original_target_arrival||{},reached=record.original_target_reached;
+ const hasResidual=Number.isFinite(arrival.max_abs_residual)&&arrival.max_abs_residual>=0;
+ const assessed=hasResidual&&typeof reached==='boolean'&&!['invalid_arrival_readbacks','insufficient_samples'].includes(arrival.reason);
+ const failed=!!(record.error||record.cleanup_error||record.stop_latch_error||record.recording_error||record.final_recording_error);
+ const ended=validTime(record.finished_s)||failed||selected.previous;
+ const phase=failed?'诊断失败':record.completed===true?'诊断完成':ended?'诊断中止':'诊断进行中';
+ const outcome=assessed?(reached?'原目标到位':'原目标未到位'):'原目标未评估';
+ const unit=arrival.position_unit==='lerobot_calibrated_position'?'校准单位':arrival.position_unit||'单位未报告';
+ const residual=hasResidual?number(arrival.max_abs_residual,3)+' '+unit:'未评估';
+ const reasons={invalid_arrival_readbacks:'读回数据无效',insufficient_samples:'读回点不足',outside_position_tolerance:'未达到位置容差',outside_step_tolerance:'实际位置尚未稳定'};
+ const reason=reasons[arrival.reason]||(!assessed?'没有完整到位评估':'');
+ const steps=[record.command_budget,record.commands_position?.length,record.drive_result?.commands_position?.length,selected.diagnostic.command_budget].find(value=>Number.isInteger(value)&&value>0);
+ const timing=selected.time===null?'记录时间未报告或无效，无法确认先后':candidates.some(value=>value.time===null)?'另有诊断时间未报告或无效，无法比较先后':'';
+ banner.textContent='J3 · '+(selected.previous?'上次':'')+selected.label+(steps?'（'+steps+'步）':'')+' · '+phase+'；'+outcome+'；末次最大残差 '+residual+(reason?'；'+reason:'')+(timing?'；'+timing:'')+'。';
+ banner.className=failed?'bad':record.completed===true&&assessed&&reached?'good':ended&&record.completed!==true?'bad':'warn';
+}
+function cemSourceName(receipt){
+ if(receipt?.ranking_state_source==='candidate_command')return 'Actor → CEM（命令评分）→ LeWM 预测审查';
+ if(receipt?.ranking_state_source==='lewm_predicted_readback')return 'Actor → CEM（LeWM 预测选优）';
+ return 'Actor → CEM（评分来源未验证）';
+}
+function pipelineDescription(model){
+ if(!model)return '等待后端报告当前模型链路。控制模型原生 40 步，每次只执行前五步。';
+ const task=model.lewm_cem_last?.fish_task;
+ if(model.lewm_cem_last?.command_origin==='python_near_blue_close'){
+  const task=model.lewm_cem_last.fish_task,trigger=task?.close_trigger;
+  return '③ Python 尝试合爪：当前 wrist M/C 距离 '+number(trigger?.current_centroid_distance_px,1)+'px（≤'+number(trigger?.maximum_centroid_distance_px,0)+'px），蓝白夹角 '+number(trigger?.current_angle_deg,1)+'°（±'+number(trigger?.maximum_angle_deg,0)+'°）。J1–J5 保持，J6 均匀五步合上；实际夹住与否待观察。';
+ }
+ if(model.lewm_cem_objective==='actor_response_tracking' && model.wrist_scene_cost?.available===false && !task)
+  return '腕部移动视角评分尚不可用：'+(model.wrist_scene_cost.reason||'需要实测腕部响应标定')+'。错误的“鱼像素固定”评分已禁用；近处对准不会使用该路径。';
+ if(task){
+  const names={approach:'① 接近（J4/J5 固定）',wrist_xy:'② wrist-only 等高靠近（Z 保持，J1 固定）',lower:'② 靠近后的垂直下探（J1 固定）',close:'③ 尝试合爪',lift:'④ 抬升（J1 可转）',carry:'④ 搬运到 DINO 盒子上方',release_height:'④ 调整盒口上方松爪高度',release:'④ 松爪',done:'抓放指令完成，物理结果待确认'};
+  const trigger=task.close_trigger;
+  const closeStatus=trigger&&['approach','lower','wrist_xy'].includes(task.phase)
+   ?(trigger.current_centroid_distance_px==null?' 腕部鱼体目标缺失：目前无法判定自动合爪。':
+     ' 自动合爪条件：wrist M/C '+number(trigger.current_centroid_distance_px,1)+'/'+number(trigger.maximum_centroid_distance_px,0)+'px；蓝白夹角 '+number(trigger.current_angle_deg,1)+'°（±'+number(trigger.maximum_angle_deg,0)+'°）；模型高度 ≤'+number(trigger.maximum_clearance_mm,1)+'mm。满足后下一块自动仅合 J6，无需再点按钮。')
+   :'';
+  return '本块计划：'+(names[task.phase]||task.phase)+'。'
+   +(model.lewm_cem_last.command_origin==='python_aligned_vertical_lower'?'仅本段下探由 Python 接管，LeWM 预测实际下探指令。':'Actor → CEM 候选 → LeWM 预测评分；直接执行选中五步，不做选优后改写。')
+   +(task.phase==='wrist_xy'?' 只按 wrist M/C 距离和宽松夹角评分，Column 不参与；J2/J3 耦合等高移动，J5 仅在接近且角度超差时调一次。腕部投影使用已有相机几何估计。':'')
+   +' 当前最低指尖模型高度 '+number(task.actual_clearance_mm,1)+'mm；落点采用多帧 Column DINO 盒子位置，松爪保持盒口上方。'+closeStatus;
+ }
+ if(model.lewm_cem_last?.cem_bypassed===true)return '本块：FCPG → Actor 40 步 → 接近限幅 → 5 步执行。该分支绕过 CEM，未进行距离与对齐选优。';
+ if(model.lewm_cem_objective==='wrist_distance_alignment')return '配置：CEM 采样 → LeWM 预测实际关节状态 → 距离＋蓝白对齐评分 → 执行 5 步。有效计划及分数见下方；LeWM 只预测状态。';
+ const policy=(model.grounding_correction===true||model.grounding_correction?.enabled===true)?'Actor → 接地修正':model.lewm_cem===true
+  ?cemSourceName({ranking_state_source:model.lewm_cem_objective==='actor_command_tracking'?'candidate_command':['actor_response_tracking','column_visual'].includes(model.lewm_cem_objective)?'lewm_predicted_readback':null})
+  :model.lewm_cem===false?'Actor → LeWM 预测':'策略配置未报告';
+ return '当前配置：FCPG → '+policy+' → 执行前 5 步 → 实际读回反馈（模型原生 40 步）。实际运行以本块回执为准。';
+}
+function columnTemporalSummary(tip){
+ const s=tip?.temporal_prior_status;
+ if(!s)return '';
+ if(s.available)return ' Column 时序参考已参与候选排序（历史图像＋LeWM/FK 预测）。';
+ const reasons={no_completed_transition:'尚无完成的执行',completed_response_not_verified:'上次执行的实际响应未通过检查',source_visual_pair_unavailable:'缺少执行前的有效指尖观测',completed_readback_address_mismatch:'执行读回与预测时刻不匹配',executed_commands_or_source_mismatch:'执行命令与预测来源不匹配',cached_dispatch_address_mismatch:'历史预测与当前执行不匹配',invalid_temporal_evidence:'历史信息不完整',observation_history_cleared:'历史已清空'};
+ return ' Column 时序参考未参与：'+(reasons[s.reason]||'无有效历史预测')+'。';
+}
+function render(d){latest=d;paintImageFG5();renderCandidates(d);renderJ3RangeArrival(d);text('pipelineDescription',pipelineDescription(d.model));const r=d.runtime||{},m=d.model||{},pending=!!r.pending,active=d.phase!=='idle',connected=!!d.connected,auxiliary=auxiliaryControlState(d);
+ text('executionPlanning',m.execution_planning==='explicit_plan_only'?'执行显式生成的同一份计划，不因等待自动重算。超时或姿态检查失败会拒绝执行。':'执行前会重新观测并生成新计划，以实际发送表为准。');
+ text('cemPlanStatus',cemPlanSummary(d));renderGraspCem(d);
+ text('connection',connected?'硬件已连接':'连接中');$('connection').className='pill '+(connected?'good':'warn');
+ const weightLabel=checkpointWeightsLabel(m);text('weights',weightLabel);text('pageTitle','V'+weightLabel+' · 双视角执行台');document.title='V'+weightLabel+' · 双视角执行台';
+ if(weightLabel==='21.0.4'){$('rawHorizon').querySelector('[value="40"]').disabled=false;if(!nativeDefaultShown){$('rawHorizon').value='40';nativeDefaultShown=true}}
+ text('state',active?d.phase:r.stopped?'STOP':pending?'有待执行计划':'已就绪');
+ const recent=recentReadbackWindow(d.last_execution);text('history',recent.count+' / '+recent.want);
+ if(!recordSourceDefaulted&&d.last_execution){$('recordSource').value='execution';recordSourceDefaulted=true}
+ text('qAge',number(d.q_age_s,1)+' s');text('q',vector(d.q_position));
+ const condition=cameraConditionName(d);text('cameraCondition',condition||'未报告');if(!busy&&CAMERA_CONDITIONS.includes(condition))$('cameraConditionSelect').value=condition;$('cameraConditionSelect').disabled=!connected||active||busy||pending||(first(r.history_chunks)||0)>0||learnedPolicyBlocked(d);
+ ['preview','candidate-preview','observe','plan','home'].forEach(id=>$(id).disabled=!connected||active||busy||(['preview','candidate-preview','observe'].includes(id)&&pending)||(id==='plan'&&auxiliary.active));$('execute').disabled=!connected||!d.ready||active||busy||auxiliary.active;const ct=d.centroid_tracking||{};$('target-track').disabled=!connected||active||busy||pending||auxiliary.active||ct.accepted===false;text('targetProgress',ct.before_error_px===undefined?'质心跟踪：每块后只允许 C−M 误差下降时继续；远离目标时闭爪会被锁住。':'质心跟踪：'+number(ct.before_error_px,1)+' px → '+number(ct.after_error_px,1)+' px，'+(ct.accepted?'允许下一块':'已 STOP，需要检查现场')+'。');$('stop').disabled=!connected;
+ const compensation=d.fixed_goal_compensation||{};
+ $('fixed-goal-compensate').disabled=!connected||active||busy||pending||auxiliary.active||!r.stopped||!r.requires_home_after_incomplete_execution||!compensation.enabled||(compensation.completed===true&&compensation.source_matches_current_execution===true);
+ const rosGateway=!!d.ros_transport;
+ $('target-track').disabled=rosGateway||!connected||active||busy||pending||auxiliary.active||ct.accepted===false;
+ $('trial').disabled=!connected||active||busy||pending||!d.capped_trial||learnedPolicyBlocked(d);
+ if(rosGateway){text('targetProgress','质心跟踪未通过 ROS 网关开放；不会把辅助运动路由到硬件。')}
+ text('auxiliaryProgress',auxiliary.message);$('auxiliaryProgress').hidden=!auxiliary.active;
+ if(d.capped_trial?.outcome!=='not_started'&&d.capped_trial){const t=d.capped_trial;text('trialProgress','连续试验 '+t.blocks_completed+'/'+t.max_blocks+' 块 · '+t.policy_commands_returned+' 条策略命令 · '+(t.running?'运行中，STOP 可中止整轮':t.outcome)+'。抓取／放置结果需要现场确认，不自动记成功。')}
+ text('task','任务：'+(m.task||'—'));text('checkpoint',m.checkpoint||'—');text('raw',JSON.stringify(d,null,2));text('feedback',first(r.feedback_available)?'已接入真实执行反馈；按实际时间重算：'+(first(r.feedback_retimed)?'是':'不需要'):'尚未完成执行，不能声称已有执行误差。');
+ text('viewFeedback','视觉反馈：'+views.map((v,i)=>v+' '+(first(r.visual_feedback_available)?.[i]?'待消费':'无新反馈')).join(' / '));
+ text('previewMemoryPolicy',m.planning_observations==='candidate-until-execution'?'预览与未执行计划只使用临时观测，不写入策略历史；执行前仍采集新图和读回。“只观测”按钮会显式更新观测历史。':'当前运行后端尚未启用预览历史隔离，预览可能更新策略历史。');
+ const times=first(r.image_times)||[],source=$('source').value;
+ views.forEach((v,i)=>{const count=(times[i]||[]).filter(t=>t>0).length;text(v+'Memory','真实图像缓存 '+count+' / 3 · 当前视角有新图：'+(first(r.measurement_available)?.[i]?'是':'否')+' · 记忆可读：'+(first(r.memory_available)?.[i]?'是':'否'))});
+ const regions=d.targets?.targets||{};const ov=d.snapshot?.object_overlay;const cog=ov?.cog_px||ov?.centroid_px;text('targets',['pickup','drop_zone'].map((role,j)=>['物体','放置'][j]+'：'+views.map(v=>regions[role]?.[v]?.visible?v+' ('+vector(regions[role][v].cog_px||regions[role][v].centroid_px)+')':v+' 未观测').join(' / ')).join('　')+(Array.isArray(cog)?'　Wrist 目标 C：'+vector(cog)+(ov?.body_truncated?'（鱼体部分出画）':''):''));
+ const cue=m.object_relative;const partialBody=ov?.body_truncated??m.object_token_provenance?.policy_record?.body_truncated;const targetSource=m.object_relative_source==='registered-fish-body-cog'?(partialBody?'可见鱼体目标 C（部分出画）':'图中鱼体目标 C'):'旧特征目标';text('actorTarget',Array.isArray(cue)&&cue[0]>0?'Actor 实际目标：'+targetSource+'；dx '+number(cue[2]*224,1)+' px，dy '+number(cue[3]*224,1)+' px（目标 − 夹爪中点）。这是实际输入，动作是否减小误差需另行验证。':'Actor 当前没有有效鱼体重心目标。');
+ const tip=d.fingertips||{};document.querySelector('.no-point').textContent='夹爪参考：'+views.map(v=>{const t=tip[v];const label=v==='wrist'?'Wrist 机械参考（FK，沿用标定参考点）':t?.source==='column-q-fk-projection'?'Column 关节投影（FK）':t?.source==='column-rgb-jaw-contour'?'Column 图像轮廓端点':t?.source==='legacy-v20.3.2-raw-visual'?'Column 旧 RAW 候选，未验证':'Column 视觉参考';if(!t?.available){const s=t?.prediction_suggestion,p=s?.suggested_fm_px||t?.suggested_fm_px,valid=Array.isArray(p)&&p.length===2&&p.every(x=>Array.isArray(x)&&x.length===2&&x.every(Number.isFinite));return label+' 暂无：'+(t?.reason||'等待同帧观测')+(valid?' · 预测建议 PF ('+vector(p[0])+') / PG ('+vector(p[1])+')（未观测，不写入视觉记忆）':'')}const fm=t.fm_px;const m=Array.isArray(fm)?[(fm[0][0]+fm[1][0])/2,(fm[0][1]+fm[1][1])/2]:(t.m_px||t.fk_m_px);const unordered=t.unordered===true||t.ordered_identity_available===false||(v==='column'&&t.ordered_identity_available!==true);const names=unordered?['P1','P2']:['F','G'];return label+' · M=mid('+names.join(',')+') ('+(Array.isArray(m)?vector(m):'—')+')'+(Array.isArray(fm)?' · '+names[0]+' ('+vector(fm[0])+') / '+names[1]+' ('+vector(fm[1])+')':'')+(unordered?'（两端身份未确认）':'')}).join('；')+'。M 是两端中点。'+(m.object_relative?'Wrist 参考参与 Actor 的目标相对量；Column 使用独立图像识别。':'两路使用各自的定位来源。');
+ document.querySelector('.no-point').textContent+=columnTemporalSummary(tip.column);
+ const posePrior=tip.column?.pose_prior;$('columnPose').hidden=!posePrior?.available;
+ if(posePrior?.available){const span=posePrior.expected_projected_span_px,std=posePrior.projected_span_std_px,bounds=posePrior.fg_bounds_px;const region=(name,b)=>name+' x '+number(b?.[0]?.[0],0)+'–'+number(b?.[1]?.[0],0)+'，y '+number(b?.[0]?.[1],0)+'–'+number(b?.[1]?.[1],0);text('columnPose','Column 六轴姿态初估：指尖投影间距约 '+number(span,1)+' px（视角不确定范围 '+number(Math.max(0,span-2*std),1)+'–'+number(span+2*std,1)+' px）。'+region('F',bounds?.[0])+'；'+region('G',bounds?.[1])+'。这是几何预测区域，端点由当前图像匹配。')}
+ const historical=d.input_mode==='live-wrist-plus-historical-column';text('sourceNote',historical?'当前模式：实时 Wrist + 历史 Column + 实测 q。Column 已 '+number(first(d.view_age_s)?.[1],1)+' 秒无新图；历史图不冒充直播。TARGET/DROP 仅对应各自显示图。':source==='live'?'直播原图：不叠加旧时刻的位置；查看定位请选同帧定位图。':'同帧定位图 #'+(d.snapshot?.sequence||'—')+' · '+number(d.snapshot_age_s,1)+' 秒前：TARGET/DROP 与这张图对应，点击顶部按钮刷新预览。');
+ const preview=d.preview,pu=first(preview?.commands_position),pq=first(preview?.source_q_position);text('gripperPreview',preview?'夹爪开合 J6：当前 '+number(pq?.[5])+' → 五条命令 '+(pu||[]).map(q=>number(q[5])).join(' → ')+'。仅预览，不是像素轨迹。':'夹爪开合预览：点击“更新定位 + 预览”。关节位置值不是指尖像素坐标。');
+ if(d.stop_error||d.error)showError(d.stop_error||d.error);draw();}
+function commandStepPoints(commands,times,joint,end){
+ if(!Array.isArray(commands)||!Array.isArray(times)||commands.length!==times.length)return [];
+ const points=[];let previous;
+ for(let i=0;i<commands.length;i++){
+  const t=times[i],v=commands[i]?.[joint];
+  if(!Number.isFinite(t)||!Number.isFinite(v)||(i&&t<times[i-1]))return [];
+  if(i)points.push([t,previous]);points.push([t,v]);previous=v;
+ }
+ if(points.length&&Number.isFinite(end)&&end>=times[times.length-1])points.push([end,previous]);
+ return points;
+}
+function cemTrackingComparison(entry,isExecution,j){
+ if(entry?.action_source!=='v21_lewm_cem'||entry.lewm_cem?.objective!=='actor_response_tracking'||!Number.isInteger(j)||j<0||j>5)return null;
+ const q=isExecution?entry.source_q_position:first(entry.source_q_position),u=isExecution?entry.commands_position:first(entry.commands_position),p=isExecution?entry.retimed_predicted_q_path:first(entry.predicted_q_path),r=entry.lewm_cem.reference_commands_position;
+ const row=x=>Array.isArray(x)&&x.length===6&&x.every(Number.isFinite),path=(x,n)=>Array.isArray(x)&&x.length===n&&x.every(row);
+ if(!row(q)||!path(u,5)||!path(p,6)||!path(r,5)||!p[0].every((v,k)=>v===q[k]))return null;
+ const residual=p[5][j]-r[4][j],referenceLabel=entry.lewm_cem.reference_transform?.kind?.startsWith('uniform_spatial_scaling')?'缩放后 Actor 参考':'Actor 有界参考';
+ return {reference:r,referenceLabel,referenceDelta:r[4][j]-q[j],commandDelta:u[4][j]-q[j],predictedDelta:p[5][j]-q[j],residual,
+  text:'J'+(j+1)+' · '+referenceLabel+'位移 '+number(r[4][j]-q[j],3)+'；CEM 命令位移 '+number(u[4][j]-q[j],3)+'；LeWM 预测位移 '+number(p[5][j]-q[j],3)+'；预测末点 − 参考 '+number(residual,3)+'（校准单位）。CEM 按候选预测误差选优，到位需实际读回验证。'};
+}
+function executionArrival(entry){
+ const follow=entry?.normal_follow,arrival=entry?.original_target_arrival??(follow?.goal_reached_scope==='original_command_position_arrival'?follow.original_target_arrival:null),flag=entry?.original_target_reached;
+ const hasResidual=Number.isFinite(arrival?.max_abs_residual)&&arrival.max_abs_residual>=0;
+ const assessed=hasResidual&&typeof arrival?.reached==='boolean'&&!['invalid_arrival_readbacks','insufficient_samples'].includes(arrival.reason);
+ const consistent=flag===undefined||(typeof flag==='boolean'&&flag===arrival?.reached);
+ const reached=entry?.completed===true&&assessed&&consistent?arrival.reached:null;
+ const label=reached===true?'原目标到位':reached===false?'原目标未到位':'原目标未验证';
+ const unit=arrival?.position_unit==='lerobot_calibrated_position'?'校准单位':arrival?.position_unit||'单位未报告';
+ const residual=hasResidual?'末次最大残差 '+number(arrival.max_abs_residual,3)+' '+unit:'末次最大残差未报告';
+ return {reached,label,css:reached===true?'good':reached===false?'bad':'warn',text:label+'；'+residual};
+}
+function drawHistory(){const blocks=(latest.execution_history||[]).filter(b=>Array.isArray(b.measured_q_path)&&b.measured_q_path.length),body=$('traceBody'),svg=$('chart'),j=+$('joint').value;body.replaceChildren();svg.replaceChildren();
+ body.closest('table').querySelectorAll('th').forEach((th,i)=>th.textContent=['块 / 原目标到位','起点 t / s','命令数','LeWM |预测−实际| 均值','LeWM |预测−实际| 最大','命令−实际 最大（舵机滞后）'][i]);
+ if(!blocks.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='本次进程尚无完成的真实执行块。';tr.append(td);body.append(tr);text('traceLabel',td.textContent);return}
+ const series=[],gap=.15;let t0=0;const t00=blocks[0].source_time_s;
+ blocks.forEach((b,k)=>{const epoch=b.source_time_s,rt=(b.readback_times_s||[]).map(t=>t-epoch+t0),ct=(b.command_times_s||[]).map(t=>t-epoch+t0),act=b.measured_q_path||[],pred=b.retimed_predicted_q_path||[],cmd=b.commands_position||[];
+  series.push({color:'#efb367',dash:false,pts:commandStepPoints(cmd,ct,j,rt[rt.length-1])},{color:'#91c0df',dash:true,width:3.5,pts:pred.map((q,i)=>[rt[i],q[j]])},{color:'#bbda8a',dash:false,pts:act.map((q,i)=>[rt[i],q[j]])},{sep:t0});
+  const n=Math.min(pred.length,act.length),err=[];for(let i=1;i<n;i++)err.push(Math.abs(pred[i][j]-act[i][j]));const lag=[];for(let i=0;i<cmd.length&&i+1<act.length;i++)lag.push(Math.abs(cmd[i][j]-act[i+1][j]));
+  const outcome=executionArrival(b),tr=document.createElement('tr');[String(k+1)+' · '+outcome.text,number(epoch-t00,2),String(cmd.length),err.length?number(err.reduce((a,c)=>a+c,0)/err.length,3):'—',err.length?number(Math.max(...err),3):'—',lag.length?number(Math.max(...lag),3):'—'].forEach((v,i)=>{const td=document.createElement('td');td.textContent=v;if(i===0)td.className=outcome.css;if(i===3||i===4)td.className='p';tr.append(td)});body.append(tr);
+  t0=(rt[rt.length-1]||t0)+gap;});
+ text('traceLabel','最近 '+blocks.length+' 个五步事务记录；目标是否到位见各块标记。曲线按块首尾相接（块间 '+(gap*1000)+' ms 间隔为显示用，非实际停顿）。蓝虚线为 LeWM 按实际发送/读回时间重定时的预测。');
+ const points=series.flatMap(s=>s.pts||[]).filter(p=>p.every(Number.isFinite));if(!points.length)return;let lo=Math.min(...points.map(p=>p[1])),hi=Math.max(...points.map(p=>p[1]));const margin=Math.max(.1,(hi-lo)*.12);lo-=margin;hi+=margin;const xmax=Math.max(.5,...points.map(p=>p[0])),ns='http://www.w3.org/2000/svg';
+ function node(name,attrs){const n=document.createElementNS(ns,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);svg.append(n);return n}
+ for(let i=0;i<4;i++){const y=25+i*55;node('line',{x1:65,y1:y,x2:1070,y2:y,stroke:'#35433d'});node('text',{x:6,y:y+4,fill:'#adbaaf','font-size':12}).textContent=number(hi-(hi-lo)*i/3)}
+ series.forEach(s=>{if(s.sep!==undefined){node('line',{x1:65+s.sep/xmax*1005,y1:25,x2:65+s.sep/xmax*1005,y2:190,stroke:'#35433d','stroke-dasharray':'2 4'});return}const pts=s.pts.filter(p=>p.every(Number.isFinite));if(pts.length)node('polyline',{points:pts.map(([t,v])=>(65+t/xmax*1005)+','+(25+(hi-v)/(hi-lo)*165)).join(' '),fill:'none',stroke:s.color,'stroke-width':s.width||2,'stroke-dasharray':s.dash?'9 6':'none'})});
+ node('text',{x:65,y:218,fill:'#adbaaf','font-size':12}).textContent='0 s';node('text',{x:1000,y:218,fill:'#adbaaf','font-size':12}).textContent=number(xmax,2)+' s';}
+function draw(){updateCameraPaths();$('cemTracking').hidden=true;text('cemTracking','');$('referenceLegend').hidden=true;if(!latest)return;const record=trajectoryRecord(latest,$('recordSource').value);if(record==='history'){drawHistory();return}const isExecution=record==='execution',isPreview=record==='preview',entry=isExecution?latest.last_execution:isPreview?latest.preview:latest.plan,body=$('traceBody');body.replaceChildren();$('chart').replaceChildren();if(!entry){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent=isExecution?'本次进程尚无真实执行。':isPreview?'点击顶部“更新定位 + 预览”，查看模型输出，不解除 STOP。':'尚无可执行计划。';tr.append(td);body.append(tr);text('traceLabel',td.textContent);return}
+ const q0=isExecution?entry.source_q_position:first(entry.source_q_position),commands=isExecution?entry.commands_position:first(entry.commands_position),pred=isExecution?entry.retimed_predicted_q_path:first(entry.predicted_q_path),actual=isExecution?entry.measured_q_path:null;
+ const sourceNames={v21_actor:'V21 Actor',v21_lewm_cem:cemSourceName(entry.lewm_cem),v21_actor_centroid_gated:'V21 Actor（质心门控）',v21_actor_execution_geometry:'垂直夹执行几何（非 Actor 成功）',v21_actor_grounding_corrected:'接地修正（非 Actor）',visual_alignment_probe:'响应试探（非 Actor）',visual_alignment_return:'试探回程（非 Actor）',visual_alignment_servo:'DINO 短轴对齐（非 Actor）'},sourceName=sourceNames[entry.action_source]||'未知来源';
+ $('chart').nextElementSibling.querySelector('span').textContent='— 本次下发目标';
+ body.closest('table').querySelectorAll('th').forEach((th,i)=>th.textContent=['读回点','t / ms','前一条 '+sourceName+' 命令 [J1…J6]','LeWM [J1…J6]','实际读回 [J1…J6]','实际 − 预测'][i]);
+ const epoch=entry.source_time_s,rt=isExecution?entry.readback_times_s.map(t=>t-epoch):[0,...(first(entry.readback_offsets_s)||[])],ct=isExecution?entry.command_times_s.map(t=>t-epoch):first(entry.command_offsets_s),j=+$('joint').value;
+ text('trajectoryHorizon','LeWM 预测 '+Math.max(0,(pred?.length||0)-1)+' 步 · 每段执行 '+(commands?.length||0)+' 步 · '+number(rt[rt.length-1],3)+' 秒窗口。蓝色虚线为预测，绿色实线为实际读回。');
+ const comparison=cemTrackingComparison(entry,isExecution,j);if(comparison){text('cemTracking',comparison.text);$('cemTracking').hidden=false;text('referenceLegend','·· '+comparison.referenceLabel);$('referenceLegend').hidden=isExecution;}
+ const follow=isExecution?entry.normal_follow:null,tail=follow?.positions||[],tailTimes=(follow?.times_s||[]).map(t=>t-epoch),plotEnd=tailTimes.length?tailTimes[tailTimes.length-1]:rt[rt.length-1];
+ text('traceLabel',(isExecution?'真实执行 · 最近约 10 步（0–1.0 s）':isPreview?'只读预览':'可执行计划')+' @ '+number(epoch,3)+' s · '+(isExecution?'预测已按实际发送/读回时间对齐；STOP 后历史保留。':isPreview?'定位源图 #'+entry.observation_sequence+'；不创建待执行动作。机械检查：'+(entry.mechanical_admission?.allowed?'通过':entry.mechanical_admission?.reason||'未知'):latest.model?.execution_planning==='explicit_plan_only'?'执行此计划，不自动重算；执行前仍检查实际姿态和有效期。':'实际执行前会重新观测。'));
+ $('traceLabel').append(document.createTextNode(' · 动作来源：'+sourceName));
+ $('traceLabel').append(document.createTextNode(' · 橙线为阶梯目标，不是实际运动轨迹。'));
+ if(isExecution&&commands?.length&&actual?.length){
+  const gap=commands[commands.length-1][j]-actual[actual.length-1][j],h=entry.completion_hold;
+  const hold=h?.held_position?'HOLD 目标 '+vector(h.held_position)+'（目标寄存器确认，不代表已收敛）':entry.protective_hold_after_q5?'q5 后有 HOLD；旧记录没有目标明细':'未记录完成 HOLD';
+  $('traceLabel').append(document.createTextNode(' 末条目标−q5：'+number(gap,3)+'。'+hold));
+  if(tail.length){
+   const strict=follow.goal_reached_scope==='original_command_position_arrival',arrival=strict?(follow.original_target_arrival||entry.original_target_arrival):null;
+   const assessed=typeof arrival?.reached==='boolean'&&Number.isFinite(arrival.max_abs_residual);
+   const outcome=strict?(assessed?(arrival.reached?'原目标严格到位':'原目标未到位'):'原目标严格到位未评估'):'旧记录：'+(follow.goal_reached===true?'仅满足原保位容差':'未证明满足原保位容差')+'；原目标严格到位未评估';
+   const tolerance=strict?arrival:follow,error=strict?arrival?.max_abs_residual:follow.final_position_error;
+   $('traceLabel').append(document.createTextNode(' · 额外跟随 '+number((plotEnd-rt[rt.length-1])*1000,0)+' ms；末端目标差 '+number(commands[commands.length-1][j]-tail[tail.length-1][j],3)+'；'+outcome+'；位置容差 '+number(tolerance?.position_tolerance,3)+' / 稳定容差 '+number(tolerance?.step_tolerance,3)+'，连续 '+number(tolerance?.quiet_samples,0)+' 点；末次最大误差 '+number(error,3)+'（校准单位）。绿线后段是额外实际读回，未覆盖原 q5。'));
+  }
+ }
+ for(let i=0;i<(isExecution?Math.max(6,recentReadbackWindow(entry).samples.length):6);i++){
+  if(isExecution){
+   const sample=recentReadbackWindow(entry).samples[i];
+   if(!sample)break;
+   const policyIndex=sample.kind==='policy'?Number(sample.label.slice(1)):null;
+   const tr=document.createElement('tr'),vals=[sample.label,number(sample.t*1000,1),policyIndex?vector(commands?.[policyIndex-1]):(sample.kind==='follow'?'跟随读回':'起点'),policyIndex!=null?vector(pred?.[policyIndex]):'—',vector(sample.q),policyIndex!=null&&pred?.[policyIndex]?vector(sample.q.map((v,k)=>v-pred[policyIndex][k])):'—'];
+   vals.forEach((v,k)=>{const td=document.createElement('td');td.textContent=v;if(k===2)td.className='c';if(k===3)td.className='p';if(k===4)td.className='a';tr.append(td)});body.append(tr);
+  }else{
+   const tr=document.createElement('tr'),vals=['q'+i,number(rt[i]*1000,1),i?vector(commands?.[i-1]):'起点',vector(pred?.[i]),vector(actual?.[i]),actual?.[i]&&pred?.[i]?vector(actual[i].map((v,k)=>v-pred[i][k])):'—'];vals.forEach((v,k)=>{const td=document.createElement('td');td.textContent=v;if(k===2)td.className='c';if(k===3)td.className='p';if(k===4)td.className='a';tr.append(td)});body.append(tr);
+  }
+ }
+ const series=[{color:'#efb367',dash:false,pts:commandStepPoints(commands,ct,j,plotEnd)},{color:'#91c0df',dash:true,width:3.5,pts:(pred||[]).map((q,i)=>[rt[i],q[j]])},{color:'#bbda8a',dash:false,pts:[...(actual||[]).map((q,i)=>[rt[i],q[j]]),...tail.map((q,i)=>[tailTimes[i],q[j]])]}];if(comparison&&!isExecution)series.push({color:'#d4afff',dash:true,pts:[[rt[0],q0[j]],...comparison.reference.map((q,i)=>[rt[i+1],q[j]])]});const points=series.flatMap(s=>s.pts).filter(p=>p.every(Number.isFinite));if(!points.length)return;let lo=Math.min(...points.map(p=>p[1])),hi=Math.max(...points.map(p=>p[1]));const margin=Math.max(.1,(hi-lo)*.12);lo-=margin;hi+=margin;const xmax=isExecution?Math.max(1.0,...points.map(p=>p[0])):Math.max(.5,...points.map(p=>p[0])),svg=$('chart'),ns='http://www.w3.org/2000/svg';function node(name,attrs){const n=document.createElementNS(ns,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);svg.append(n);return n}for(let i=0;i<4;i++){const y=25+i*55;node('line',{x1:65,y1:y,x2:1070,y2:y,stroke:'#35433d'});node('text',{x:6,y:y+4,fill:'#adbaaf','font-size':12}).textContent=number(hi-(hi-lo)*i/3)}series.forEach(s=>{const pts=s.pts.filter(p=>p.every(Number.isFinite));if(pts.length)node('polyline',{points:pts.map(([t,v])=>(65+t/xmax*1005)+','+(25+(hi-v)/(hi-lo)*165)).join(' '),fill:'none',stroke:s.color,'stroke-width':s.width||2.5,'stroke-dasharray':s.dash?'9 6':'none'})});node('text',{x:65,y:218,fill:'#adbaaf','font-size':12}).textContent='0 ms';node('text',{x:1000,y:218,fill:'#adbaaf','font-size':12}).textContent=number(xmax*1000,0)+' ms';}
+async function poll(){try{const d=await currentStatus();if(connectionFailed){showError('');connectionFailed=false}render(d)}catch(e){connectionFailed=true;text('connection','连接失败');showError(e.message)}finally{setTimeout(poll,700)}}
+async function frame(view){
+ if(loading[view])return;loading[view]=true;
+ const historical=view==='column'&&latest?.input_mode==='live-wrist-plus-historical-column',gen=frameGeneration,
+ source=historical?'endpoint':$('source').value,sequence=latest?.snapshot?.sequence,snapshotTime=latest?.snapshot?.time;
+ const stillCurrent=()=>gen===frameGeneration&&(source!=='endpoint'||(sequence===latest?.snapshot?.sequence&&snapshotTime===latest?.snapshot?.time));
+ try{
+  if(source==='endpoint'&&!sequence)return;
+  const q=new URLSearchParams({source,t:Date.now().toString()});if(source==='endpoint')q.set('sequence',sequence);
+  const r=await fetch('/api/frame/'+view+'.jpg?'+q,{cache:'no-store',signal:AbortSignal.timeout(4000)});
+  if(!r.ok){
+   const detail=await r.json().catch(()=>({}));
+   if(source==='endpoint'&&r.status===409&&String(detail.error||'').includes('observation snapshot changed')){
+    if(stillCurrent())text(view+'Age','同步新快照…');return;
+   }
+   throw Error(detail.error||'画面未就绪');
+  }
+  const blob=await r.blob();if(!stillCurrent())return;
+  const url=URL.createObjectURL(blob),decoded=new Image();decoded.src=url;
+  try{await decoded.decode()}catch(e){URL.revokeObjectURL(url);throw e}
+  if(!stillCurrent()){URL.revokeObjectURL(url);return}
+  const old=urls[view],img=$(view+'Image');urls[view]=url;img.src=url;img.dataset.sequence=String(sequence);img.dataset.snapshotTime=String(snapshotTime);img.dataset.source=source;$(view+'Empty').hidden=true;paintCameraPaths();
+  text(view+'Age',historical?'历史帧 · '+number(first(latest.view_age_s)?.[1],0)+'s 前':source==='live'?'实时原图':'定位图 #'+sequence+' · '+number(latest?.snapshot_age_s,1)+'s');
+  if(old)URL.revokeObjectURL(old);
+ }catch(e){if(stillCurrent())text(view+'Age','读取失败')}finally{loading[view]=false}
+}
+async function operate(action){if(busy&&action!=='stop')return;if(action==='home'&&!confirm('按现有机械保护回到固定 HOME？这不是模型策略动作。'))return;if(action==='home'){text('history','0 / 10');if(latest){latest.last_execution=null;latest.execution_history=[]}draw()}const generation=++controlUiGeneration;busy=true;if(latest)render(latest);showError('');$('operation').className='muted';text('operation',action==='stop'?'正在请求 STOP…':'正在处理 '+action+'…');try{const accepted=await request('/api/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'},action==='home'?180000:45000);if(generation===controlUiGeneration&&accepted?.request_id)text('operation',(action==='stop'?'STOP':'操作')+' 请求已受理，等待 ROS 控制节点回执…');const d=await waitForControl(accepted,action==='home'?180000:45000);if(generation!==controlUiGeneration)return;if(action==='stop'&&!d.runtime?.stopped)throw Error('STOP 回执未证明运行时已停止');render(d);if(action==='plan')$('recordSource').value='plan';if(action==='execute')$('recordSource').value='execution';if(action==='preview'){$('recordSource').value='preview';$('source').value='endpoint';frameGeneration++}draw();if(action==='execute'){const outcome=executionArrival(d.last_execution);$('operation').className=outcome.css;text('operation',outcome.text+'。'+(d.last_execution?.completed===true?'五步事务记录完整；':'五步事务完整性未验证；')+(d.runtime?.stopped===true?'已 STOP。':'STOP 尚未确认。'))}else{text('operation',action==='preview'?'定位图与动作预览已更新；STOP 状态保持，没有创建待执行动作。':action==='observe'?'观测更新完成，没有发送策略动作。':action==='fixed-goal-compensate'?'固定目标补偿完成，已读回确认并恢复原参数；可执行 HOME。':action+' 完成')}}catch(e){if(generation!==controlUiGeneration)return;if(e.name==='TimeoutError'&&action!=='stop'){try{const accepted=await request('/api/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});await waitForControl(accepted,10000)}catch(stopError){if(generation===controlUiGeneration)showError('停止请求未获确认：'+stopError.message)}}if(generation!==controlUiGeneration)return;showError(e.message);$('operation').className='bad';text('operation','操作未完成，请查看错误和实际执行记录。')}finally{if(generation===controlUiGeneration){busy=false;if(latest)render(latest)}}}
+async function setCameraCondition(){
+ const name=$('cameraConditionSelect').value;if(busy||!CAMERA_CONDITIONS.includes(name))return;
+ const generation=++controlUiGeneration;busy=true;if(latest)render(latest);showError('');text('operation','正在设置相机条件 '+name+'…');
+ try{
+  const accepted=await request('/api/camera-condition',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({camera_condition:name})});
+  const d=await waitForControl(accepted,45000);
+  if(generation!==controlUiGeneration)return;
+  render(d);text('operation','相机条件已设为 '+(cameraConditionName(d)||name)+'。');
+ }catch(e){
+  if(generation!==controlUiGeneration)return;
+  showError('设置相机条件失败：'+e.message);
+  text('operation','条件未更新。页面只调用 POST /api/camera-condition，接口未就绪时会在上方显示失败。');
+  const current=cameraConditionName(latest||{});
+  if(CAMERA_CONDITIONS.includes(current))$('cameraConditionSelect').value=current;
+ }finally{if(generation===controlUiGeneration){busy=false;if(latest)render(latest)}}
+}
+['preview','candidate-preview','observe','plan','execute','target-track','trial','fixed-goal-compensate','home','stop'].forEach(id=>$(id).onclick=()=>operate(id));$('cameraConditionSelect').onchange=setCameraCondition;$('source').onchange=()=>{frameGeneration++;if(latest)render(latest)};['joint','recordSource'].forEach(id=>$(id).onchange=draw);['rawHorizon','pathMode','rawJoint'].forEach(id=>$(id).onchange=paintCameraPaths);$('copy').onclick=()=>navigator.clipboard.writeText(JSON.stringify(latest,null,2));poll();setInterval(()=>views.forEach(frame),350);
+</script></body></html>

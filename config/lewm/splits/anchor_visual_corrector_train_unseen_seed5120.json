@@ -1,0 +1,34 @@
+{
+  "corrector_checkpoint_sha256": "3cfe621bbfb5b87962a3c569d6ebf9d4d702e0483adeebd45a4e00bb0a16ee79",
+  "corrector_selection_disclosure": "These episodes were excluded from corrector gradient training but were used as the corrector validation set and for best-checkpoint selection. This is not an independent test set.",
+  "corrector_split": {
+    "split_seed": 0,
+    "split_unit": "task-episode",
+    "val_fraction": 0.2
+  },
+  "development_only": true,
+  "episode_count": 41,
+  "episode_set_sha256": "3f6202c24d6795398ff05abba46b9f0b7902bfd91ae44516dc3482eff30251c5",
+  "lewm_validation_manifest_sha256": "f3448ef472bd93975126c203556094ad65229a714d58236a53b11b281768e299",
+  "overlap_set_sha256": "89737e09ab7bf33acdba30720eae8ff0a89622bf1e397f00c514ad68cba32a6e",
+  "protocol": "fcpg_anchor_visual_corrector_train_unseen_slice_v1",
+  "schema_version": 1,
+  "tasks": {
+    "button-press-v3": {
+      "clean": [25, 87, 161],
+      "mild": [39, 102, 113, 138, 183, 205, 283, 284]
+    },
+    "pick-place-v3": {
+      "clean": [87, 197, 265],
+      "mild": [18, 102, 113, 133, 238, 244, 284, 288]
+    },
+    "push-v3": {
+      "clean": [74, 136, 217],
+      "mild": [18, 113, 133, 191, 205, 224, 284]
+    },
+    "reach-v3": {
+      "clean": [91, 249, 286],
+      "mild": [130, 224, 244, 278, 283, 284]
+    }
+  }
+}

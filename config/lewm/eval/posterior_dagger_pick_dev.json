@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_lewm_posterior_dagger_v1",
+  "classification": "development_only",
+  "task": "pick-place-v3",
+  "camera": "corner",
+  "width": 224,
+  "height": 224,
+  "policy_seed": 0,
+  "model_seed": 15801,
+  "source_fresh_gate_config": "config/lewm/eval/p1_native_complementary_fresh.json",
+  "action_steps_per_decision": 5,
+  "drop_duration_decisions": 6,
+  "drop_start_min_decision": 6,
+  "drop_start_max_decision": 9,
+  "known_sensor_validity_only": true,
+  "occlusion_radius_px": 24,
+  "occlusion_value_uint8": 0,
+  "occlusion_center_key": "q_nominal",
+  "camera_condition": "fixed_rotation",
+  "camera_rotation_deg": 5.0,
+  "camera_rotation_axis_world": [0.0, 0.0, 1.0],
+  "methods": [
+    "complementary_factual",
+    "complementary_no_action",
+    "geometry_hold"
+  ],
+  "roles": {
+    "factual": "complementary_factual",
+    "no_action": "complementary_no_action",
+    "geometry": "geometry_hold"
+  },
+  "splits": {
+    "train": {
+      "benchmark_seed": 64101,
+      "environment_seed_base": 1010000,
+      "task_index_base": 0,
+      "episodes": 12,
+      "schedule_seed": 64103
+    },
+    "development": {
+      "benchmark_seed": 64201,
+      "environment_seed_base": 1020000,
+      "task_index_base": 12,
+      "episodes": 6,
+      "schedule_seed": 64203
+    }
+  },
+  "caches": {
+    "train": {
+      "complementary_factual": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/train_complementary_factual.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/train_complementary_factual.npz"
+      ],
+      "complementary_no_action": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/train_complementary_no_action.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/train_complementary_no_action.npz"
+      ],
+      "geometry_hold": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/train_geometry_hold.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/train_geometry_hold.npz"
+      ]
+    },
+    "development": {
+      "complementary_factual": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/development_complementary_factual.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/development_complementary_factual.npz"
+      ],
+      "complementary_no_action": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/development_complementary_no_action.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/development_complementary_no_action.npz"
+      ],
+      "geometry_hold": [
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round0/development_geometry_hold.npz",
+        "outputs/lewm_posterior_dagger_pick/on_policy_v2/collection/round1/development_geometry_hold.npz"
+      ]
+    }
+  },
+  "training": {
+    "steps": 2000,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.000001,
+    "hidden_dim": 128,
+    "seeds": [64301],
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 64390,
+    "output_dir": "outputs/lewm_posterior_dagger_pick/on_policy_v2/heads/final",
+    "checkpoint_pattern": "{method}_seed{seed}_latest.pt",
+    "checkpoint_dagger_round": 1,
+    "checkpoint_protocol": "fcpg_lewm_posterior_dagger_v1"
+  },
+  "rollout": {
+    "benchmark_seed": 64401,
+    "environment_seed_base": 1030000,
+    "task_index_base": 18,
+    "episodes": 12,
+    "schedule_seed": 64403,
+    "horizon_raw_steps": 335,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 64490,
+    "output_dir": "outputs/lewm_posterior_dagger_pick/on_policy_v2/rollout/fresh",
+    "conditions": [
+      {
+        "name": "joint_rotation5_local_dropout",
+        "primary": true,
+        "dropout_enabled": true,
+        "camera_rotation_deg": 5.0,
+        "camera_rotation_axis_world": [0.0, 0.0, 1.0]
+      }
+    ]
+  },
+  "orchestration": {
+    "output_root": "outputs/lewm_posterior_dagger_pick/on_policy_v2",
+    "device": "cuda:0",
+    "cuda_visible_devices": "0",
+    "policy_seed": 0,
+    "model_seed": 15801,
+    "rounds": [0, 1],
+    "smoke": {
+      "train_episodes": 1,
+      "development_episodes": 1,
+      "rollout_episodes": 1,
+      "steps": 4,
+      "bootstrap_samples": 100
+    }
+  }
+}

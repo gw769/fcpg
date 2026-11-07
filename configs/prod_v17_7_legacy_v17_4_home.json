@@ -1,0 +1,13 @@
+{
+  "description": "Legacy V17.4 fixed fish-task HOME from the 2026-07-24 pre-trajectory report, with the observed open-gripper position used by the live controller.",
+  "position_unit": "lerobot_calibrated_normalized_position",
+  "source_report": "/home/james/feedback-corrected-grounding/outputs/lerobot/so101/real_dual_shadow_fcpg_lewm_20260724_pre_traj02_rank/report.json",
+  "current_state": [
+    0.14450867474079132,
+    -97.94153594970703,
+    98.22537994384766,
+    62.080535888671875,
+    -51.376625061035156,
+    31.340341567993164
+  ]
+}

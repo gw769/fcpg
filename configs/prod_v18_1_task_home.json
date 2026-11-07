@@ -1,0 +1,15 @@
+{
+  "description": "V18.1 fish-task start pose copied from TRAIN episode 3 frame 0",
+  "source_cache": "my_first_task_clean_v1_wrist_224",
+  "source_episode": 3,
+  "source_frame": 0,
+  "position_unit": "lerobot_calibrated_normalized_position",
+  "current_state": [
+    6.069364070892334,
+    -97.85919952392578,
+    98.40283966064453,
+    75.16778564453125,
+    -51.324676513671875,
+    13.600525856018066
+  ]
+}

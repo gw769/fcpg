@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_physical_support_a3_v1",
+  "status": "zero_training_support_gate_frozen_before_collection",
+  "tasks": [
+    "pick-place-v3",
+    "drawer-open-v3",
+    "reach-v3",
+    "push-v3"
+  ],
+  "split": {
+    "protocol_seed": 29103,
+    "assignment": "a3-task-local-24-train-12-development-12-reserved-test",
+    "train_episodes_per_task": 24,
+    "development_episodes_per_task": 12,
+    "test_episodes_per_task": 12
+  },
+  "collection": {
+    "benchmark_seed": 29103,
+    "environment_seed_base": 520000,
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon_steps": 8,
+    "test_instances_not_collected_by_this_protocol": true
+  },
+  "hazard": {
+    "decision_steps_per_episode": 40,
+    "history_steps": 3,
+    "eligible_first_step": 3,
+    "eligible_last_step": 31,
+    "bernoulli_probability": 0.12,
+    "refractory_steps": 5,
+    "maximum_events_per_episode": 3,
+    "condition_on_at_least_one_event": true,
+    "schedule_drawn_before_environment_reset": true,
+    "schedule_independent_of_state_action_reward_and_task_phase": true
+  },
+  "matched_state_branches": {
+    "branch_count": 8,
+    "interruption_horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "motion_delta_rms": null,
+    "preserve_policy_gripper_commands": true,
+    "semantic_bank_before_permutation": [
+      "expert",
+      "reverse",
+      "hold",
+      "half_speed",
+      "transverse_u_positive",
+      "transverse_u_negative",
+      "transverse_v_positive",
+      "transverse_v_negative"
+    ],
+    "slot_order_randomized_per_snapshot": true,
+    "candidate_kind_not_exposed_to_model": true
+  },
+  "support_gate": {
+    "primary_horizons": [6, 7, 8],
+    "minimum_tcp_max_pairwise_m": 0.01,
+    "minimum_object_max_pairwise_m": 0.005,
+    "physical_informative_rule": "tcp_or_object",
+    "minimum_latent_branch_variance": 0.01,
+    "latent_whitening": "per_task_train_only",
+    "minimum_episode_macro_informative_fraction_per_task": 0.8,
+    "all_four_tasks_must_pass_physical_and_latent": true
+  },
+  "training_if_gate_go": {
+    "optimizer_steps": 2000,
+    "seeds": [29201, 29202, 29203],
+    "bundle_batch_size": 16,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "additional_sigreg_values_allowed": [],
+    "selection": "fixed_latest",
+    "ten_thousand_steps_authorized_only_after_two_thousand_step_go": true
+  },
+  "development_gate": {
+    "evaluation_split": "development",
+    "checkpoint_step": 2000,
+    "seeds": [29201, 29202, 29203],
+    "primary_horizons": [6, 7, 8],
+    "minimum_relative_improvement": 0.05,
+    "minimum_positive_tasks": 3,
+    "minimum_positive_seeds": 2,
+    "minimum_cross_replicating_seeds": 2,
+    "minimum_positive_tasks_per_replicating_seed": 3,
+    "every_shuffled_shift_must_reach_minimum": true,
+    "raw_factual_not_worse_than_no_action": true,
+    "raw_factual_better_than_hold_last_and_constant_velocity": true
+  },
+  "confirmation_after_development_go": {
+    "reserved_test_episodes_per_task": 12,
+    "test_collection_requires_development_go": true,
+    "optimizer_steps": 10000,
+    "seeds": [29301, 29302, 29303],
+    "fresh_start_from_frozen_base": true,
+    "train_split": "train",
+    "evaluation_split": "test",
+    "bundle_batch_size": 16,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "additional_sigreg_values_allowed": [],
+    "selection": "fixed_latest",
+    "primary_horizons": [6, 7, 8],
+    "minimum_relative_improvement": 0.05,
+    "minimum_positive_tasks": 3,
+    "minimum_positive_seeds": 2,
+    "minimum_cross_replicating_seeds": 2,
+    "minimum_positive_tasks_per_replicating_seed": 3,
+    "every_shuffled_shift_must_reach_minimum": true,
+    "raw_factual_not_worse_than_no_action": true,
+    "raw_factual_better_than_hold_last_and_constant_velocity": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "live_actor": "v11_5",
+  "v11_5_checkpoint": "/home/james/so101-vda-disk/feedback-corrected-grounding/outputs/lerobot/so101/v11_5_local_v100_seed11931_20260814/best.pt",
+  "v11_5_vit": "/home/james/feedback-corrected-grounding/outputs/lerobot/so101/so101_v9_local_multiscale_seed5131/latest.pt",
+  "v10_backup": {
+    "name": "v10_b2head_allseen_final",
+    "role": "backup_only",
+    "do_not_overwrite": true,
+    "do_not_retrain": true,
+    "checkpoint": "/home/james/feedback-corrected-grounding/outputs/lerobot/so101/v10_b2head_allseen_final/best.pt",
+    "source_on_disk": "/home/james/so101-vda-disk/feedback-corrected-grounding/outputs/lerobot/so101/v10_b2head_allseen_final/best.pt",
+    "restore": "scripts/launch_v10_b2_backup.sh",
+    "note": "Original V10 B2 ranking/LeWM residual head. Leave in place. Restart serve without --v11-control-checkpoint to use it again."
+  },
+  "do_not_overwrite": [
+    "v10_b2head_allseen_final",
+    "v11_3_local_v100_seed11911_20260814",
+    "v11_4_local_v100_seed11921_20260814"
+  ],
+  "do_not_kill": [":8877"]
+}

@@ -1,0 +1,13 @@
+{
+  "description": "Recorded SO-101 high-clearance park from the completed 2026-08-21 hardware repeatability session; V17.7 runtime re-audits the full HOME path before transport.",
+  "source_report": "outputs/contact_datum/unidirectional_highclearance_repeatability_report.json",
+  "position_unit": "lerobot_calibrated_normalized_position",
+  "current_state": [
+    4.696531772613525,
+    -43.8452033996582,
+    48.62466812133789,
+    50.92281723022461,
+    -51.376625061035156,
+    31.406044006347656
+  ]
+}

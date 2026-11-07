@@ -1,0 +1,37 @@
+schema_version: 1
+status: preregistered_development_probe
+seed: 17301
+base_checkpoint: outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/lewm_grounded_latest.pt
+output_dir: outputs/lewm_grounded/anchor_dynamics_pair_independent_seed17301_2k
+
+loader:
+  batch_size: 192
+  num_workers: 4
+  persistent_workers: true
+  prefetch_factor: 2
+  pin_memory: true
+
+optimizer:
+  lr: 5.0e-5
+  weight_decay: 1.0e-3
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  warmup_steps: 200
+
+trainer:
+  max_steps: 2000
+  grad_clip: 1.0
+  amp: true
+  amp_dtype: bfloat16
+  max_val_batches: 0
+
+contract:
+  question: Does action conditioning improve dynamics in one frozen anchor latent space?
+  encoder_frozen: true
+  shared_latent_target: true
+  matched_initialization: true
+  matched_dropout_rng: true
+  matched_architecture: true
+  independent_gradient_clipping: true
+  only_factor: factual_actions_vs_action_independent_constant
+  checkpoint_selection: fixed_budget_latest

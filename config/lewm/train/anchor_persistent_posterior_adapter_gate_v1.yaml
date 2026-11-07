@@ -1,0 +1,194 @@
+schema_version: 1
+status: preregistered_before_fresh_collection
+experiment: anchor_persistent_measurement_dominant_posterior_gate_v1
+
+frozen_upstream:
+  lewm_checkpoint: outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/lewm_grounded_latest.pt
+  lewm_checkpoint_sha256: a6c329d88692810e852685be1460569f6da28753b8d672468b20538811b9c092
+  expected_lewm_step: 2000
+  fcpg_checkpoint: outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt
+  fcpg_checkpoint_sha256: 3cfe621bbfb5b87962a3c569d6ebf9d4d702e0483adeebd45a4e00bb0a16ee79
+  observed_image_key: rgb
+  target_image_key: rgb_camera_only
+
+tasks:
+  - pick-place-v3
+  - button-press-v3
+  - reach-v3
+  - push-v3
+
+collector:
+  camera: corner
+  width: 224
+  height: 224
+  steps_per_episode: 100
+  warmup_steps: 20
+  action_source: scripted
+  actual_camera_translation_cm_min: 0.0
+  actual_camera_translation_cm_max: 0.0
+  actual_camera_rotation_deg_min: 5.0
+  actual_camera_rotation_deg_max: 5.0
+  actual_camera_trajectory: step
+  actual_camera_step_fraction: 0.5
+  actual_camera_step_fraction_min: 0.15
+  actual_camera_step_fraction_max: 0.20
+  actual_camera_drift_start_fraction: 0.0
+  actual_camera_drift_end_fraction: 1.0
+  actual_camera_clean_probability: 0.0
+  patch_radius: 16
+  anchor_dropout_mode: visual
+  anchor_dropout_indices: [1]
+  anchor_dropout_start_offset: 15
+  anchor_dropout_length: 15
+  anchor_dropout_maximum_length: 15
+  anchor_recovery_window_length: 10
+  anchor_occlusion_radius_px: 12
+  anchor_occlusion_value: 0
+  minimum_recovery_frames: 20
+  minimum_history_size: 4
+  paired_clean_view: false
+  vary_task_index: true
+  independent_rng_streams: true
+  observation_action_alignment: pre_action
+
+cache:
+  vision_model_name: vit_base_patch16_224.augreg_in1k
+  selected_layers: [11]
+  vision_batch_size: 256
+  correction_batch_size: 1024
+  posterior_batch_size: 256
+  device: cuda:0
+  observed_evaluation_view: perturbed_observation
+  clean_evaluation_view: canonical_unoccluded_only
+
+splits:
+  train:
+    episodes_per_task: 30
+    task_index_offset: 10000
+    env_seed_base: 1200100
+    task_generation_seed: 12001
+    collector_seed: 12001
+    dataset: data/lewm_anchor_persistent/posterior_gate_v1/train_4tasks30eps_seed12001.npz
+  validation:
+    episodes_per_task: 10
+    task_index_offset: 11000
+    env_seed_base: 1200200
+    task_generation_seed: 12002
+    collector_seed: 12002
+    dataset: data/lewm_anchor_persistent/posterior_gate_v1/validation_4tasks10eps_seed12002.npz
+  validation_clean:
+    episodes_per_task: 10
+    task_index_offset: 11500
+    env_seed_base: 1200250
+    task_generation_seed: 12022
+    collector_seed: 12022
+    dataset: data/lewm_anchor_persistent/posterior_gate_v1/validation_clean_source_4tasks10eps_seed12022.npz
+    evaluation_view: canonical_unoccluded_only
+
+sequence:
+  history_size: 3
+  frame_skip: 5
+  events: [o0, o1, o2, r0, r1]
+  primary_events: [o1, o2]
+  primary_estimand: post_update
+  recovery_safety_event: r1
+  directly_affected_anchor: 1
+  canonical_target_role: detached_label_only
+  training_history: deployment_measurement_forced
+  recursive_evaluation_updates: 5
+
+adapter:
+  posterior: z_measurement + beta * (z_prior - z_measurement)
+  shared_per_anchor_scalar_gate: true
+  hidden_dim: 32
+  max_parameters: 20000
+  zero_initialization: measurement_identity
+  innovation: full_clipped_prior_minus_measurement
+  confidence:
+    - correction_dx_normalized
+    - correction_dy_normalized
+    - correction_norm_normalized
+    - local_support_fraction
+    - valid_nominal
+    - corrected_in_bounds
+  mask_history: online_geometric_validity_only
+  action_summary: causal_lewm_action_chunk
+  action_summary_dim: 20
+  forbidden_inputs:
+    - task_id
+    - q_true
+    - canonical_rgb
+    - canonical_embedding
+    - measurement_valid
+    - anchor_dropout_active
+    - camera_step_frame
+    - event_name
+
+optimization:
+  seeds: [12011, 12037, 12041, 12049, 12071]
+  steps: 2000
+  batch_size: 512
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  checkpoint_selection: validation_median_seed_after_safety_filter
+  required_positive_validation_seeds: 4
+  test_seed_selection_forbidden: true
+  loss_group_masses:
+    primary_direct_o0: 0.20
+    primary_direct_o1: 0.20
+    primary_direct_o2: 0.20
+    safety_recovery: 0.20
+    safety_indirect: 0.20
+  loss_group_reduction: equal_row_anchor_within_group_from_balanced_task_collection
+
+comparators:
+  primary_baseline: measurement_writeback
+  fixed_beta_candidates: [0.25, 0.50, 0.75, 1.00]
+  fixed_beta_selection: validation_safety_qualified_lowest_primary_mse
+  fixed_beta_test_selection_forbidden: true
+  required_sequential:
+    - selected_fixed_beta
+    - no_lewm
+  secondary:
+    - action_blind
+    - action_shuffle
+    - no_writeback
+
+statistics:
+  statistical_unit: physical_episode
+  aggregation: phase_then_event_then_episode_then_equal_task_macro
+  bootstrap_repetitions: 10000
+  bootstrap_seed: 12091
+  primary_relative_improvement_threshold: 0.10
+  primary_two_sided_ci_lower_strictly_positive: true
+  sequential_one_sided_alpha: 0.025
+  per_task_point_degradation_max: 0.05
+  per_task_ratio_upper_bound: 1.10
+  recovery_safety:
+    estimand: post_update
+    events: [r1]
+    normalization: task_primary_measurement_mse
+    maximum_normalized_excess_mse: 0.02
+    one_sided_ci_upper_at_most: 0.02
+  indirectly_affected_anchor_safety:
+    estimand: post_update
+    events: [o0, o1, o2, r0, r1]
+    normalization: task_primary_measurement_mse
+    maximum_normalized_excess_mse: 0.02
+    one_sided_ci_upper_at_most: 0.02
+  clean_safety:
+    estimand: post_update
+    events: [o0, o1, o2, r0, r1]
+    normalization: task_primary_measurement_mse
+    interpretation: additive_clean_excess_as_fraction_of_perturbed_primary_measurement_mse
+    maximum_normalized_excess_mse_strict: 0.02
+    one_sided_ci_upper_strictly_below: 0.02
+  zero_measurement_denominator_is_valid_for_additive_safety: true
+
+stopping:
+  one_architecture_only: true
+  no_hyperparameter_sweep: true
+  selected_endpoint_safety_failure_stops_route: true
+  control_experiment_authorized_only_after_full_gate: true

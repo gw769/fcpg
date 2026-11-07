@@ -1,0 +1,38 @@
+schema_version: 1
+status: exposed_posthoc_development
+seed: 9531
+
+dataset: data/lewm_anchor_persistent/heldout/visual_occlusion_step_rotation5_anchor1_4tasks5eps_seed9517.npz
+checkpoint: outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/lewm_grounded_latest.pt
+observed_correction_cache: data/grounding_cache/lewm_anchor_persistent/heldout/visual_occlusion_step_rotation5_anchor1_4tasks5eps_seed9517_rgb_shared4task_seed0_deployment
+canonical_correction_cache: data/grounding_cache/lewm_anchor_persistent/heldout/visual_occlusion_step_rotation5_anchor1_4tasks5eps_seed9517_rgb_camera_only_shared4task_seed0_targetonly
+
+observed_image_key: rgb
+canonical_image_key: rgb_camera_only
+history_size: 3
+frame_skip: 5
+batch_size: 96
+num_workers: 0
+fixed_alphas: [0.0, 0.25, 0.5, 0.75, 1.0]
+bootstrap_repetitions: 10000
+
+contract:
+  evaluation_role: zero_training_headroom_diagnostic
+  evaluation_scope: exposed_posthoc_development
+  target_view_role: target_only
+  q_true_model_input_forbidden: true
+  adapter_training_authorized: false
+  same_frame_recovery_primary_forbidden: true
+  primary_anchor_scope: directly_occluded
+  primary_window: phase_stream_next_pre_measurement
+  writeback_scope: dropout_active_anchors_only
+  superseded_outputs:
+    - outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/posterior_headroom_exposed_dev_seed9531.json
+    - outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/posterior_headroom_exposed_dev_seed9531_v2.json
+  interpretation: >-
+    The current visually occluded observation, frozen LeWM prior, and their
+    zero-training convex fusions are compared against a target-only canonical
+    encoding from the same physical state and dynamic camera. The existing
+    five-frame occlusion supports one masked model state per frame-skip phase
+    and one subsequent pre-measurement prior per phase only. It cannot establish
+    multi-step posterior recovery or a deployable confidence estimator.

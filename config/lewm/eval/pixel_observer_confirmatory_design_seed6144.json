@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "protocol": "lewm_pixel_observer_confirmatory_design_v1",
+  "status": "preregistered_before_alpha_selection",
+  "tasks": [
+    "pick-place-v3",
+    "button-press-v3",
+    "reach-v3",
+    "push-v3"
+  ],
+  "tooling": {
+    "collector": {
+      "path": "scripts/collect_metaworld_projection_dataset.py",
+      "sha256": "07ab57fa8aec3614c6933dd60a95ccea0aa4cade26940bb792a83329db599f41"
+    },
+    "camera_sampler": {
+      "path": "fcpg/mujoco_camera.py",
+      "sha256": "bcee28becd9bf8501991399fb2ef7d684c7944e82726d13363145b0ad1d565b1"
+    }
+  },
+  "collection": {
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "episodes_per_task": 30,
+    "steps_per_episode": 100,
+    "warmup_steps": 2,
+    "perturbations_per_frame": 1,
+    "action_source": "scripted",
+    "keypoint_layout": "control",
+    "vary_task_index": true,
+    "task_index_offset": 0,
+    "actual_camera_randomization": "episode",
+    "actual_camera_clean_probability": 0.0,
+    "independent_rng_streams": true,
+    "nominal_translation_cm": 0.0,
+    "nominal_yaw_deg": 0.0,
+    "numpy_version": "1.26.4"
+  },
+  "camera_model": {
+    "camera_intrinsic": [
+      [270.39190673828125, 0.0, 112.0],
+      [0.0, 270.39190673828125, 112.0],
+      [0.0, 0.0, 1.0]
+    ],
+    "base_extrinsic": [
+      [-0.7071067690849304, 0.7071067690849304, 0.0, -0.4949747323989868],
+      [0.19245009124279022, 0.19245009124279022, 0.9622504711151123, -0.28867512941360474],
+      [0.6804138422012329, 0.6804138422012329, -0.27216553688049316, 1.1839200258255005],
+      [0.0, 0.0, 0.0, 1.0]
+    ]
+  },
+  "sources": {
+    "rotation5": {
+      "path": "data/lewm_pixel_observer_confirmatory/rotation5_4tasks_30eps_224_seed271402.npz",
+      "rng_seed": 271402,
+      "task_generation_seed": 371402,
+      "env_seed_base": 281400000,
+      "actual_translation_cm": 0.0,
+      "actual_rotation_abs_deg": 5.0,
+      "transform_ledger_sha256": "196bd024391967cdcbe28a3e4ac3dc940a6cffe68f5f369ffcd2c09f556c4ef1"
+    },
+    "translation4": {
+      "path": "data/lewm_pixel_observer_confirmatory/translation4_4tasks_30eps_224_seed271403.npz",
+      "rng_seed": 271403,
+      "task_generation_seed": 371403,
+      "env_seed_base": 291400000,
+      "actual_translation_cm": 4.0,
+      "actual_rotation_abs_deg": 0.0,
+      "transform_ledger_sha256": "0fcca75933523c305f0f87eddf75d89734b22e1324bfb4947edbc30ad165957f"
+    }
+  },
+  "statistics": {
+    "primary_horizon": 5,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 6144,
+    "max_task_relative_degradation": 0.1,
+    "max_raw_fcpg_relative_degradation": 0.05,
+    "max_source_task_relative_degradation": 0.1,
+    "min_eligible_anchor_fraction": 0.95,
+    "min_contributing_window_fraction": 0.95,
+    "min_measurement_coverage": 0.95,
+    "raw_fcpg_noninferiority_statistic": "bootstrap_relative_improvement_95_ci_lower",
+    "source_task_noninferiority_statistic": "bootstrap_relative_improvement_95_ci_lower",
+    "require_each_primary_cohort_ci_lower_positive": true,
+    "primary_cohort_source_binding": {
+      "rotation5": 0,
+      "translation4": 1
+    }
+  },
+  "disclosure": "Generate these cohorts only after the development alpha is frozen. The evaluator recomputes camera-center displacement and relative rotation from base_extrinsic and true_extrinsic; source names and embedded scalar metadata are not trusted on their own."
+}

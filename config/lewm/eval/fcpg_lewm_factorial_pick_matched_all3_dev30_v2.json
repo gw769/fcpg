@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "protocol": "fcpg_lewm_factorial_pick_development_v2",
+  "classification": "paired_prefix_crossed_seed_development",
+  "task": "pick-place-v3",
+  "camera": "corner",
+  "width": 224,
+  "height": 224,
+  "benchmark_seed": 54901,
+  "environment_seed_base": 990000,
+  "physical_episode_count": 30,
+  "task_instance_indices": [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+  ],
+  "drop_start_decisions": [
+    8, 6, 9, 7, 8, 6, 7, 9, 8, 7,
+    6, 8, 9, 6, 7, 8, 7, 9, 6, 8,
+    9, 7, 6, 9, 8, 6, 8, 7, 9, 7
+  ],
+  "drop_duration_decisions": 6,
+  "horizon_raw_steps": 335,
+  "occlusion_radius_px": 24,
+  "occlusion_value_uint8": 0,
+  "camera_rotation_axis_world": [0.0, 0.0, 1.0],
+  "camera_rotation_deg": 5.0,
+  "model_seed": 15801,
+  "canonical_model_seed": 15801,
+  "model_seeds": [15801, 15802, 15803],
+  "source_fresh_gate_config": "config/lewm/eval/p1_native_complementary_fresh.json",
+  "predictors_by_grounding": {
+    "nominal": {
+      "training_config": "config/lewm/eval/p1_native_dynamics_nominal_matched_dev.json",
+      "checkpoints": {
+        "15801": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics_nominal/dev_seed15801_2k/p1_native_dynamics_latest.pt",
+          "sha256": "7ece425c9e1a737846f34581fa03aeb45448521e969e9dff36d9904460b0fe86"
+        },
+        "15802": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics_nominal/dev_seed15802_2k/p1_native_dynamics_latest.pt",
+          "sha256": "ce78b0b96fed224a16b181697081460f85e932ead0544cd5156e7dc4880d8317"
+        },
+        "15803": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics_nominal/dev_seed15803_2k/p1_native_dynamics_latest.pt",
+          "sha256": "7b73dcf0493f6e9249d42073615e7413618fcc2cf076ff7a9fc1198bd61ed671"
+        }
+      }
+    },
+    "fcpg": {
+      "training_config": "config/lewm/eval/p1_native_dynamics_dev.json",
+      "checkpoints": {
+        "15801": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15801_2k/p1_native_dynamics_latest.pt",
+          "sha256": "09be4561dc9c3c72029b7aaee41345d4ef9f2b6714ec02690794cfae1cfcc2a7"
+        },
+        "15802": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15802_2k/p1_native_dynamics_latest.pt",
+          "sha256": "80add8304d02f97d4c3c741677c2b9d050c265008afee12eb0b8d640e16964dc"
+        },
+        "15803": {
+          "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15803_2k/p1_native_dynamics_latest.pt",
+          "sha256": "f23ba6a6be0f652374144904d2c14a9d1e8b36441606b1527ad19995a6685119"
+        }
+      }
+    }
+  },
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 99500,
+  "prefix_bundle_dir": "outputs/fcpg_lewm_factorial_v2/pick_matched_dev30_seed990000/prefix_bundle",
+  "output_dir": "outputs/fcpg_lewm_factorial_v2/pick_matched_dev30_seed990000/seed15801"
+}

@@ -1,0 +1,93 @@
+# Autonomous near-field target registration.
+#
+# The detector is appearance-agnostic: it applies linear discriminants over raw
+# channel intensities. The vectors below are what select a target appearance,
+# and they live here in config rather than in code, so retargeting to another
+# object or sensor is a config edit.
+#
+# Discriminant form (per pixel):   sum_i(weights[i] * channel[i]) + offset > 0
+# Channel order follows the frame encoding (see camera adapter `encoding`).
+
+detector:
+  adapter_class: adapters.vision.channel_segmentation.ChannelDiscriminantDetector
+
+  # Channel order for a 'bgr' frame is [c0=B, c1=G, c2=R].
+  # Fitted against the operator-registered reference on the fixed view:
+  # agreement was 3.37 px, comparable to the projection fit's own 5.5 px EPE.
+  discriminants:
+    - weights: [ 0.0,  0.0,  1.0]   # c2 > 140
+      offset: -140.0
+    - weights: [ 0.0, -1.0,  1.0]   # c2 - c1 > 50
+      offset: -50.0
+    - weights: [-1.0,  0.0,  1.0]   # c2 - c0 > 25
+      offset: -25.0
+
+  min_area_px: 30
+  max_area_px: null       # null = no upper bound
+  min_solidity: null      # null = no solidity floor at detect time
+  morph_open_px: 0
+  descriptor_bins: 16
+
+# Grounding feedback: physical inputs and the uncertainty combiner.
+#
+# The verdict compares safety_factor * sigma against a tolerance derived from
+# jaw geometry, so every value here is a physical measurement or an explicitly
+# flagged assumption -- not a tuned constant.
+grounding:
+  # MEASURED. Jaw opening at the gripper_calibration_open clamp.
+  aperture_m: 0.05498
+
+  # MEASURED. Far-view planar grounding error from the error-field study.
+  # This is TOTAL error against ground truth, so it already contains the
+  # column projection fit's own residual (5.5 px EPE). The residual is
+  # deliberately not listed as a separate evidence channel: doing so would
+  # count the same error source twice, and being constant per fit it could
+  # add no per-scene information anyway.
+  baseline_sigma_m: 0.00882
+
+  # ASSUMED. Not yet measured with calipers. This value decides the verdict:
+  # below ~24 mm the far view alone clears the tolerance and no observation is
+  # requested; above it, one is. Measuring this is the single highest-value
+  # input still outstanding.
+  object_width_m: 0.020
+
+  # ASSUMED. No near-view accuracy study has been run.
+  near_sensor_sigma_m: 0.002
+
+  pad_margin_m: 0.002
+
+  # Uncertainty headroom demanded before acting. Swept 0.5-2.0 in the offline
+  # study; 1.5 is the reported operating point and is not fitted.
+  safety_factor: 1.5
+
+  # One observation per sensor per trial, then escalate to HALT. Bounds the
+  # loop so the system cannot request observations indefinitely.
+  max_observation_requests: 1
+
+# Verification applied before a reference is committed. Any failure halts
+# motion; there is no fallback to an external registration path.
+policy:
+  min_area_px: 200
+
+  # Near-field views see the target larger than far views. Left null rather
+  # than guessed; set once measured across several poses.
+  max_area_px: null
+
+  # Left null: the validated target is elongated (a compact body with a thin
+  # trailing extent), measuring 0.28 solidity in the near view. A naive floor
+  # would reject the true target.
+  min_solidity: null
+
+  # A runner-up scoring within this fraction of the best makes the scene
+  # ambiguous and registration refuses to guess.
+  ambiguity_score_ratio: 0.5
+
+  # Cross-view descriptor agreement measured at 0.552 correlation (chroma
+  # intersection 0.441) between the fixed and near-field views of the same
+  # object. Lighting and viewing angle differ enough that a tight threshold
+  # would reject valid targets, so this is a loose floor, not a primary
+  # criterion. Set to null to skip the comparison entirely.
+  min_descriptor_correlation: 0.25
+
+  frame_margin_px: 2
+  registration_radius_px: 28.0

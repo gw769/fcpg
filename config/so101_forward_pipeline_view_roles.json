@@ -1,0 +1,61 @@
+{
+  "format": "so101-forward-pipeline-view-roles-v1",
+  "rules": [
+    {
+      "dataset_pattern": "*so101_pi05_base_dataset*",
+      "external": "observation.images.base_0_rgb",
+      "wrist": "observation.images.left_wrist_0_rgb",
+      "stress_views": ["observation.images.right_wrist_0_rgb"]
+    },
+    {
+      "dataset_pattern": "*pick_cube_so101_dobri*",
+      "external": "observation.images.camera1",
+      "wrist": "observation.images.camera2",
+      "stress_views": ["observation.images.camera3"],
+      "evidence": "Dataset README states camera1=top, camera2=wrist, camera3=side."
+    },
+    {
+      "dataset_pattern": "*so101_60_haribot*",
+      "external": "observation.images.phone",
+      "wrist": "observation.images.wrist",
+      "evidence": "Explicit phone and wrist stream names."
+    },
+    {
+      "dataset_pattern": "*so101_chess17*",
+      "external": "observation.images.phone",
+      "wrist": "observation.images.wrist",
+      "evidence": "Explicit phone and wrist stream names."
+    },
+    {
+      "dataset_pattern": "*so101_reach_object*",
+      "external": "observation.images.phone",
+      "wrist": "observation.images.wrist",
+      "evidence": "Explicit phone and wrist stream names."
+    },
+    {
+      "dataset_pattern": "*so101_pen2box*",
+      "external": "observation.images.top",
+      "wrist": "observation.images.arm",
+      "evidence": "Archived frame audit shows top as fixed overview and arm as arm-mounted close view."
+    },
+    {
+      "dataset_pattern": "*so101_stack_cubes*",
+      "external": "observation.images.external_D455",
+      "wrist": "observation.images.ego",
+      "evidence": "Archived frame audit shows external_D455 as fixed overview and ego at the gripper."
+    },
+    {
+      "dataset_pattern": "*so101_teleop_vials*",
+      "external": "observation.images.external_D455",
+      "wrist": "observation.images.ego",
+      "evidence": "Archived frame audit shows external_D455 as fixed overview and ego at the gripper."
+    },
+    {
+      "dataset_pattern": "*so101_tapes_cleanup*",
+      "external": "observation.images.front",
+      "wrist": "observation.images.tip",
+      "evidence": "Archived frame audit shows front as fixed overview and tip at the gripper."
+    }
+  ],
+  "policy": "All unmatched roots use deterministic name inference; ties and missing roles fail closed and must be added here before a formal manifest."
+}

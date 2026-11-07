@@ -1,0 +1,129 @@
+# Development-only parameter-matched anchor visual input ablation.
+# Uses training/validation only; the frozen Gate L1 test set must not be reused.
+
+schema_version: 1
+status: preregistered_not_run
+seed: 5120
+output_dir: outputs/lewm_grounded/anchor_visual_ablation_seed5120/triplet_corrected
+provenance_manifest: outputs/lewm_grounded/manifests/anchor_visual_triplet_corrected_sig002_seed5120.json
+
+upstream:
+  repository: https://github.com/lucas-maes/le-wm
+  commit: 8edfeb336732b5f3ce7b8b210d0ba370a09e2cac
+  vendor_dir: third_party/lewm
+
+data:
+  target_mode: frozen_oracle
+  episode_manifest: config/lewm/splits/gate_l1_camera_train_val_seed3072.json
+  sources:
+    - name: pick
+      env_name: pick-place-v3
+      path: data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick
+      oracle_target_cache: data/oracle_target/lewm_gate_l1_sealed/pick_train
+    - name: button
+      env_name: button-press-v3
+      path: data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button
+      oracle_target_cache: data/oracle_target/lewm_gate_l1_sealed/button_train
+    - name: reach
+      env_name: reach-v3
+      path: data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach
+      oracle_target_cache: data/oracle_target/lewm_gate_l1_sealed/reach_train
+    - name: push
+      env_name: push-v3
+      path: data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push
+      oracle_target_cache: data/oracle_target/lewm_gate_l1_sealed/push_train
+  history_size: 3
+  rollout_steps: 1
+  frame_skip: 5
+  grounding_mode: fcpg
+  split_seed: 3072
+  split_seed_stride: 0
+  require_corrector_split_match: false
+  normalize_inputs: true
+  val_fraction: 0.2
+  balanced_sources: true
+  require_pre_action_alignment: true
+
+loader:
+  batch_size: 192
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: 3
+  pin_memory: true
+
+model:
+  vision:
+    size: tiny
+    patch_size: 14
+    image_size: 224
+    pretrained: false
+    use_mask_token: false
+  frame:
+    latent_dim: 192
+    depth: 2
+    heads: 6
+    mlp_ratio: 4
+    dropout: 0.1
+    anchor_visual_mode: triplet_corrected
+  predictor:
+    depth: 6
+    action_smoothing_dim: 10
+    heads: 16
+    mlp_dim: 2048
+    dim_head: 64
+    dropout: 0.1
+    projector_hidden_dim: 2048
+  sigreg:
+    knots: 17
+    num_proj: 1024
+
+loss:
+  sigreg_weight: 0.02
+  per_source_sigreg: true
+  alignment_weight: 1.0
+
+optimizer:
+  lr: 5.0e-5
+  weight_decay: 1.0e-3
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  warmup_steps: 127
+
+trainer:
+  epochs: 100
+  max_steps: 2000
+  max_train_batches: 0
+  max_val_batches: 0
+  grad_clip: 1.0
+  amp: true
+  amp_dtype: bfloat16
+  checkpoint_every_epochs: 1
+  keep_epoch_checkpoints: false
+  require_input_manifest: true
+  resume: null
+
+contract:
+  gate: anchor_visual_input_ablation
+  pair_id: anchor_visual_ablation_seed5120
+  anchor_visual_mode: triplet_corrected
+  expected_parameter_count: 19152816
+  development_only: true
+  optimizer_step_budget: 2000
+  frozen_gate_l1_test_reuse_forbidden: true
+  training_grounding: fcpg
+  common_target: frozen_oracle_anchor_v1
+  target_encoder_sha256: 7c8ce2120a592403c5908cb68733b7e8ee5ded79b9292d68ff78907c6ab91c31
+  target_q_true_usage: supervision_and_offline_evaluation_only
+  primary_horizons: [1, 3, 5]
+  stress_horizon: 10
+  stress_camera_condition: rotation10
+  test_tuning_forbidden: true
+
+result:
+  training_completed: false
+  checkpoint: null
+  metrics: null

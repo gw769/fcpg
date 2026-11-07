@@ -1,0 +1,79 @@
+{
+  "format": "so101-v10-local-source-v1",
+  "name": "my_first_task_clean_v1",
+  "locked": true,
+  "public_mix": false,
+  "locked_reason": "physical fish-to-box adaptation; public SO-101 mix is forbidden",
+  "task": "Pick up the red fish toy and place it in the cardboard box",
+  "raw_root": "/home/james/.cache/huggingface/lerobot/local/my_first_task_clean_v1",
+  "wrist_cache": "/home/james/so101-data-disk/lerobot/so101/cache/my_first_task_clean_v1_wrist_224",
+  "column_cache": "/home/james/so101-data-disk/lerobot/so101/cache/my_first_task_clean_v1_column_224",
+  "geometry": "/home/james/so101-data-disk/lerobot/so101/predictive_context/my_first_task_clean_v1_wrist_expanded5_10k",
+  "real_grounding": "/home/james/so101-data-disk/lerobot/so101/fcpg/my_first_task_clean_v1_real_warp_val2_seed6124",
+  "projection": "/home/james/so101-data-disk/lerobot/so101/projection/my_first_task_clean_v1_wrist_only_v10",
+  "calibration": "/home/james/feedback-corrected-grounding/outputs/lerobot/so101/my_first_task_clean_v1_dual_camera_calibration/calibration.json",
+  "train_episodes": [0, 1, 3],
+  "validation_episodes": [2],
+  "frames": 2183,
+  "windows_v11_5": {
+    "history_offsets": [-5, 0],
+    "action_horizon": 20,
+    "train": 1510,
+    "val": 509
+  },
+  "episode_inventory": {
+    "0": {
+      "from_raw_episode": 0,
+      "frames": 578,
+      "windows_v11_5": 533,
+      "split": "train",
+      "gripper_min": 5.7,
+      "closes": true
+    },
+    "1": {
+      "from_raw_episode": 2,
+      "frames": 684,
+      "windows_v11_5": 639,
+      "split": "train",
+      "gripper_min": 9.6,
+      "closes": false
+    },
+    "2": {
+      "from_raw_episode": 3,
+      "frames": 547,
+      "windows_v11_5": 509,
+      "split": "val",
+      "gripper_min": 11.6,
+      "closes": false
+    },
+    "3": {
+      "from_raw_episode": 4,
+      "frames": 374,
+      "windows_v11_5": 338,
+      "split": "train",
+      "gripper_min": 1.3,
+      "closes": true
+    }
+  },
+  "clean_from": {
+    "raw_dataset": "/home/james/.cache/huggingface/lerobot/local/my_first_task",
+    "raw_task": "pick up the object",
+    "raw_episodes": 5,
+    "dropped_raw_episode": 1,
+    "map_clean_to_raw": {"0": 0, "1": 2, "2": 3, "3": 4}
+  },
+  "split_authority": [
+    "v10/data.py locked_local_fish_to_box_source validation_episodes=(2,)",
+    "fcpg/my_first_task_clean_v1_real_warp_val2_seed6124 validation_episode=2 val_physical_states=547",
+    "README public-joint local fine-tune: train 0/1/3, val 2"
+  ],
+  "do_not_use": {
+    "public_mix": "so101_fruit / table_cleanup / drawing / 7tasks / multi_task — drowned the 4 demos to 0.36% in V11.5",
+    "my_first_task_uncleaned": "5 raw episodes, generic task name, includes dropped ep1",
+    "my_first_task_clean": "empty stub, 0 episodes",
+    "fish_to_box_v10": "empty stub, 0 episodes",
+    "local_sources/my_first_task_clean_v1.json": "train 0/1/2 val 3 — last-episode heuristic, conflicts with FCPG val2"
+  },
+  "column_role": "global_rgb_context_only",
+  "wrist_role": "fcpg_three_anchor_grounding"
+}

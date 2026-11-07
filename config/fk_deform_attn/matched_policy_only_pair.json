@@ -1,0 +1,50 @@
+{
+  "data": "data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz",
+  "vision_cache": "data/vision_cache/pick300_224_vitb_l11_fp16",
+  "extra_data": [
+    "data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz",
+    "data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz",
+    "data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz"
+  ],
+  "extra_vision_cache": [
+    "data/vision_cache/button300_224_vitb_l11_fp16",
+    "data/vision_cache/reach300_224_vitb_l11_fp16",
+    "data/vision_cache/push300_224_vitb_l11_fp16"
+  ],
+  "vision_model_name": "vit_base_patch16_224.augreg_in1k",
+  "vision_selected_layers": [
+    11
+  ],
+  "policy_contract_checkpoint": "outputs/action_chunk/lewm_stage1/shared_4task_seed0_lp0_sig0_b2048/fcpg_action_chunk_best.pt",
+  "fcpg_corrector_checkpoint": "outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt",
+  "output_dir": "outputs/fk_deform_attn/matched_policy_only_pair_seed0",
+  "obs_mode": "robot",
+  "obs_horizon": 2,
+  "action_horizon": 32,
+  "num_samples": 8,
+  "lattice_step_px": 1.0,
+  "offset_scale_px": 20.0,
+  "epochs": 40,
+  "batch_size": 2048,
+  "microbatch_size": 1024,
+  "num_workers": 1,
+  "prefetch_factor": 1,
+  "lr": 0.0001,
+  "weight_decay": 0.000001,
+  "warmup_steps": 200,
+  "gripper_weight": 0.5,
+  "grad_clip": 1.0,
+  "val_fraction": 0.2,
+  "split_seed": 0,
+  "seed": 0,
+  "evidence_scope": "seed0-development-controlled-comparison",
+  "cross_seed_generalization_claim_supported": false,
+  "balance_sources": true,
+  "amp": true,
+  "patience": 0,
+  "max_train_batches": 0,
+  "max_val_batches": 0,
+  "latency_warmup": 10,
+  "latency_iterations": 50,
+  "device": "cuda:0"
+}

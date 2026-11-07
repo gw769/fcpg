@@ -1,0 +1,79 @@
+# Generic pick-and-place task configuration.
+# No robot model, camera model, object class, or environment assumption
+# is embedded here.  Swap this file to define a different task.
+
+task:
+  name: pick_and_place
+  description: "Pick a target object and place it at a drop zone."
+
+  # Active phases in execution order
+  phases:
+    - approach
+    - contact
+    - lift
+    - transport
+    - release
+
+  # Phase-transition thresholds (dimensioned; keyed by name used in PhaseTrackerInterface)
+  thresholds:
+    # Distance from gripper to pickup target to enter CONTACT phase (meters)
+    near_pickup_m: 0.018
+    # Distance from gripper to drop zone to enter RELEASE phase (meters)
+    near_drop_zone_m: 0.025
+    # Gripper position below which we consider the gripper CLOSED (normalized)
+    gripper_closed: null     # derived from gripper calibration at runtime
+    # Gripper position above which we consider the gripper OPEN (normalized)
+    gripper_open: null       # derived from gripper calibration at runtime
+    # Pixel radius within which pickup template match is considered "at target"
+    grasp_roi_px: 30.0
+
+  # Vertical heights (meters, in robot base frame).
+  # null = derived from training data statistics at runtime.
+  heights:
+    contact_height_m: null
+    transport_height_m: null
+    release_height_m: null
+
+  # Column servo motion limits
+  servo:
+    max_step_per_chunk_m: 0.025
+    descent_radius_m: 0.050       # planar error below which Z descent begins
+    max_z_step_per_chunk_m: null  # no limit if null
+
+  # Execution limits
+  max_autonomous_chunks: 16
+  max_autonomous_duration_s: 180.0
+
+  # Set to true to stop after lift without transport/release
+  # (useful for grasp-only validation trials)
+  stop_after_lift: false
+
+  # Goal type — what the operator provides at runtime
+  goal_contract: operator_click_pickup_and_drop_zone
+
+  # Planning / perception adapters used for this task
+  planning:
+    motion_planner:
+      adapter_class: adapters.so101.planner.FCPGLeWMPlanner
+      dynamics_checkpoint: null     # set in serve config
+      bridge_checkpoint: null       # set in serve config
+      horizon: 8
+      history: 3
+      n_candidates: 8
+      frameskip: 5
+
+    phase_tracker:
+      adapter_class: adapters.so101.phases.ManipulationPhaseTracker
+
+  perception:
+    gripper_grounding:
+      adapter_class: adapters.so101.grounding.FCPGGripperGrounding
+      checkpoint_path: null         # set in serve config
+      max_center_offset_px: 70.0    # live-anchor drift tolerance
+
+    target_tracking:
+      adapter_class: adapters.so101.tracking.TemplateTargetTracker
+      profile_root: null            # set in serve config
+      minimum_score: 0.56
+      minimum_margin: 0.015
+      selection_radius_px: 28.0

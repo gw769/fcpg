@@ -1,0 +1,170 @@
+{
+  "schema_version": 2,
+  "protocol": "fcpg_lewm_counterfactual_v2_development",
+  "scope": {
+    "classification": "external_development",
+    "upstream_training_allowed": false,
+    "online_cem_allowed": false,
+    "formal_claim_allowed": false
+  },
+  "seed": 8192,
+  "device": "cuda:0",
+  "inputs": {
+    "lewm_checkpoints": {
+      "nominal": {
+        "path": "outputs/lewm_grounded/gate_l1_nominal_sig002_seed3072/lewm_grounded_latest.pt",
+        "sha256": "87c5023270b7e127a6b2a7ec8a81abeb34460b2c3cc8c7472839e3c82f2c582d"
+      },
+      "fcpg": {
+        "path": "outputs/lewm_grounded/gate_l1_fcpg_sig002_seed3072/lewm_grounded_latest.pt",
+        "sha256": "729f9f0f0d01c400f3736542f1a8ad5970deba21406541ae2fe8b13404ea306a"
+      }
+    },
+    "action_only_policy": {
+      "path": "outputs/action_chunk/lewm_stage1/shared_4task_seed0_lp0_sig0_b2048/fcpg_action_chunk_best.pt",
+      "sha256": "6e00a633703d2e2d1d0061e45f9a44293b550f3682ea409cf4d4c36a2039748f"
+    },
+    "fcpg_corrector": {
+      "path": "outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt",
+      "sha256": "3cfe621bbfb5b87962a3c569d6ebf9d4d702e0483adeebd45a4e00bb0a16ee79"
+    },
+    "oracle_target_encoder": {
+      "path": "data/oracle_target/lewm_gate_l1/oracle_target_encoder.pt",
+      "sha256": "7c8ce2120a592403c5908cb68733b7e8ee5ded79b9292d68ff78907c6ab91c31"
+    }
+  },
+  "oracle_vision": {
+    "model_name": "vit_base_patch16_224.augreg_in1k",
+    "selected_layer": 11,
+    "usage": "offline_oracle_future_and_current_rgb_goal_context"
+  },
+  "evaluation": {
+    "tasks": [
+      "pick-place-v3",
+      "button-press-v3",
+      "reach-v3",
+      "push-v3"
+    ],
+    "episodes_per_task": 10,
+    "phase_steps": [
+      10,
+      25,
+      35
+    ],
+    "phase_names": [
+      "early",
+      "mid",
+      "late"
+    ],
+    "history_size": 3,
+    "frame_skip": 5,
+    "raw_action_steps": 25,
+    "action_dim": 4,
+    "transitions": 5,
+    "transition_action_dim": 20,
+    "horizons": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "noise_scales": [
+      0.05,
+      0.15,
+      0.3
+    ],
+    "random_count": 2,
+    "candidate_names": [
+      "expert",
+      "policy",
+      "expert_noise_0.05",
+      "expert_noise_0.15",
+      "expert_noise_0.3",
+      "same_task_shuffled",
+      "random_0",
+      "random_1"
+    ],
+    "progress_info_key": "in_place_reward",
+    "snapshot_include_process_rng": true
+  },
+  "conditions": {
+    "clean": {
+      "translation_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_world": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rotation_degrees": 0.0
+    },
+    "rotation5": {
+      "translation_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_world": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rotation_degrees": 5.0
+    },
+    "translation4": {
+      "translation_world": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_world": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rotation_degrees": 0.0
+    }
+  },
+  "environment": {
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "max_expert_steps": 120,
+    "benchmark_seed": 8192,
+    "env_seed_base": 30000,
+    "task_index_offset": 0
+  },
+  "split": {
+    "unit": "physical_episode",
+    "train_count_per_task": 7,
+    "validation_count_per_task": 3,
+    "assignment": "sha256_sorted",
+    "upstream_non_overlap_required": true
+  },
+  "goal_context": {
+    "source": "current_rgb_and_task_id",
+    "future_success_frame_allowed": false,
+    "privileged_coordinates_allowed": false,
+    "visual_dim": 48,
+    "visual_input_dim": 768,
+    "projection_sha256": "a7c785c4e4a3c4e7736af913686318d857f46760bdbbb60233f243b44a96f365"
+  },
+  "smoke": {
+    "episodes_per_task": 1,
+    "candidate_names": [
+      "expert",
+      "policy",
+      "expert_noise_0.15",
+      "same_task_shuffled"
+    ],
+    "output_suffix": "_smoke"
+  },
+  "output": {
+    "directory": "outputs/lewm_counterfactual_v2/development_seed8192",
+    "write_mode": "exclusive_atomic_directory"
+  }
+}

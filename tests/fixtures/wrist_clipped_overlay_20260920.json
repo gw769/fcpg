@@ -1,0 +1,130 @@
+{
+  "source_observation": "local-response-repair-20260920 snapshot4",
+  "image_times": [
+    [
+      169218.538480225,
+      169218.543931942
+    ]
+  ],
+  "object_overlay": {
+    "centroid_px": [
+      3.200000047683716,
+      35.550048828125
+    ],
+    "cog_px": [
+      3.200000047683716,
+      35.550048828125
+    ],
+    "view": "wrist",
+    "grasp_kind": "shape_prior_uniform_density_cog",
+    "axis_px": [
+      0.0,
+      1.0
+    ],
+    "grasp_axis_px": [
+      -1.0,
+      0.0
+    ],
+    "jaw_pair_px": [
+      [
+        99.09538100487572,
+        139.33589906802376
+      ],
+      [
+        207.64259217947824,
+        142.3934664607695
+      ]
+    ],
+    "jaw_pair_source": "fk_projection_display_only",
+    "length_px": 6.241224026774664,
+    "width_px": 3.727887184068592,
+    "contour_px": [
+      [
+        4.0,
+        29.0
+      ],
+      [
+        2.0,
+        32.0
+      ],
+      [
+        0.0,
+        32.0
+      ],
+      [
+        0.0,
+        39.0
+      ],
+      [
+        2.0,
+        39.0
+      ],
+      [
+        4.0,
+        42.0
+      ],
+      [
+        6.0,
+        39.0
+      ],
+      [
+        6.0,
+        32.0
+      ]
+    ],
+    "source": "frozen_symmetric_support",
+    "symmetry_iou": 0.8488372093023255,
+    "support_clipped": true,
+    "body_truncated": null,
+    "aimable": false,
+    "policy_token_available": false,
+    "target_geometry": "frozen_feature_support",
+    "vector": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "image_time_s": 169218.538480225
+  },
+  "fingertips": {
+    "wrist": {
+      "available": true,
+      "fm_px": [
+        [
+          99.09538100487572,
+          139.33589906802376
+        ],
+        [
+          207.64259217947824,
+          142.3934664607695
+        ]
+      ],
+      "source": "wrist-fk-projection",
+      "image_time_s": 169218.538480225,
+      "fk_based": true
+    },
+    "column": {
+      "available": true,
+      "fm_px": [
+        [
+          38.5,
+          109.19999999999999
+        ],
+        [
+          15.749999999999998,
+          104.3
+        ]
+      ],
+      "source": "column-rgb-jaw-contour",
+      "image_time_s": 169218.543931942,
+      "fk_based": false,
+      "unordered": true,
+      "ordered_identity_available": false
+    }
+  }
+}

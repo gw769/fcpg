@@ -1,0 +1,118 @@
+# Matched 2k pilot: frozen FCPG ViT-B local map with a trainable 256->192
+# interface, warm-starting the Anchor-Persistent LeWM dynamics weights.
+schema_version: 1
+status: development_feature_source_pilot
+seed: 9216
+output_dir: outputs/lewm_grounded/anchor_persistent_fcpg_vitb_bridge_sig002_seed9216_2k
+
+upstream:
+  repository: https://github.com/lucas-maes/le-wm
+  commit: 8edfeb336732b5f3ce7b8b210d0ba370a09e2cac
+  arxiv_version: v3_2026-06-03
+
+data:
+  target_mode: online
+  episode_manifest: config/lewm/splits/gate_l1_camera_train_val_seed3072.json
+  sources:
+    - name: pick
+      env_name: pick-place-v3
+      path: data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick
+    - name: button
+      env_name: button-press-v3
+      path: data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button
+    - name: reach
+      env_name: reach-v3
+      path: data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach
+    - name: push
+      env_name: push-v3
+      path: data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push
+  history_size: 3
+  rollout_steps: 1
+  frame_skip: 5
+  grounding_mode: fcpg
+  split_seed: 3072
+  split_seed_stride: 0
+  require_corrector_split_match: false
+  normalize_inputs: true
+  val_fraction: 0.2
+  balanced_sources: true
+  require_pre_action_alignment: true
+
+loader:
+  batch_size: 192
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: 3
+  pin_memory: true
+
+model:
+  variant: anchor_persistent
+  vision:
+    source: fcpg_vitb
+    fcpg_checkpoint: outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt
+    output_dim: 192
+  frame:
+    latent_dim: 192
+    depth: 2
+    heads: 6
+    mlp_ratio: 4
+    dropout: 0.1
+    anchor_visual_mode: single_corrected
+  predictor:
+    depth: 6
+    action_smoothing_dim: 10
+    heads: 16
+    mlp_dim: 2048
+    dim_head: 64
+    dropout: 0.1
+    projector_hidden_dim: 2048
+  sigreg:
+    knots: 17
+    num_proj: 1024
+
+loss:
+  sigreg_weight: 0.02
+  per_source_sigreg: false
+  alignment_weight: 0.0
+
+optimizer:
+  lr: 5.0e-5
+  weight_decay: 1.0e-3
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  warmup_steps: 200
+
+trainer:
+  initialize_from: outputs/lewm_grounded/anchor_persistent_sig002_seed9216_2k/lewm_grounded_latest.pt
+  epochs: 100
+  max_steps: 2000
+  max_train_batches: 0
+  max_val_batches: 0
+  grad_clip: 1.0
+  amp: true
+  amp_dtype: bfloat16
+  checkpoint_every_epochs: 1
+  keep_epoch_checkpoints: false
+  require_input_manifest: false
+  resume: null
+
+contract:
+  gate: anchor_persistent_fcpg_vitb_bridge_v1
+  optimizer_step_budget: 2000
+  checkpoint_selection: fixed_budget_latest
+  frozen_fcpg_backbone: true
+  trainable_feature_bridge: true
+  copied_from_tiny_checkpoint: true
+  sigreg_weight: 0.02
+  primary_metrics:
+    - anchor_prediction_mse
+    - anchor_copy_mse
+    - action_shuffle_delta
+  expansion_rule: >-
+    Do not extend beyond this matched 2k pilot unless the FCPG feature source
+    beats the frozen Tiny-input control on held-out validation without clean
+    regression and preserves action sensitivity.

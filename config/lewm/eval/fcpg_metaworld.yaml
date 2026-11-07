@@ -1,0 +1,101 @@
+# Planned online MetaWorld protocol; no current CLI consumes this YAML directly.
+# Offline diagnostics use scripts/evaluate_lewm_grounded.py and explicit flags.
+
+schema_version: 1
+status: planned_protocol_not_executable
+consumed_by: null
+offline_diagnostics_cli: scripts/evaluate_lewm_grounded.py
+
+upstream_commit: 8edfeb336732b5f3ce7b8b210d0ba370a09e2cac
+train_config: config/lewm/train/fcpg_metaworld.yaml
+checkpoint: null
+
+data:
+  tasks:
+    - name: pick
+      env_name: pick-place-v3
+      dataset: data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick
+    - name: button
+      env_name: button-press-v3
+      dataset: data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button
+    - name: reach
+      env_name: reach-v3
+      dataset: data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach
+    - name: push
+      env_name: push-v3
+      dataset: data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push
+
+sequence:
+  history_size: 3
+  frame_skip: 5
+  transition_action_dim: 20
+
+goal:
+  representation: projected_embedding
+  source: future_dataset_frame
+  offset_raw_steps: 25
+  cost: final_step_embedding_squared_error_sum
+
+planning:
+  method: fcpg_adapted_cem
+  recursive_latent_rollout: true
+  horizon: 5
+  samples: 512
+  elites: 64
+  iterations: 5
+  momentum: 0.1
+  minimum_std: 0.05
+  action_low: -1.0
+  action_high: 1.0
+  execute_action_blocks: 1
+  online_wrapper_implemented: false
+  matched_upstream_ablation:
+    implementation_status: pending
+    samples: 300
+    elites: 30
+    iterations: 30
+    clamp: false
+    momentum: 0.0
+    receding_horizon_raw_steps: 5
+
+protocol:
+  paired_episodes_per_condition: 60
+  seeds: [0, 1, 2]
+  camera_curves:
+    clean:
+      rotation_degrees: [0]
+      translation_cm: [0]
+    rotation:
+      rotation_degrees: [0, 5, 10, 20]
+      translation_cm: [0]
+    translation:
+      rotation_degrees: [0]
+      translation_cm: [0, 1, 2, 4]
+  baselines:
+    - random_action
+    - behavior_cloning_action_only
+    - lewm_predictive_bc_auxiliary
+    - full_lewm_nominal_grounding
+    - full_lewm_fcpg_grounding_adapted_cem
+    - full_lewm_fcpg_grounding_matched_upstream_cem
+  metrics:
+    - success_rate
+    - paired_success_delta
+    - goal_embedding_cost
+    - teacher_forced_pred_mse
+    - identity_copy_mse
+    - action_shuffle_mse
+    - action_shuffle_delta_mse
+    - action_sensitivity_mse
+    - recursive_rollout_mse
+    - planning_latency_ms
+
+output:
+  root: outputs/lewm_grounded_eval/fcpg_metaworld
+  evaluation_completed: false
+  results: null
+

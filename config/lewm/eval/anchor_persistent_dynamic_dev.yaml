@@ -1,0 +1,25 @@
+schema_version: 1
+status: development_only
+seed: 9411
+batch_size: 192
+num_workers: 0
+sigreg_weight: 0.02
+
+sources:
+  - name: heldout_corner_linear_drift_translation2_4
+    path: data/lewm_pixel_observer_v2/heldout/corner_linear_drift_translation2_4_4tasks10eps_seed8811.npz
+    correction_cache: data/grounding_cache/lewm_pixel_observer_v2/heldout/corner_linear_drift_translation2_4_4tasks10eps_seed8811_shared4task_seed0
+  - name: heldout_corner_step_rotation5
+    path: data/lewm_pixel_observer_v2/heldout/corner_step_rotation5_4tasks10eps_seed8813.npz
+    correction_cache: data/grounding_cache/lewm_pixel_observer_v2/heldout/corner_step_rotation5_4tasks10eps_seed8813_shared4task_seed0
+  - name: heldout_corner_step_translation4
+    path: data/lewm_pixel_observer_v2/heldout/corner_step_translation4_4tasks10eps_seed8812.npz
+    correction_cache: data/grounding_cache/lewm_pixel_observer_v2/heldout/corner_step_translation4_4tasks10eps_seed8812_shared4task_seed0
+
+contract:
+  q_true_used: false
+  camera_jump_prediction_claim: false
+  interpretation: >-
+    Factual-vs-shuffled measures action-conditioned anchor dynamics.  FCPG-vs-
+    nominal innovation measures compatibility with the same predicted prior and
+    is diagnostic only; current visual FCPG measurement handles exogenous jumps.

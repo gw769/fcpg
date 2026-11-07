@@ -1,0 +1,815 @@
+{
+  "schema": "v21-reviewed-camera-types-v1",
+  "purpose": "research-only",
+  "production_enabled": false,
+  "source_wide_mapping_verified": false,
+  "unknown_policy": "explicit-zero-type-retain-all-data",
+  "slot_policy": "original-order-no-permutation",
+  "notes": [
+    "42 individually reviewed canonical episode identities, not 42 independent physical recordings; no source-wide extrapolation.",
+    "Preserve both external views. Unknown camera types never change pixel validity or supervision.",
+    "Expanded TRAIN evidence: 24 episodes, 72 pairs, all capture clocks/q/masks exactly match the existing cache.",
+    "Opt-in research metadata only. The original 18-episode registry and its completed canaries remain unchanged.",
+    "World-model acceptance, Actor fine-tuning and physical deployment remain unapproved."
+  ],
+  "episodes": [
+    {
+      "canonical_episode": 18269,
+      "source_episode": 11436,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        321,
+        381
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 21784,
+      "source_episode": 11376,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        48,
+        108
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 32560,
+      "source_episode": 11403,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        261,
+        321
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 75,
+      "source_episode": 13198,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        189,
+        249
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 21324,
+      "source_episode": 13253,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        66,
+        126
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 37462,
+      "source_episode": 13279,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        156,
+        216
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 40,
+      "source_episode": 11076,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        303,
+        363
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 11311,
+      "source_episode": 11033,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        114,
+        174
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 35678,
+      "source_episode": 11060,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        300,
+        360
+      ],
+      "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json"
+    },
+    {
+      "canonical_episode": 6,
+      "source_episode": 5175,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        240,
+        270
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-evidence/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 19241,
+      "source_episode": 262,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        249,
+        279
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-evidence/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 37517,
+      "source_episode": 8007,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        123,
+        237,
+        351
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-extended/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 25,
+      "source_episode": 556,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        399,
+        429
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 19441,
+      "source_episode": 240,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        510,
+        540
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 37463,
+      "source_episode": 188,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        744,
+        774
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 61,
+      "source_episode": 216,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        22,
+        183,
+        345
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-extended/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 19022,
+      "source_episode": 709,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        22,
+        165,
+        309
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-extended/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 37412,
+      "source_episode": 194,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        90,
+        174,
+        273
+      ],
+      "evidence": "outputs/v21-episode-role-20260928-f9rDrW/train-role-extended/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 288,
+      "source_episode": 0,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        75,
+        258,
+        546
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 36533,
+      "source_episode": 504,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        156,
+        816,
+        1551
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 7849,
+      "source_episode": 929,
+      "dataset_root": "/data/so101/raw_expand/IRA_full_merged_so101",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        582,
+        1275
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group0-contact.jpg"
+    },
+    {
+      "canonical_episode": 24373,
+      "source_episode": 1,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        116,
+        204,
+        271
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 34814,
+      "source_episode": 207,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        22,
+        178,
+        334
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 8331,
+      "source_episode": 598,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        44,
+        227,
+        311
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group1-contact.jpg"
+    },
+    {
+      "canonical_episode": 19855,
+      "source_episode": 0,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        141,
+        561,
+        1179
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 35158,
+      "source_episode": 142,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        381,
+        717
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 29908,
+      "source_episode": 297,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        675,
+        1362
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group2-contact.jpg"
+    },
+    {
+      "canonical_episode": 14076,
+      "source_episode": 1,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        144,
+        321,
+        1023
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group3-contact.jpg"
+    },
+    {
+      "canonical_episode": 19630,
+      "source_episode": 150,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        186,
+        240,
+        297
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group3-contact.jpg"
+    },
+    {
+      "canonical_episode": 26485,
+      "source_episode": 297,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        81,
+        120
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group3-contact.jpg"
+    },
+    {
+      "canonical_episode": 12731,
+      "source_episode": 0,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        153,
+        489,
+        615
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group4-contact.jpg"
+    },
+    {
+      "canonical_episode": 37211,
+      "source_episode": 147,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        276,
+        522
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group4-contact.jpg"
+    },
+    {
+      "canonical_episode": 30112,
+      "source_episode": 288,
+      "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        348,
+        558
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group4-contact.jpg"
+    },
+    {
+      "canonical_episode": 7980,
+      "source_episode": 0,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        141,
+        561,
+        1179
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group5-contact.jpg"
+    },
+    {
+      "canonical_episode": 400,
+      "source_episode": 134,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        45,
+        201,
+        498
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group5-contact.jpg"
+    },
+    {
+      "canonical_episode": 12890,
+      "source_episode": 289,
+      "dataset_root": "/data/so101/raw_expand/IRA_lego_so101/TPSoSe2026_Dataset_Lego_LeRobot_SO101_merged",
+      "historical_views": [
+        "observation.images.wrist_left",
+        "observation.images.desk_view"
+      ],
+      "physical_roles": [
+        "wrist",
+        "external"
+      ],
+      "reviewed_frames": [
+        141,
+        1074,
+        2037
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group5-contact.jpg"
+    },
+    {
+      "canonical_episode": 29979,
+      "source_episode": 2759,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        45,
+        231,
+        420
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group6-contact.jpg"
+    },
+    {
+      "canonical_episode": 31937,
+      "source_episode": 2799,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        45,
+        213,
+        420
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group6-contact.jpg"
+    },
+    {
+      "canonical_episode": 33941,
+      "source_episode": 2840,
+      "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+      "historical_views": [
+        "observation.images.left_wrist_0_rgb",
+        "observation.images.base_0_rgb"
+      ],
+      "physical_roles": [
+        "external",
+        "wrist"
+      ],
+      "reviewed_frames": [
+        45,
+        279,
+        516
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group6-contact.jpg"
+    },
+    {
+      "canonical_episode": 24171,
+      "source_episode": 611,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        232,
+        249,
+        267
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group7-contact.jpg"
+    },
+    {
+      "canonical_episode": 7585,
+      "source_episode": 712,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        22,
+        126,
+        195
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group7-contact.jpg"
+    },
+    {
+      "canonical_episode": 7346,
+      "source_episode": 791,
+      "dataset_root": "/data/so101/raw_expand/bv_so101",
+      "historical_views": [
+        "observation.images.wrist",
+        "observation.images.top"
+      ],
+      "physical_roles": [
+        "external",
+        "external"
+      ],
+      "reviewed_frames": [
+        22,
+        111,
+        249
+      ],
+      "evidence": "outputs/v21-provenance-role-20260929/evidence/group7-contact.jpg"
+    }
+  ],
+  "fish": {
+    "fish_wrist_root": "/data/experiments/prod_v18_1_tip_free/source/fish-wrist",
+    "fish_column_root": "/data/experiments/prod_v18_1_tip_free/source/fish-column",
+    "physical_roles": [
+      "wrist",
+      "external"
+    ],
+    "allowed_episodes": [
+      0,
+      1,
+      3
+    ],
+    "evidence": "Existing paired real-robot fish recording contract; episode 2 remains sealed."
+  }
+}

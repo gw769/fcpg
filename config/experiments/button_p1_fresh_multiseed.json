@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "protocol": "button-p1-strict-fresh-multiseed-v1",
+  "task": "button-press-v3",
+  "inputs": {
+    "data": "data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz",
+    "vision_cache": "data/vision_cache/button300_224_vitb_l11_fp16",
+    "vision_model_name": "vit_base_patch16_224.augreg_in1k",
+    "vision_selected_layers": [
+      11
+    ]
+  },
+  "artifacts": {
+    "output_root": "outputs/button_p1_fresh_multiseed",
+    "corrector_root": "outputs/button_p1_fresh_multiseed/training/correctors",
+    "grounding_cache_root": "data/grounding_cache/button_p1_fresh_multiseed",
+    "policy_root": "outputs/button_p1_fresh_multiseed/training/policies",
+    "prototype_bank": "data/baseline_cache/button_p1_fresh_multiseed_prototypes128_seed0",
+    "rollout_root": "outputs/button_p1_fresh_multiseed/rollouts",
+    "statistics_root": "outputs/button_p1_fresh_multiseed/statistics"
+  },
+  "reuse": {
+    "corrector_checkpoints": {
+      "0": "outputs/transformer_residual/lewm_stage1/button_seed0_sig0/fcpg_transformer_residual_best.pt"
+    },
+    "grounding_caches": {
+      "0": "data/grounding_cache/lewm_stage1/button_seed0_sig0"
+    }
+  },
+  "seeds": {
+    "corrector": [
+      0,
+      1,
+      2
+    ],
+    "policy": [
+      0,
+      1,
+      2
+    ],
+    "runner": 20260718
+  },
+  "corrector": {
+    "architecture": "lewm",
+    "obs_mode": "robot",
+    "vision_dim": 256,
+    "model_dim": 256,
+    "local_grid_size": 5,
+    "local_radius_px": 24.0,
+    "local_layers": 4,
+    "global_layers": 2,
+    "heads": 8,
+    "dropout": 0.1,
+    "max_residual_px": 20.0,
+    "reliability_weight": 0.0,
+    "reliability_corruption_probability": 0.0,
+    "sigreg_weight": 0.0,
+    "epochs": 50,
+    "batch_size": 1024,
+    "num_workers": 4,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.00001,
+    "warmup_epochs": 3.0,
+    "validation_fraction": 0.2,
+    "split_unit": "task-episode",
+    "split_seed_matches_training_seed": true
+  },
+  "policy": {
+    "architecture": "legacy",
+    "obs_mode": "robot",
+    "obs_horizon": 2,
+    "action_horizon": 32,
+    "vision_dim": 256,
+    "model_dim": 256,
+    "encoder_layers": 2,
+    "decoder_layers": 6,
+    "heads": 8,
+    "dropout": 0.1,
+    "epochs": 60,
+    "batch_size": 1024,
+    "num_workers": 4,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.000001,
+    "warmup_steps": 100,
+    "latent_prediction_weight": 0.0,
+    "sigreg_weight": 0.0,
+    "patience": 60,
+    "split_seed_matches_training_seed": true
+  },
+  "jitter": {
+    "standard_deviation_px": 8.0,
+    "maximum_px": 24.0
+  },
+  "prototype": {
+    "keypoint_source": "primary",
+    "count_per_keypoint": 128,
+    "feature_level": 0,
+    "split_seed": 0,
+    "seed": 0,
+    "radius_px": 32.0,
+    "grid_size": 9
+  },
+  "pnp": {
+    "history_frames": 3,
+    "maximum_reprojection_error_px": 8.0,
+    "maximum_pose_rotation_deg": 30.0,
+    "maximum_pose_translation_cm": 20.0
+  },
+  "evaluation": {
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon": 100,
+    "action_steps": 8,
+    "task_index_offset": 2000,
+    "env_seed_base": 80000,
+    "clean_episodes_per_seed": 80,
+    "nonzero_episodes_per_seed": 20,
+    "rotation_degrees": [
+      0.0,
+      5.0,
+      10.0
+    ],
+    "translation_centimeters": [
+      0.0,
+      2.0,
+      4.0
+    ],
+    "zero_condition": "shared_clean",
+    "methods": [
+      "jitter",
+      "fcpg_nominal",
+      "fcpg_native",
+      "prototype",
+      "pnp",
+      "oracle"
+    ]
+  },
+  "statistics": {
+    "bootstrap_samples": 20000,
+    "bootstrap_seed": 20260718,
+    "confidence_level": 0.95,
+    "task_handling": "fixed_not_resampled",
+    "bootstrap_design": "policy_seed_x_shared_episode_identity_two_way_crossed",
+    "auc_clean_episode_rule": "intersection_with_all_nonzero_severities",
+    "paired_comparisons": [
+      {
+        "name": "fcpg_native_minus_nominal",
+        "candidate": "fcpg_native",
+        "baseline": "fcpg_nominal"
+      },
+      {
+        "name": "fcpg_native_minus_jitter",
+        "candidate": "fcpg_native",
+        "baseline": "jitter"
+      },
+      {
+        "name": "fcpg_nominal_minus_jitter",
+        "candidate": "fcpg_nominal",
+        "baseline": "jitter"
+      },
+      {
+        "name": "prototype_minus_jitter",
+        "candidate": "prototype",
+        "baseline": "jitter"
+      },
+      {
+        "name": "pnp_minus_jitter",
+        "candidate": "pnp",
+        "baseline": "jitter"
+      },
+      {
+        "name": "oracle_minus_jitter",
+        "candidate": "oracle",
+        "baseline": "jitter"
+      },
+      {
+        "name": "pnp_minus_prototype",
+        "candidate": "pnp",
+        "baseline": "prototype"
+      }
+    ],
+    "clean_noninferiority": {
+      "margin_success_probability": -0.03,
+      "one_sided_confidence_level": 0.95,
+      "required_comparisons": [
+        "fcpg_native_minus_nominal",
+        "fcpg_native_minus_jitter"
+      ],
+      "decision_rule": "each_one_sided_lower_bound_strictly_greater_than_margin"
+    }
+  }
+}

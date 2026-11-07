@@ -1,0 +1,47 @@
+{
+  "format": "so101-forward-pipeline-joint-units-v1",
+  "default_family": "lerobot_normalized",
+  "rules": [
+    {
+      "dataset_pattern": "*/so101_60_haribot",
+      "family": "legacy_positive_degrees",
+      "evidence": "Full-range audit matches the old-calib degree limits with the exported shoulder-lift axis negated."
+    },
+    {
+      "dataset_pattern": "*/so101_60_new",
+      "family": "legacy_positive_degrees",
+      "evidence": "Full-range audit matches the old-calib degree limits with the exported shoulder-lift axis negated."
+    },
+    {
+      "dataset_pattern": "*/so101_ball_in_cup",
+      "family": "legacy_positive_degrees",
+      "evidence": "Same main_* legacy export family as the full-range audited positive-degree roots."
+    },
+    {
+      "dataset_pattern": "*/so101_chess17",
+      "family": "legacy_positive_degrees",
+      "evidence": "Full-range audit matches the old-calib degree limits with the exported shoulder-lift axis negated."
+    },
+    {
+      "dataset_pattern": "*/so101_cube",
+      "family": "legacy_positive_degrees",
+      "evidence": "Full-range audit matches the old-calib degree limits with the exported shoulder-lift axis negated."
+    },
+    {
+      "dataset_pattern": "*/so101_orsoromeo_pick_and_place",
+      "family": "legacy_positive_degrees",
+      "evidence": "Same legacy physical-degree provenance family; currently excluded independently for lacking a wrist view."
+    },
+    {
+      "dataset_pattern": "*/so101_pick_cube",
+      "family": "new_calib_radians",
+      "evidence": "All six archived joints follow the vendored new-calib radian ranges."
+    },
+    {
+      "dataset_pattern": "*/so101_pick_place_batch2",
+      "family": "new_calib_radians",
+      "evidence": "All six archived joints follow the vendored new-calib radian ranges."
+    }
+  ],
+  "policy": "Every rule is provenance evidence, not a range-fitted transform. Unmatched roots retain their declared post-PR-777 LeRobot normalized values; formal audit records the selected family and exact affine."
+}

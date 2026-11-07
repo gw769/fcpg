@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_active_control_a4_v2",
+  "status": "preflight_draft",
+  "question": "Can one shared seven-task LeWM propagate action-conditioned robot anchors and task context from genuinely active-control states?",
+  "tasks": [
+    "pick-place-v3",
+    "drawer-retrieve-v0",
+    "reach-v3",
+    "push-v3",
+    "door-open-v3",
+    "window-open-v3",
+    "towel-wipe-v0"
+  ],
+  "split": {
+    "protocol_seed": 30103,
+    "assignment": "a4-task-local-fresh-24-train-12-development-12-reserved-test",
+    "unit": "source_physical_episode",
+    "train_episodes_per_task": 24,
+    "development_episodes_per_task": 12,
+    "test_episodes_per_task": 12,
+    "task_local": true,
+    "episode_disjoint": true,
+    "a3_episode_reuse_allowed": false
+  },
+  "collection": {
+    "benchmark_seed": 30103,
+    "environment_seed_base": 620000,
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "test_instances_not_collected_before_development_go": true
+  },
+  "proposal_schedule": {
+    "drawn_before_environment_reset": true,
+    "independent_of_state_action_reward_task_phase_and_outcomes": true,
+    "sampling": "uniform_without_replacement",
+    "proposals_per_episode": 12,
+    "minimum_raw_step": 3,
+    "maximum_raw_step_inclusive": 160,
+    "minimum_separation_raw_steps": 5
+  },
+  "eligibility": {
+    "allowed_inputs": [
+      "proposal",
+      "complete_history",
+      "success",
+      "ever_success_before",
+      "active_stage",
+      "expert_xyz_norm",
+      "recent_action_rms",
+      "workspace_and_joint_margin",
+      "unexpected_collision",
+      "remaining_raw_steps"
+    ],
+    "history_steps": 3,
+    "minimum_expert_xyz_norm": 0.05,
+    "recent_action_window_raw_steps": 5,
+    "minimum_recent_action_rms": 0.05,
+    "minimum_workspace_and_joint_margin": 0.05,
+    "branch_horizon_raw_steps": 40,
+    "record_every_proposal": true,
+    "collect_all_rejection_reasons": true,
+    "future_or_outcome_fields_for_task_level_support_only": [
+      "future_latent_variance",
+      "future_physical_spread",
+      "future_reward",
+      "branch_success"
+    ],
+    "future_or_outcome_row_filtering_allowed": false
+  },
+  "matched_state_branches": {
+    "branch_count": 8,
+    "interruption_horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "interruption_horizon_raw_steps": 40,
+    "semantic_bank_before_permutation": [
+      "expert",
+      "reverse",
+      "hold",
+      "half_speed",
+      "transverse_u_positive",
+      "transverse_u_negative",
+      "transverse_v_positive",
+      "transverse_v_negative"
+    ],
+    "all_branches_executed_and_saved_after_acceptance": true,
+    "slot_order_randomized_per_snapshot": true
+  },
+  "preflight": {
+    "required_gates_before_training": [
+      "environment_and_expert_rollout",
+      "snapshot_restore",
+      "zero_severe_penetration",
+      "fcpg_anchor_smoke",
+      "active_control_support",
+      "physical_support",
+      "latent_support",
+      "task_state_sufficiency"
+    ]
+  },
+  "support_gate": {
+    "evaluation_split": "train",
+    "minimum_active_bundle_episode_count_per_task": 18,
+    "maximum_accepted_post_success_fraction": 0.0,
+    "maximum_accepted_near_zero_action_fraction": 0.0,
+    "maximum_invalid_branch_fraction": 0.0,
+    "aggregation": "task_then_physical_episode",
+    "source_expert_success_role": "dataset_quality_metric_only",
+    "future_or_outcome_usage": "task_level_support_gate_only"
+  },
+  "task_state_sufficiency_gate": {
+    "candidates": [
+      "anchor_only",
+      "summary_task_context_plus_anchors",
+      "global_visual_plus_anchors_reference"
+    ],
+    "required_readouts": [
+      "object_pose",
+      "goal_relative_progress",
+      "contact_or_grasp_state",
+      "branch_outcome"
+    ],
+    "current_state_gate_readouts": [
+      "object_pose",
+      "goal_relative_progress",
+      "contact_or_grasp_state"
+    ],
+    "future_diagnostic_readouts": [
+      "branch_outcome"
+    ],
+    "shared_deployable_context": [
+      "task_onehot",
+      "proprio",
+      "anchor_validity",
+      "history_actions",
+      "candidate_actions"
+    ],
+    "fit_split": "train",
+    "evaluation_split": "development",
+    "readout": "closed_form_ridge",
+    "neural_optimizer_steps": 0,
+    "bootstrap_unit": "source_physical_episode",
+    "bootstrap_samples": 10000,
+    "minimum_summary_relative_improvement": 0.05,
+    "minimum_nonnegative_tasks": 6,
+    "privileged_labels_role": "offline_targets_only",
+    "reserved_test_access_allowed": false,
+    "task_dynamics_claim_requires_task_context_sufficiency": true
+  },
+  "training_if_all_preflight_gates_go": {
+    "optimizer_steps": 2000,
+    "seeds": [30201, 30202, 30203],
+    "models_per_seed": 1,
+    "model_scope": "one_shared_model_across_all_seven_tasks",
+    "tasks_per_model": 7,
+    "task_balanced": true,
+    "episode_balanced_within_task": true,
+    "bundle_batch_size": 28,
+    "bundles_per_task_per_batch": 4,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "sigreg_values_allowed": [0.02],
+    "additional_sigreg_values_allowed": [],
+    "fresh_start_from_frozen_base": true,
+    "selection": "fixed_latest"
+  },
+  "development_gate": {
+    "evaluation_split": "development",
+    "checkpoint_step": 2000,
+    "primary_horizons": [6, 7, 8],
+    "primary_metric": "relative_prediction_mse_improvement",
+    "minimum_relative_improvement": 0.1,
+    "paired_ci_lower_must_exceed": 0.0,
+    "bootstrap_unit": "source_physical_episode",
+    "bootstrap_samples": 10000,
+    "task_macro": true,
+    "minimum_positive_tasks": 6,
+    "minimum_positive_seeds": 2,
+    "must_beat_matched_no_action": true,
+    "must_beat_all_seven_wrong_action_shifts": true,
+    "must_beat_hold_last_and_constant_velocity": true
+  },
+  "confirmation_after_development_go": {
+    "test_collection_requires_development_go": true,
+    "optimizer_steps": 10000,
+    "seeds": [30301, 30302, 30303],
+    "fresh_start_from_same_frozen_base": true,
+    "development_checkpoint_or_optimizer_reused": false,
+    "models_per_seed": 1,
+    "model_scope": "one_shared_model_across_all_seven_tasks",
+    "tasks_per_model": 7,
+    "task_balanced": true,
+    "episode_balanced_within_task": true,
+    "bundle_batch_size": 28,
+    "bundles_per_task_per_batch": 4,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "sigreg_values_allowed": [0.02],
+    "additional_sigreg_values_allowed": [],
+    "selection": "fixed_latest",
+    "evaluation_split": "test",
+    "checkpoint_step": 10000,
+    "primary_horizons": [6, 7, 8],
+    "primary_metric": "relative_prediction_mse_improvement",
+    "minimum_relative_improvement": 0.1,
+    "paired_ci_lower_must_exceed": 0.0,
+    "bootstrap_unit": "source_physical_episode",
+    "bootstrap_samples": 10000,
+    "task_macro": true,
+    "minimum_positive_tasks": 6,
+    "minimum_positive_seeds": 2,
+    "must_beat_matched_no_action": true,
+    "must_beat_all_seven_wrong_action_shifts": true,
+    "must_beat_hold_last_and_constant_velocity": true
+  }
+}

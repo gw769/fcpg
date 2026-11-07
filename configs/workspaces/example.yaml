@@ -1,0 +1,47 @@
+# Workspace configuration — environment geometry and safety limits.
+# Replace these values when the physical setup changes.
+# Nothing in this file is robot-model specific.
+
+workspace:
+  # Reachable working volume in robot base frame (meters)
+  lower_bound_m: [0.05, -0.20, -0.06]
+  upper_bound_m: [0.40, 0.22, 0.20]
+
+  # Tolerance added to workspace bounds for candidate filtering
+  margin_m: 0.04
+
+table:
+  # Z height of the work surface in robot base frame (meters).
+  # Set to null to derive automatically from demonstration data (10th
+  # percentile of recorded anchor centers).
+  z_m: null
+
+safety:
+  # Hardware gate: minimum distance between any gripper anchor and the table.
+  # Commands that would bring any anchor below table_z + this value are blocked.
+  minimum_anchor_clearance_m: 0.012
+
+  # Desired pad clearance at grasp time.  The approach height solver iterates
+  # until the measured pad clearance matches this target (within tolerance).
+  grasp_pad_clearance_m: 0.014
+  grasp_pad_clearance_tolerance_m: 0.0008
+
+  # Offset added to contact_height_m to keep anchor clearance gate satisfied.
+  # Derived from hardware validation; adjust if robot geometry changes.
+  contact_height_offset_m: 0.018
+
+# Camera projection calibrations (one per camera role)
+projection:
+  column:
+    adapter_class: adapters.so101.projection.SO101LinearProjection
+    calibration_path: null   # set to absolute path at deployment
+    view: column
+    # Live-anchor drift correction transform (2×3 affine matrix).
+    # Updated automatically after each gripper calibration.
+    live_transform: null
+
+  wrist:
+    adapter_class: adapters.so101.projection.SO101LinearProjection
+    calibration_path: null
+    view: wrist
+    live_transform: null

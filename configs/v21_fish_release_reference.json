@@ -1,0 +1,15 @@
+{
+  "source": "operator_confirmed_release_height",
+  "q_position": [
+    -2.3843929767608643,
+    -87.56690216064453,
+    99.64507293701172,
+    6.124161243438721,
+    -75.68830871582031,
+    31.274639129638672
+  ],
+  "q_source_monotonic_s": 9687.041589376,
+  "q_age_s": 0.0530737869994482,
+  "box_xy_taught": false,
+  "height_note": "Operator confirmed this actual pose is high enough for release. This is a height reference only, not the box XY. Kinematic height is not an independent measured height."
+}

@@ -1,0 +1,100 @@
+{
+  "code": {
+    "require_clean_git": true
+  },
+  "data": {
+    "horizon_index": 4,
+    "model": "fcpg",
+    "target": "actual_return",
+    "training": {
+      "groundings": [
+        "nominal",
+        "fcpg"
+      ],
+      "pooling": "equal_concat",
+      "view": "clean"
+    }
+  },
+  "evaluation": {
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 8299,
+    "drift_views": [
+      "rotation5",
+      "translation4"
+    ],
+    "exclude_candidates": [
+      "random_0",
+      "random_1"
+    ],
+    "gates": {
+      "E1": "oracle_vs_direct_clean_fcpg",
+      "E2": "predicted_vs_direct_drift_fcpg_with_cyclic_future_control",
+      "E3": "same_predicted_scorer_fcpg_vs_nominal_grounding_drift"
+    },
+    "metrics": [
+      "task_macro_spearman",
+      "task_macro_normalized_top1_regret"
+    ],
+    "resampling_unit": "physical_episode_within_task"
+  },
+  "feature_scaling": {
+    "fit_scope": "training_only",
+    "method": "per_coordinate_standardization",
+    "task_onehot": "unchanged"
+  },
+  "loss": {
+    "huber_beta": 1.0,
+    "huber_weight": 0.1,
+    "name": "ranknet_plus_huber",
+    "pairwise_weight": 1.0,
+    "tie_tolerance": 1e-06
+  },
+  "model": {
+    "architecture": "tiny",
+    "expected_input_dims": {
+      "action_only": 152,
+      "direct": 768,
+      "oracle": 1728,
+      "predicted": 1728
+    },
+    "expected_parameter_counts": {
+      "action_only": 6931,
+      "direct": 6931,
+      "oracle": 6921,
+      "predicted": 6921
+    },
+    "parameter_budget": 6930,
+    "sharing": "one_scorer_per_probe_shared_across_tasks_views_groundings"
+  },
+  "optimization": {
+    "batching": "full_batch",
+    "deterministic": true,
+    "device": "cpu",
+    "early_stopping": false,
+    "gradient_clip_norm": 1.0,
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "scheduler": null,
+    "seeds": [
+      8201,
+      8202,
+      8203
+    ],
+    "steps": 2000,
+    "weight_decay": 0.0001
+  },
+  "output": {
+    "directory": "outputs/lewm_counterfactual_v2/scorer_e1_e3_seed8201",
+    "write_mode": "exclusive_atomic_directory"
+  },
+  "protocol": "fcpg_lewm_counterfactual_v2_scorer_e1_e3_v1",
+  "scope": {
+    "allow_ineligible_external_development": true,
+    "classification": "external_development",
+    "formal_claim_allowed": false
+  },
+  "source": {
+    "directory": "outputs/lewm_counterfactual_v2/development_seed8192",
+    "result_sha256": "fc1b45ab0d9c0cfe8c3a7b619e9c8a4735a7893fd8887240bf8371a4c9a93390"
+  }
+}

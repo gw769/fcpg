@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_p1_native_complementary_fresh_v1",
+  "scope": {
+    "classification": "fresh_pick_known_drop_confirmation_gate",
+    "task": "pick-place-v3",
+    "claim_if_positive": "a geometry-anchored complementary observer makes frozen action-conditioned P1 dynamics useful during known visual dropout",
+    "claim_if_negative": "the exposed-development complementary gain schedule does not transfer to a fresh physical Pick panel",
+    "selector_claim_authorized": false,
+    "unknown_corruption_claim_authorized": false,
+    "policy_rollout_authorized_only_after_gate_go": true,
+    "retraining_authorized": false
+  },
+  "fresh_data": {
+    "protocol": "p1-native-fresh-v1",
+    "benchmark_seed": 41801,
+    "protocol_seed": 41803,
+    "environment_seed_base": 840000,
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "physical_episode_count": 30,
+    "task_instance_indices": [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+    ],
+    "hazard_model_steps": [
+      5, 5, 6, 5, 4, 3, 5, 4, 5, 3,
+      5, 5, 3, 4, 4, 5, 3, 4, 4, 4,
+      3, 3, 5, 5, 5, 5, 6, 4, 3, 5
+    ],
+    "hazard_drawn_before_environment_reset": true,
+    "hazard_independent_of_state_action_reward_and_outcome": true,
+    "one_hazard_per_physical_episode": true,
+    "visible_horizons": [0, 1, 2],
+    "offline_label_horizons": [3, 4, 5, 6, 7, 8],
+    "raw_steps_per_model_step": 5,
+    "branch_count": 8,
+    "branch_semantics_hidden_after_permutation": true,
+    "physical_identity": "task_name_plus_reset_physical_state_goal_sha256",
+    "deployment_cache": "outputs/lewm_p1_native_complementary_fresh/fresh_deployment_inputs.npz",
+    "label_cache": "outputs/lewm_p1_native_complementary_fresh/fresh_offline_labels.npz",
+    "metadata": "outputs/lewm_p1_native_complementary_fresh/fresh_collection.metadata.json"
+  },
+  "freshness": {
+    "forbidden_exposed_cache_sha256": "c41a874fa7e9ef303e8bd410e056bb01fdf85b3933f87b876ceb61e4fb9aac7f",
+    "legacy_observation_source": "data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz",
+    "legacy_observation_source_sha256": "b096658222c6a9f766255537cd7ed9c5b0a270e4b6f73bd0e19e895823d55a8a",
+    "legacy_observed_state_inventory": "outputs/lewm_p1_native_complementary_fresh/legacy_observed_state_signatures.npz",
+    "legacy_signature_fields": ["obs", "keypoints_xyz"],
+    "require_zero_exact_observed_state_signature_overlap": true,
+    "reset_state_nonoverlap_with_legacy_training_is_not_claimed": true
+  },
+  "p1": {
+    "policy_checkpoint": "outputs/action_chunk/p1/pick_fcpg_pureres_seed0_retry1/fcpg_action_chunk_best.pt",
+    "policy_checkpoint_sha256": "f0650d8c1e44ef7dc88a70e0af7478572b0b1439078d3e6a50a43a4c573592b9",
+    "corrector_checkpoint": "outputs/transformer_residual/lewm_stage1/pick_seed0_sig0/fcpg_transformer_residual_best.pt",
+    "corrector_checkpoint_sha256": "d1a617c91b4701d58c1814ca8de95c27128654cf62d359930ebd7f3a9198e3c0"
+  },
+  "frozen_predictor_training_contract": {
+    "config": "config/lewm/eval/p1_native_dynamics_dev.json",
+    "config_sha256": "b16c6781a0b28cd19a2b76d4246627ed6df41f0964ab5bfdbb856f5bf8ea3f2b"
+  },
+  "frozen_predictors": [
+    {
+      "seed": 15801,
+      "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15801_2k/p1_native_dynamics_latest.pt",
+      "sha256": "09be4561dc9c3c72029b7aaee41345d4ef9f2b6714ec02690794cfae1cfcc2a7"
+    },
+    {
+      "seed": 15802,
+      "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15802_2k/p1_native_dynamics_latest.pt",
+      "sha256": "80add8304d02f97d4c3c741677c2b9d050c265008afee12eb0b8d640e16964dc"
+    },
+    {
+      "seed": 15803,
+      "checkpoint": "outputs/lewm_p1_native_dynamics/dev_seed15803_2k/p1_native_dynamics_latest.pt",
+      "sha256": "f23ba6a6be0f652374144904d2c14a9d1e8b36441606b1527ad19995a6685119"
+    }
+  ],
+  "observer": {
+    "gain_by_missing_horizon": {
+      "H3": 0.25,
+      "H4": 0.50,
+      "H5": 0.75,
+      "H6": 0.75,
+      "H7": 0.75,
+      "H8": 0.75
+    },
+    "geometry_baseline": "held_last_valid_visual_plus_current_exact_fk",
+    "posterior_is_written_back_before_next_prediction": true,
+    "known_valid_measurement_bypass": "bitwise_native_measurement",
+    "recovery_resets_missing_age": true,
+    "wrong_action_shifts": [1, 2, 3, 4, 5, 6, 7]
+  },
+  "evaluation": {
+    "row_protocol": "fcpg_p1_native_complementary_fresh_gate_v1",
+    "batch_size": 32,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 41890,
+    "confidence": 0.95,
+    "statistical_unit": "physical_episode",
+    "shared_bootstrap_draws_across_methods_horizons_and_model_seeds": true,
+    "output_dir": "outputs/lewm_p1_native_complementary_fresh/evaluation",
+    "raw_lewm_is_separate_diagnostic": true
+  },
+  "gate": {
+    "minimum_relative_improvement": 0.10,
+    "paired_two_sided_ci_lower_must_exceed": 0.0,
+    "h3_one_sided_ci_quantile": 0.05,
+    "h3_maximum_relative_regression": 0.05,
+    "minimum_horizons_beating_all_nonlearning_baselines": 5,
+    "all_seven_wrong_action_shifts_required": true,
+    "minimum_passing_model_seeds": 2,
+    "remaining_seed_geometry_and_no_action_points_must_be_positive": true
+  }
+}

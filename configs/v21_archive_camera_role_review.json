@@ -1,0 +1,23 @@
+{
+  "schema": "v21-archive-camera-role-review-v1",
+  "purpose": "diagnostic-only",
+  "scope": "reviewed-canonical-episodes-only",
+  "review_method": "assistant visual review of original PTS-decoded first/last context exposures; moving jaw-fixed view versus static whole-arm view",
+  "production_enabled": false,
+  "source_wide_mapping_verified": false,
+  "dataset_root": "/data/so101/raw_expand/so101_pi05_base_dataset",
+  "historical_views": ["observation.images.left_wrist_0_rgb", "observation.images.base_0_rgb"],
+  "evidence": "outputs/v21-research-data-gate-20260928-rQVOkE/provenance/report.json",
+  "upstream_camera_map": "https://github.com/jinnymo/so101-pi05-base/blob/73167f4dba88633aeec95ba7a3b3881916fa9aaa/pipeline/artifacts/21_camera_slot_map.json",
+  "episodes": [
+    {"canonical_episode": 18269, "source_episode": 11436, "upstream": "MCeut/so101_lab_openBin_putCube", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [321, 381]},
+    {"canonical_episode": 21784, "source_episode": 11376, "upstream": "MCeut/so101_lab_openBin_putCube", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [48, 108]},
+    {"canonical_episode": 32560, "source_episode": 11403, "upstream": "MCeut/so101_lab_openBin_putCube", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [261, 321]},
+    {"canonical_episode": 75, "source_episode": 13198, "upstream": "sabinMlminator/so101_pickplace_cubes_test1", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [189, 249]},
+    {"canonical_episode": 21324, "source_episode": 13253, "upstream": "sabinMlminator/so101_pickplace_cubes_test1", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [66, 126]},
+    {"canonical_episode": 37462, "source_episode": 13279, "upstream": "sabinMlminator/so101_pickplace_cubes_test1", "physical_roles": ["external", "wrist"], "permutation": [1, 0], "reviewed_frames": [156, 216]},
+    {"canonical_episode": 40, "source_episode": 11076, "upstream": "lucasfv/so101_finetuning", "physical_roles": ["wrist", "external"], "permutation": [0, 1], "reviewed_frames": [303, 363]},
+    {"canonical_episode": 11311, "source_episode": 11033, "upstream": "lucasfv/so101_finetuning", "physical_roles": ["wrist", "external"], "permutation": [0, 1], "reviewed_frames": [114, 174]},
+    {"canonical_episode": 35678, "source_episode": 11060, "upstream": "lucasfv/so101_finetuning", "physical_roles": ["wrist", "external"], "permutation": [0, 1], "reviewed_frames": [300, 360]}
+  ]
+}

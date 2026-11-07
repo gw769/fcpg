@@ -1,0 +1,55 @@
+{
+ "description": "Fish-task HOME matching the start of the four task demonstrations (my_first_task_clean_v1, frame 0 of each episode): median of the demo starts for shoulder lift, elbow flex, wrist flex and the gripper; shoulder pan and wrist roll kept from the legacy V17.4 HOME (pan 0; the demos started at pan 0-11 and roll -50..-56, one at -99). The legacy HOME had the wrist flex 12 units lower and the jaws open at 31 instead of 13-16. James 2026-10-16 ok; docs/V21_SYSTEM_LEWM_CEM_AUDIT_20261013.md section 14.9.",
+ "position_unit": "lerobot_calibrated_normalized_position",
+ "source": "/home/james/so101-vda-disk/v21-lewm-train-20261012/roots/prod_v18_1_tip_free/source/fish-column/states.npy (episodes 0-3, first frame)",
+ "demo_starts": [
+  [
+   10.8382,
+   -98.3532,
+   98.3141,
+   74.7483,
+   -56.3636,
+   16.0972
+  ],
+  [
+   -0.0723,
+   -95.4714,
+   98.4916,
+   73.9094,
+   -50.1818,
+   12.9435
+  ],
+  [
+   4.9133,
+   -97.9415,
+   98.1366,
+   63.6745,
+   -99.1688,
+   16.1629
+  ],
+  [
+   6.0694,
+   -97.8592,
+   98.4028,
+   75.1678,
+   -51.3247,
+   13.6005
+  ]
+ ],
+ "legacy_home": [
+  0.14450867474079132,
+  -97.94153594970703,
+  98.22537994384766,
+  62.080535888671875,
+  -51.376625061035156,
+  31.340341567993164
+ ],
+ "current_state": [
+  0.14450867474079132,
+  -97.9003677368164,
+  98.35847473144531,
+  74.328857421875,
+  -51.376625061035156,
+  14.848883152008057
+ ]
+}

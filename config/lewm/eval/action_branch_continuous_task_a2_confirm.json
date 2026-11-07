@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_action_branch_continuous_task_a2_confirmation_v1",
+  "status": "fresh_confirmation_locked_before_test_collection",
+  "tasks": [
+    "pick-place-v3",
+    "drawer-open-v3",
+    "reach-v3",
+    "push-v3"
+  ],
+  "split": {
+    "protocol_seed": 27103,
+    "assignment": "a2-confirmation-task-local-24-train-24-test",
+    "train_episodes_per_task": 24,
+    "test_episodes_per_task": 24
+  },
+  "collection": {
+    "benchmark_seed": 27103,
+    "environment_seed_base": 420000,
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "horizon_steps": 8
+  },
+  "hazard": {
+    "decision_steps_per_episode": 40,
+    "history_steps": 3,
+    "eligible_first_step": 3,
+    "eligible_last_step": 31,
+    "bernoulli_probability": 0.12,
+    "refractory_steps": 5,
+    "maximum_events_per_episode": 3,
+    "condition_on_at_least_one_event": true,
+    "schedule_drawn_before_environment_reset": true,
+    "schedule_independent_of_state_action_reward_and_task_phase": true
+  },
+  "matched_state_branches": {
+    "branch_count": 8,
+    "interruption_horizon_steps": 8,
+    "raw_steps_per_model_step": 5,
+    "motion_delta_rms": 0.15,
+    "preserve_policy_gripper_commands": true
+  },
+  "support_gate": {
+    "primary_horizons": [6, 7, 8],
+    "minimum_branch_variance": 0.01,
+    "minimum_episode_macro_informative_fraction_per_task": 0.8,
+    "episodes_per_task": 24,
+    "all_four_tasks_must_pass": true
+  },
+  "training": {
+    "optimizer_steps": 10000,
+    "seeds": [26801, 26802, 26803],
+    "bundle_batch_size": 16,
+    "amp_dtype": "float16",
+    "anchor_encoder_sigreg": 0.02,
+    "additional_sigreg_values_allowed": [],
+    "selection": "fixed_latest"
+  },
+  "scoring": {
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 27431,
+    "minimum_relative_improvement": 0.05,
+    "minimum_positive_tasks": 3,
+    "minimum_positive_seeds": 2
+  }
+}

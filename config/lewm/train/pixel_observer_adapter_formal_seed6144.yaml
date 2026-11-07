@@ -1,0 +1,87 @@
+# Formal PixelObserver-G0 adapter. Run only after the bound online base reaches
+# its frozen step-10000 endpoint. Alpha selection remains development-only.
+
+schema_version: 1
+status: preregistered_not_run
+seed: 6144
+output_dir: outputs/lewm_pixel_observer/formal_adapter_seed6144
+base_checkpoint: outputs/lewm_grounded/pixel_observer_base_online_sig002_seed3072/lewm_grounded_latest.pt
+
+data:
+  target_mode: online
+  episode_manifest: config/lewm/splits/gate_l1_camera_train_val_seed3072.json
+  sources:
+    - name: pick
+      path: data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick
+    - name: button
+      path: data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button
+    - name: reach
+      path: data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach
+    - name: push
+      path: data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push
+  history_size: 3
+  rollout_steps: 1
+  frame_skip: 5
+  grounding_mode: fcpg
+  split_seed: 3072
+  split_seed_stride: 0
+  require_corrector_split_match: false
+  normalize_inputs: true
+  val_fraction: 0.2
+  balanced_sources: true
+  require_pre_action_alignment: true
+
+loader:
+  batch_size: 192
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: 2
+  pin_memory: true
+
+adapter:
+  hidden_dim: 256
+  max_delta_px: 16.0
+  residual_scale_px: 16.0
+
+observer:
+  gain: 0.5
+
+optimizer:
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  warmup_steps: 100
+
+trainer:
+  epochs: 100
+  max_steps: 2000
+  max_train_batches: 0
+  max_val_batches: 0
+  grad_clip: 1.0
+  amp: true
+  amp_dtype: bfloat16
+
+contract:
+  gate: pixel_observer_g0_formal
+  development_only: false
+  optimizer_step_budget: 2000
+  base_grounded_lewm_frozen: true
+  require_formal_base: true
+  require_explicit_online_base: true
+  require_completed_base_budget: true
+  expected_base_step: 10000
+  base_target: online_self_target
+  supervision: q_corrected_minus_q_nominal_only
+  q_true_forbidden: true
+  oracle_target_forbidden: true
+  old_gate_l1_test_reuse_forbidden: true
+
+result:
+  training_completed: false
+  checkpoint: null
+  metrics: null

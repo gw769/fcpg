@@ -1,0 +1,395 @@
+{
+  "format": "so101-fish-to-box-task-v1",
+  "name": "fish_to_box_task_v1",
+  "task_class": 1,
+  "task": "Pick up the red fish toy and place it in the cardboard box",
+  "public_mix": false,
+  "source_dataset": "my_first_task_clean_v1",
+  "source_train_episodes": [
+    0,
+    1,
+    3
+  ],
+  "source_val_episodes": [
+    2
+  ],
+  "design": {
+    "unit": "phase_slice",
+    "keep": [
+      "approach",
+      "grasp",
+      "leading_park",
+      "trailing_park"
+    ],
+    "drop": [
+      "return_home"
+    ],
+    "goal": "slice_terminal_state",
+    "why": "raw episode terminals are folded home; V11.5 episode_terminal_state would otherwise supervise go-home. The parked head and tail are kept as their own still slices so the goal there is the pose the arm already holds; only the travelling return is dropped",
+    "home_lift_deg": -80.0,
+    "workspace_lift_deg": -50.0,
+    "min_slice_frames": 26,
+    "park_still_deg": 1.0
+  },
+  "slices": [
+    {
+      "slice_id": 0,
+      "source_episode": 0,
+      "phase": "approach",
+      "split": "train",
+      "start": 71,
+      "end": 438,
+      "terminal_local": 437,
+      "frames": 367,
+      "gripper_min": 9.658344268798828,
+      "terminal_state": [
+        -25.506,
+        8.11,
+        11.358,
+        55.789,
+        -94.026,
+        20.499
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 1,
+      "source_episode": 0,
+      "phase": "grasp",
+      "split": "train",
+      "start": 398,
+      "end": 462,
+      "terminal_local": 461,
+      "frames": 64,
+      "gripper_min": 5.716163158416748,
+      "terminal_state": [
+        -18.642,
+        -9.922,
+        11.358,
+        76.174,
+        -94.026,
+        5.716
+      ],
+      "closes": true,
+      "task_class": 1
+    },
+    {
+      "slice_id": 2,
+      "source_episode": 0,
+      "phase": "leading_park",
+      "split": "train",
+      "start": 0,
+      "end": 66,
+      "terminal_local": 65,
+      "frames": 66,
+      "gripper_min": 16.031538009643555,
+      "terminal_state": [
+        10.838,
+        -97.942,
+        97.427,
+        74.748,
+        -56.364,
+        16.032
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 3,
+      "source_episode": 0,
+      "phase": "trailing_park",
+      "split": "train",
+      "start": 538,
+      "end": 578,
+      "terminal_local": 577,
+      "frames": 40,
+      "gripper_min": 5.716163158416748,
+      "terminal_state": [
+        4.335,
+        -95.307,
+        98.314,
+        56.124,
+        -94.182,
+        5.716
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 4,
+      "source_episode": 1,
+      "phase": "approach",
+      "split": "train",
+      "start": 676,
+      "end": 1002,
+      "terminal_local": 1001,
+      "frames": 326,
+      "gripper_min": 9.59264087677002,
+      "terminal_state": [
+        7.442,
+        -1.029,
+        43.301,
+        43.121,
+        -92.364,
+        23.653
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 5,
+      "source_episode": 1,
+      "phase": "grasp",
+      "split": "train",
+      "start": 962,
+      "end": 1021,
+      "terminal_local": 1020,
+      "frames": 59,
+      "gripper_min": 13.009198188781738,
+      "terminal_state": [
+        7.37,
+        -1.029,
+        43.567,
+        42.617,
+        -92.416,
+        16.032
+      ],
+      "closes": true,
+      "task_class": 1
+    },
+    {
+      "slice_id": 6,
+      "source_episode": 1,
+      "phase": "leading_park",
+      "split": "train",
+      "start": 578,
+      "end": 654,
+      "terminal_local": 653,
+      "frames": 76,
+      "gripper_min": 12.943495750427246,
+      "terminal_state": [
+        0.65,
+        -95.471,
+        98.492,
+        73.909,
+        -50.182,
+        12.943
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 7,
+      "source_episode": 1,
+      "phase": "trailing_park",
+      "split": "train",
+      "start": 1223,
+      "end": 1262,
+      "terminal_local": 1261,
+      "frames": 39,
+      "gripper_min": 16.16294288635254,
+      "terminal_state": [
+        4.913,
+        -97.942,
+        97.959,
+        63.674,
+        -99.169,
+        16.163
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 8,
+      "source_episode": 2,
+      "phase": "approach",
+      "split": "val",
+      "start": 1325,
+      "end": 1688,
+      "terminal_local": 1687,
+      "frames": 363,
+      "gripper_min": 13.469120025634766,
+      "terminal_state": [
+        -22.905,
+        -35.611,
+        77.906,
+        -5.537,
+        -51.481,
+        20.894
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 9,
+      "source_episode": 2,
+      "phase": "grasp",
+      "split": "val",
+      "start": 1648,
+      "end": 1711,
+      "terminal_local": 1710,
+      "frames": 63,
+      "gripper_min": 11.563732147216797,
+      "terminal_state": [
+        -8.598,
+        -49.033,
+        78.882,
+        -5.537,
+        -51.481,
+        13.206
+      ],
+      "closes": true,
+      "task_class": 1
+    },
+    {
+      "slice_id": 10,
+      "source_episode": 2,
+      "phase": "leading_park",
+      "split": "val",
+      "start": 1262,
+      "end": 1323,
+      "terminal_local": 1322,
+      "frames": 61,
+      "gripper_min": 16.16294288635254,
+      "terminal_state": [
+        5.853,
+        -97.118,
+        98.048,
+        63.507,
+        -99.169,
+        16.163
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 11,
+      "source_episode": 2,
+      "phase": "trailing_park",
+      "split": "val",
+      "start": 1778,
+      "end": 1809,
+      "terminal_local": 1808,
+      "frames": 31,
+      "gripper_min": 13.600525856018066,
+      "terminal_state": [
+        6.069,
+        -97.859,
+        98.403,
+        75.168,
+        -51.377,
+        13.601
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 12,
+      "source_episode": 3,
+      "phase": "approach",
+      "split": "train",
+      "start": 1882,
+      "end": 2101,
+      "terminal_local": 2100,
+      "frames": 219,
+      "gripper_min": 12.220762252807617,
+      "terminal_state": [
+        -16.329,
+        -27.707,
+        43.39,
+        36.661,
+        -51.429,
+        15.637
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 13,
+      "source_episode": 3,
+      "phase": "grasp",
+      "split": "train",
+      "start": 2061,
+      "end": 2122,
+      "terminal_local": 2121,
+      "frames": 61,
+      "gripper_min": 1.3140604496002197,
+      "terminal_state": [
+        1.59,
+        -44.092,
+        60.958,
+        35.57,
+        -51.429,
+        1.314
+      ],
+      "closes": true,
+      "task_class": 1
+    },
+    {
+      "slice_id": 14,
+      "source_episode": 3,
+      "phase": "leading_park",
+      "split": "train",
+      "start": 1809,
+      "end": 1881,
+      "terminal_local": 1880,
+      "frames": 72,
+      "gripper_min": 13.600525856018066,
+      "terminal_state": [
+        6.069,
+        -97.777,
+        98.137,
+        75.168,
+        -51.377,
+        13.601
+      ],
+      "closes": false,
+      "task_class": 1
+    },
+    {
+      "slice_id": 15,
+      "source_episode": 3,
+      "phase": "trailing_park",
+      "split": "train",
+      "start": 2152,
+      "end": 2183,
+      "terminal_local": 2182,
+      "frames": 31,
+      "gripper_min": 1.3140604496002197,
+      "terminal_state": [
+        1.662,
+        -97.942,
+        98.403,
+        75.168,
+        -51.325,
+        1.314
+      ],
+      "closes": false,
+      "task_class": 1
+    }
+  ],
+  "train_slice_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    12,
+    13,
+    14,
+    15
+  ],
+  "val_slice_ids": [
+    8,
+    9,
+    10,
+    11
+  ],
+  "frames": 1938,
+  "source_frames": 2183,
+  "dropped_frames": 245
+}

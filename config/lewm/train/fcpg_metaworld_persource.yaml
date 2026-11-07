@@ -1,0 +1,130 @@
+# Full LeWM training configuration for the four-task FCPG MetaWorld dataset.
+# The runtime can load this file directly; no checkpoint or result exists yet.
+
+schema_version: 1
+status: configured_not_run
+seed: 3072
+output_dir: outputs/lewm_grounded/fcpg_metaworld_sig009_persource
+provenance_manifest: outputs/lewm_grounded/manifests/fcpg_metaworld_sig009_persource.json
+
+upstream:
+  repository: https://github.com/lucas-maes/le-wm
+  commit: 8edfeb336732b5f3ce7b8b210d0ba370a09e2cac
+  vendor_dir: third_party/lewm
+
+data:
+  sources:
+    - name: pick
+      env_name: pick-place-v3
+      path: data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick
+    - name: button
+      env_name: button-press-v3
+      path: data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button
+    - name: reach
+      env_name: reach-v3
+      path: data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach
+    - name: push
+      env_name: push-v3
+      path: data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz
+      correction_cache: data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push
+  history_size: 3
+  rollout_steps: 1
+  frame_skip: 5
+  grounding_mode: fcpg
+  split_seed: 0
+  split_seed_stride: 0
+  require_corrector_split_match: true
+  normalize_inputs: true
+  val_fraction: 0.2
+  balanced_sources: true
+  require_pre_action_alignment: true
+
+loader:
+  batch_size: 128
+  # LeWMSequenceDataset keeps the four compressed NPZ sources resident. Forked
+  # workers replicate enough state to exhaust a 64 GiB host during startup.
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: 3
+  pin_memory: true
+
+model:
+  vision:
+    size: tiny
+    patch_size: 14
+    image_size: 224
+    pretrained: false
+    use_mask_token: false
+  frame:
+    latent_dim: 192
+    depth: 2
+    heads: 6
+    mlp_ratio: 4
+    dropout: 0.1
+  predictor:
+    depth: 6
+    action_smoothing_dim: 10
+    heads: 16
+    mlp_dim: 2048
+    dim_head: 64
+    dropout: 0.1
+    projector_hidden_dim: 2048
+  sigreg:
+    knots: 17
+    num_proj: 1024
+
+loss:
+  sigreg_weight: 0.09
+  per_source_sigreg: true
+
+optimizer:
+  lr: 5.0e-5
+  weight_decay: 1.0e-3
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  # stable-pretraining v0.1.7 uses 1% of the 63,700 optimizer-step budget.
+  warmup_steps: 637
+
+trainer:
+  epochs: 100
+  max_steps: 0
+  max_train_batches: 0
+  max_val_batches: 0
+  grad_clip: 1.0
+  amp: true
+  amp_dtype: bfloat16
+  checkpoint_every_epochs: 1
+  keep_epoch_checkpoints: true
+  require_input_manifest: true
+  resume: null
+
+contract:
+  behavior_cloning_loss: false
+  vision_backbone: upstream_vit_tiny_patch14_end_to_end
+  frame_encoder: grounded_global_proprio_anchor_tokens
+  projector: upstream_mlp_batchnorm
+  predictor: upstream_action_conditioned_ar_predictor
+  training_objective: next_embedding_mse_plus_sigreg
+  input_normalization: train_split_zscore_persisted_in_checkpoint
+  grounding_mode: fcpg_cache_required
+  split_contract: matches_shared_corrector_task_episode_seed0_80_20
+  action_embedder_channel_projection_dim: 10
+  planner_action_space: raw_actions_normalized_inside_model
+  state_frames: 4
+  raw_window_span: 16
+  raw_action_dim: 4
+  transition_action_dim: 20
+  cross_episode_padding: false
+  matched_sigreg_ablation_weights: [0.0, 0.09]
+  diagnostics:
+    - identity_copy_mse
+    - action_shuffle_sensitivity
+    - recursive_rollout_mse
+
+result:
+  training_completed: false
+  checkpoint: null
+  metrics: null

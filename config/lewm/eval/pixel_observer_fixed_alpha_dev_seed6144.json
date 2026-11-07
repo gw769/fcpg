@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "protocol": "lewm_pixel_observer_g0_fixed_alpha",
+  "status": "implementation_ready_observer_checkpoint_pending",
+  "phase": "development",
+  "seed": 6144,
+  "confirmatory_design_binding": {
+    "path": "config/lewm/eval/pixel_observer_confirmatory_design_seed6144.json",
+    "sha256": "e1b6460f7c6b0cca99a021ad4ade6e7cbee00c2fbfaea2c9c75821fa77cdeed2"
+  },
+  "base_checkpoint": null,
+  "base_checkpoint_sha256": null,
+  "observer_checkpoint": null,
+  "observer_checkpoint_sha256": null,
+  "evaluation": {
+    "schedule": "filter",
+    "history_size": 3,
+    "rollout_steps": 5,
+    "frame_skip": 5,
+    "horizons": [1, 3, 5],
+    "alphas": [0.0, 0.25, 0.5, 0.75, 1.0],
+    "batch_size": 16,
+    "num_workers": 0,
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 6144,
+    "primary_horizon": 5,
+    "max_task_relative_degradation": 0.1,
+    "max_raw_fcpg_relative_degradation": 0.05,
+    "max_source_task_relative_degradation": 0.1,
+    "min_eligible_anchor_fraction": 0.95,
+    "min_contributing_window_fraction": 0.95,
+    "min_measurement_coverage": 0.95,
+    "partition": "validation"
+  },
+  "split": {
+    "episode_manifest": "config/lewm/splits/gate_l1_camera_train_val_seed3072.json",
+    "fresh_non_exposure_audited": false,
+    "expected_sources": ["pick", "button", "reach", "push"],
+    "expected_tasks": [
+      "pick-place-v3",
+      "button-press-v3",
+      "reach-v3",
+      "push-v3"
+    ],
+    "expected_episode_counts": {
+      "pick": 42,
+      "button": 42,
+      "reach": 42,
+      "push": 42
+    },
+    "expected_window_counts": {
+      "pick": 2730,
+      "button": 2730,
+      "reach": 2730,
+      "push": 2730
+    },
+    "disclosure": "Development validation only. These episodes have already been used for checkpoint selection and prior ablations; this is not a fresh or confirmatory test."
+  },
+  "sources": [
+    {
+      "name": "pick",
+      "path": "data/metaworld_projection/scripted_pick_actualcam_se3_clean25_300eps_224.npz",
+      "correction_cache": "data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_pick"
+    },
+    {
+      "name": "button",
+      "path": "data/metaworld_projection/scripted_button_actualcam_se3_clean25_300eps_224.npz",
+      "correction_cache": "data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_button"
+    },
+    {
+      "name": "reach",
+      "path": "data/metaworld_projection/scripted_reach_actualcam_se3_clean25_300eps_224.npz",
+      "correction_cache": "data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_reach"
+    },
+    {
+      "name": "push",
+      "path": "data/metaworld_projection/scripted_push_actualcam_se3_clean25_300eps_224.npz",
+      "correction_cache": "data/grounding_cache/lewm_stage1/shared_4task_seed0_sig0_push"
+    }
+  ],
+  "output": {
+    "root": "outputs/lewm_pixel_observer/dev_seed6144",
+    "report": "outputs/lewm_pixel_observer/dev_seed6144/filter_matrix_report.json",
+    "overwrite": false
+  }
+}

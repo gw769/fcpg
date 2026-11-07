@@ -1,0 +1,146 @@
+{
+  "schema": "v21-reviewed-recording-isolation-v1",
+  "review_id": "shared-recordings-20260929-v1",
+  "purpose": "research-only",
+  "train_policy": "exclude-reviewed-cross-split-families",
+  "development_policy": "keep-original",
+  "parent_exposure": "not-reconstructed",
+  "original_archive_rows": {"train": 272000, "development": 48000},
+  "expected_removed_archive_rows": 613,
+  "evidence": "outputs/v21-provenance-role-20260929/motion-aliases-media-v2.json",
+  "notes": [
+    "Five reviewed shared-recording families only, not all 535 exact-motion groups.",
+    "Complete recorded time/q/command equality plus paired sampled images supports shared lineage; whole-video byte equality is not claimed.",
+    "Preserve all original DEV windows and raw data. Do not reinterpret the warm parent as unexposed."
+  ],
+  "groups": [
+    {
+      "family_id": "reviewed-1423",
+      "frames": 2104,
+      "historical_views": ["observation.images.wrist_left", "observation.images.desk_view"],
+      "evidence": [
+        "outputs/v21-provenance-role-20260929/alias-media/ep1423-ep11249.jpg",
+        "outputs/v21-provenance-role-20260929/alias-media/ep1423-ep30888.jpg",
+        "outputs/v21-provenance-role-20260929/alias-media/ep1423-ep33120.jpg"
+      ],
+      "episodes": [
+        {
+          "canonical_episode": 1423,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_2",
+          "source_episode": 6,
+          "tasks": ["Put each item into the bowl until the desk is cleared"],
+          "train_windows": 176, "development_windows": 0
+        },
+        {
+          "canonical_episode": 11249,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+          "source_episode": 66,
+          "tasks": ["Put each item into the bowl until the desk is cleared"],
+          "train_windows": 5, "development_windows": 0
+        },
+        {
+          "canonical_episode": 30888,
+          "dataset_root": "/data/so101/raw_expand/IRA_collection_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1",
+          "source_episode": 16,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 96
+        },
+        {
+          "canonical_episode": 33120,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1_redundant",
+          "source_episode": 16,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 104
+        }
+      ]
+    },
+    {
+      "family_id": "reviewed-2849",
+      "frames": 2590,
+      "historical_views": ["observation.images.wrist_left", "observation.images.desk_view"],
+      "evidence": ["outputs/v21-provenance-role-20260929/alias-media/ep2849-ep13766.jpg"],
+      "episodes": [
+        {
+          "canonical_episode": 2849,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+          "source_episode": 52,
+          "tasks": ["Clean the desk surface by moving items into the bowl next to it"],
+          "train_windows": 240, "development_windows": 0
+        },
+        {
+          "canonical_episode": 13766,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1_redundant",
+          "source_episode": 2,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 88
+        }
+      ]
+    },
+    {
+      "family_id": "reviewed-4398",
+      "frames": 1712,
+      "historical_views": ["observation.images.wrist_left", "observation.images.desk_view"],
+      "evidence": ["outputs/v21-provenance-role-20260929/alias-media/ep4398-ep21973.jpg"],
+      "episodes": [
+        {
+          "canonical_episode": 4398,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+          "source_episode": 99,
+          "tasks": ["Place all desk items in the bowl so the desk is empty"],
+          "train_windows": 30, "development_windows": 0
+        },
+        {
+          "canonical_episode": 21973,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1_redundant",
+          "source_episode": 49,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 128
+        }
+      ]
+    },
+    {
+      "family_id": "reviewed-8356",
+      "frames": 1724,
+      "historical_views": ["observation.images.wrist_left", "observation.images.desk_view"],
+      "evidence": ["outputs/v21-provenance-role-20260929/alias-media/ep8356-ep28978.jpg"],
+      "episodes": [
+        {
+          "canonical_episode": 8356,
+          "dataset_root": "/data/so101/raw_expand/IRA_collection_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1",
+          "source_episode": 42,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 112
+        },
+        {
+          "canonical_episode": 28978,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged_V2",
+          "source_episode": 92,
+          "tasks": ["Place all desk items in the bowl so the desk is empty"],
+          "train_windows": 18, "development_windows": 0
+        }
+      ]
+    },
+    {
+      "family_id": "reviewed-18935",
+      "frames": 1496,
+      "historical_views": ["observation.images.wrist_left", "observation.images.desk_view"],
+      "evidence": ["outputs/v21-provenance-role-20260929/alias-media/ep18935-ep33302.jpg"],
+      "episodes": [
+        {
+          "canonical_episode": 18935,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/2026_06_03-17h58m_Desk_Cleanup_V3_1_redundant",
+          "source_episode": 4,
+          "tasks": ["Clean the desk"],
+          "train_windows": 0, "development_windows": 96
+        },
+        {
+          "canonical_episode": 33302,
+          "dataset_root": "/data/so101/raw_expand/IRA_desk_cleanup_so101/TPSoSe2026_Dataset_Desk_Cleanup_LeRobot_SO101_merged",
+          "source_episode": 54,
+          "tasks": ["Clean the desk surface by moving items into the bowl next to it"],
+          "train_windows": 144, "development_windows": 0
+        }
+      ]
+    }
+  ]
+}

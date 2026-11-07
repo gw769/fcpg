@@ -1,0 +1,526 @@
+{
+  "schema_version": 2,
+  "protocol": "trial4_real_fish_grasp_criteria",
+  "frozen_utc": "2026-08-13T09:50:00Z",
+  "supersedes": {
+    "schema_version": 1,
+    "frozen_utc": "2026-08-13T09:40:00Z",
+    "amendment_reason": "A column anchor localisation accuracy of 11.7 px against hand-measured physical ground truth was measured and deployed to the production server (PID 825846) after v1 was frozen. v1 had no metric bound on the vision error and therefore could not tell whether its own CLOSE gate was protective. It is not. See section vision_sufficiency_verdict.",
+    "amended_before_real_robot_window": true,
+    "amended_before_any_close_attempt": true,
+    "honesty_note": "This amendment was driven by a new upstream measurement, not by observing any grasp outcome. No real-fish close has been attempted at the time of this amendment."
+  },
+  "repo_commit_worktree": "7c0a3e8",
+  "worktree": ".worktrees/v11-recipe",
+  "scope": "ONE close attempt, grasp verification only. No transport, no place, no release.",
+
+  "freeze_status": {
+    "frozen_before_any_trial4_close_attempt": true,
+    "honest_statement": "Every threshold is tagged with provenance.kind. 'inherited_from_artifact' means the number already existed in a repository artifact, was measured by another line and handed to this document, or is computed from the MuJoCo model with no free choice. 'first_time_set' means this document is the first place the number appears; its rationale is stated and it was chosen before any real-fish close attempt was observed.",
+    "hardware_reality": "No force sensor and no current feedback. The only observables are joint Present_Position, FK of those positions, the two camera images, and the gripper position reading. Nothing below may depend on measured force.",
+    "endpoint_reality": "The stall-aware endpoint contract is in force. commanded endpoint != actual settled state. Every geometric predicate is evaluated on the MEASURED settled state, never on the commanded target."
+  },
+
+  "column_pixel_to_mm_derivation": {
+    "id": "SCALE",
+    "pixel_unit": "planning-image px, 224x224, geometry_protocol letterbox_v1, content_rect [0,28,224,196], scale 0.35 from a 640x480 source. 1 planning px = 2.857 source px.",
+    "why_three_scales": "The column view is oblique and its projection is an affine task-plane fit, not a calibrated pinhole (model_contract.peg_context_contract.geometry: 'affine task-plane backprojection; not metric depth'). The mm per px therefore depends on the depth of the thing being measured. Two scales are derived from real round data and bracket the answer; a third is an independent sanity check. No single scale is presented as the truth.",
+    "reference_round": "outputs/lerobot/so101/trial4_dual_jaw_real/rounds/r-1786528668651050504-5d1f8df8/plan.json",
+    "working_pose": {
+      "current_state": [11.705202102661133, -17.167558670043945, 67.96805572509766, -8.892617225646973, -52.77922058105469, 24.375822067260742],
+      "gripper_command": 24.375822067260742,
+      "fk_jaw_tip_separation_mm": 44.072
+    },
+    "S_task_task_plane_backprojection": {
+      "value_mm_per_px": 2.1071,
+      "derivation": "plan.json target.planar_error_m (0.07459207624197006 m = 74.592 mm) divided by candidates[0].initial_pixel_error (35.40020681639854 px). Verified independently: the euclidean distance from targets.pickup_column.gripper_center_px to targets.pickup_column.centroid_px is 35.400 px, i.e. exactly the planner's own pixel error, so the two fields describe the same gap in two units.",
+      "applies_to": "points lying on the task plane, e.g. the fish on the table",
+      "provenance": {"kind": "inherited_from_artifact", "source": "plan.json fields only; no free parameter"}
+    },
+    "S_grip_gripper_depth": {
+      "value_mm_per_px": 1.4871,
+      "derivation": "FK jaw-tip separation 44.072 mm at the working-pose gripper command 24.3758, divided by the observed column jaw-tip separation 29.637 px (grounding.column.nominal anchors 1 and 2, the same anchor pair gripper_capture_radius_m uses). The corrected anchors give 29.435 px, a 0.7 percent difference, because the column correction in this round is very nearly a pure translation.",
+      "applies_to": "the gripper itself, which sits above the task plane and therefore closer to the column camera, so it subtends more px per mm",
+      "provenance": {"kind": "inherited_from_artifact", "source": "MuJoCo FK plus plan.json anchors; no free parameter"}
+    },
+    "S_pin_pinhole_cross_check": {
+      "value_mm_per_px": 2.3548,
+      "derivation": "standoff D = 466 mm (handed over from the column-localisation line, from solving D/(D+88.4mm) = 0.841; independently re-solved here as D = 74.35/0.159 = 467.6 mm) divided by f = (480/2)/tan(46deg/2)*0.35 = 197.9 planning px.",
+      "status": "CROSS-CHECK ONLY, not used in any threshold",
+      "caveat": "fovy 46 deg is the SIMULATION camera intrinsic from v10/assets/so101_fish_to_box.xml. The real column webcam's intrinsics are not calibrated in any artifact found. It agrees with S_task to within 12 percent, which is why S_task is trusted.",
+      "provenance": {"kind": "inherited_from_artifact", "source": "handed-over standoff plus sim intrinsics"}
+    },
+    "wrist_view_for_comparison": {
+      "value_mm_per_px": 0.5008,
+      "derivation": "the same FK jaw-tip separation 44.072 mm divided by the observed wrist jaw-tip separation 88.009 px (grounding.wrist.nominal anchors 1 and 2)",
+      "finding": "the wrist view resolves the gripper 2.97x finer than S_grip and 4.21x finer than S_task",
+      "provenance": {"kind": "inherited_from_artifact", "source": "MuJoCo FK plus plan.json anchors"}
+    },
+    "column_error_in_mm": {
+      "input_px": 11.7,
+      "input_provenance": "corrected-anchor mean |err| against hand-measured physical fingertip ground truth, measured and deployed by the column-localisation line, production server PID 825846. Improved from 24.8 px.",
+      "range_mm": [17.4, 24.7],
+      "point_estimate_mm": 21.0,
+      "conservative_mm": 24.7,
+      "pinhole_cross_check_mm": 27.6,
+      "note": "17.4 mm uses S_grip, 24.7 mm uses S_task. Both are reported because the error is an error in locating the GRIPPER (favouring S_grip) but it propagates into a gripper-to-fish alignment that the planner reasons about on the task plane (favouring S_task). The conclusion below does not depend on the choice."
+    },
+    "other_error_terms_in_mm": {
+      "heatmap_grid_quantisation": {
+        "input_px": 14.0,
+        "half_cell_px": 7.0,
+        "range_mm": [10.4, 14.7],
+        "meaning": "a structural floor, not an accuracy figure. Even a perfectly accurate decoder cannot express a position more finely than half a grid cell.",
+        "input_provenance": "measured by the column-localisation line: all three anchors decode to exactly y=105 every frame"
+      },
+      "calibration_pose_residual": {
+        "input_px": 3.8,
+        "range_mm": [5.7, 8.0],
+        "meaning": "the same code in the calibration pose. Shows the 11.7 px is pose-dependent, so the 17.4-24.7 mm figure is scoped to the working pose only."
+      }
+    },
+    "vit_locator_accuracy_is_not_usable": {
+      "rejected_number_px": 3.72,
+      "rejected_field": "tips_median_px",
+      "reason": "handed over from the column-localisation line: the locator's training labels ARE the FK-plus-affine-projection output, and 4366 of 8732 dataset rows have zero synthetic drift with max|q_true - q_nominal| = 0.00000000 px. The metric therefore measures reproduction of the projection fit, not discovery of the physical fingertip. The locator has never seen a physical-truth label.",
+      "consequence": "3.72 px MUST NOT appear in any threshold in this document, and does not. The only admissible accuracy figure is the 11.7 px physical-truth residual."
+    }
+  },
+
+  "capture_budget": {
+    "id": "BUDGET",
+    "definition": "how far the tool centre may sit from the fish centre and still have the jaws close around the body: jaw half-span minus fish radius",
+    "fish_radius_mm": 11.0,
+    "tiers": {
+      "advertised": {
+        "source": "fcpg/so101_realtime_runtime.py::gripper_capture_radius_m, evaluated at state[5]=100.0",
+        "half_span_mm": 70.787,
+        "budget_mm": 59.787,
+        "status": "NOT ACHIEVABLE. See the finding below."
+      },
+      "demonstrated_open": {
+        "source": "plan.json model_contract.gripper_calibration_positions.open = 31.603153228759766, train-only p99; FK jaw separation 55.279 mm",
+        "half_span_mm": 27.640,
+        "budget_mm": 16.640,
+        "status": "the best budget actually reachable, and only if the gripper is deliberately opened to it"
+      },
+      "this_round_actual": {
+        "source": "plan.json current_state[5] = 24.3758; FK jaw separation 44.072 mm",
+        "half_span_mm": 22.036,
+        "budget_mm": 11.036,
+        "status": "what the arm was actually running with in the reference round"
+      }
+    },
+    "finding_advertised_radius_is_overstated": {
+      "factor": 2.56,
+      "detail": "70.787 mm assumes gripper command 100. The demonstrated p99 open position is 31.60, whose half-span is 27.64 mm. gripper_capture_radius_m therefore overstates the reachable capture radius by 2.56x, and the EndpointEnvelope max_tcp_miss_m derived from it is over-permissive by the same factor.",
+      "action": "reported, not changed; modifying the envelope is outside this document's scope",
+      "consequence_for_this_document": "the sufficiency question MUST be answered against 16.64 mm or 11.04 mm, never against 59.79 mm"
+    }
+  },
+
+  "vision_sufficiency_verdict": {
+    "id": "VERDICT",
+    "question": "Is column vision accurate enough to align the jaws on the fish?",
+    "answer": "NO. Column vision alone is NOT sufficient.",
+    "unambiguous": true,
+    "ratio_table": {
+      "note": "vision error divided by capture budget; >= 1.00 means the error alone consumes the whole budget",
+      "against_advertised_budget_59.79mm": {"S_grip_17.4mm": 0.29, "S_task_24.7mm": 0.41, "verdict": "would pass, but this budget is not reachable"},
+      "against_demonstrated_open_budget_16.64mm": {"S_grip_17.4mm": 1.05, "S_task_24.7mm": 1.48, "verdict": "FAILS"},
+      "against_this_round_budget_11.04mm": {"S_grip_17.4mm": 1.58, "S_task_24.7mm": 2.23, "verdict": "FAILS"}
+    },
+    "why_the_conclusion_is_robust": "Every reachable combination fails. The most favourable reachable pairing is the smallest error scale against the largest reachable budget, 17.4 mm against 16.64 mm, which is still 1.05x over. The verdict therefore does not depend on which px-to-mm scale is chosen, and it only reverses if the 70.79 mm advertised radius were reachable, which the demonstrated gripper range shows it is not.",
+    "second_independent_reason": {
+      "claim": "even a perfectly ACCURATE column heatmap would still be insufficient at the current grid",
+      "detail": "the 14 px decode grid gives a +-7 px quantisation floor, i.e. +-10.4 to +-14.7 mm. That is 63 to 88 percent of the 16.64 mm budget and 94 to 133 percent of the 11.04 mm budget, before any accuracy error is added.",
+      "consequence": "this is a structural limit of the decoder, not a tuning problem. Sub-grid refinement is a prerequisite, not an optimisation."
+    },
+    "what_is_additionally_required": {
+      "R1_open_the_gripper_first": {
+        "requirement": "command the gripper to the demonstrated open position 31.60 before the final approach, instead of approaching at 24.38",
+        "effect": "raises the budget from 11.04 mm to 16.64 mm, a 51 percent increase, at zero cost",
+        "status": "actionable now, derived entirely from existing artifacts",
+        "note": "necessary but NOT sufficient: 17.4 mm still exceeds 16.64 mm"
+      },
+      "R2_wrist_view_alignment": {
+        "requirement": "take the final alignment measurement from the wrist view, not the column view",
+        "rationale": "the wrist camera is rigidly mounted to the gripper, so its anchors need almost no correction: grounding.wrist.mean_total_correction_px = 0.330 with prior_source 'calibrated_nominal', versus grounding.column.mean_total_correction_px = 35.681 with prior_source 'global_tip_heatmap'. Its pixel scale is also 2.97x to 4.21x finer at 0.5008 mm/px.",
+        "blocking_prerequisite": "the wrist view has NEVER been measured against hand-measured physical ground truth. The 11.7 px figure exists only for the column view. A small correction magnitude is NOT evidence of accuracy: it only proves the rigid geometry is self-consistent, and the same confusion is what made the 3.72 px locator figure unusable. The wrist view must receive the same physical-truth measurement the column view just received before any threshold may depend on it.",
+        "status": "REQUIRED but NOT YET VALIDATED. Encoded as STOP condition S9."
+      },
+      "R3_iterative_convergence_not_one_shot": {
+        "requirement": "CLOSE may only follow a converged iterative alignment, never a single-frame estimate",
+        "rationale": "the planner already performs bounded relative column servo with model_contract.max_column_servo_step_m = 0.025 and column_descent_radius_m = 0.05. A single 17-25 mm error cannot be gated away, but a sequence of rounds whose measured residual decreases monotonically provides evidence that the loop is closing on the real target rather than on a biased estimate.",
+        "encoded_as": "criterion_1_close_gate_entry.sub_conditions.C1f"
+      },
+      "R4_subgrid_heatmap_refinement": {
+        "requirement": "remove or refine the 14 px decode quantisation",
+        "rationale": "see second_independent_reason; the floor alone can exceed the budget",
+        "status": "out of scope for this document, listed as a prerequisite others must clear"
+      }
+    },
+    "scope_limitation_of_the_verdict": "11.7 px is a residual in the current working pose. The same code gives 3.8 px in the calibration pose, i.e. 5.7-8.0 mm, which WOULD fit inside the 16.64 mm budget. The verdict is therefore scoped to the working pose, and it is stated in the worst-case direction because the working pose is the one the trial runs in."
+  },
+
+  "measured_constants": {
+    "fish_body_diameter_mm": {
+      "value": 22.0,
+      "provenance": {
+        "kind": "inherited_from_artifact",
+        "source": "v10/assets/so101_fish_to_box.xml geom fish_body, capsule size 0.011 -> radius 11 mm"
+      }
+    },
+    "fish_tail_thickness_mm": {
+      "value": 6.0,
+      "provenance": {"kind": "inherited_from_artifact", "source": "same asset, fish_tail_top/bottom box half-thickness 0.003"}
+    },
+    "fish_centreline_height_above_table_mm": {
+      "value": 14.0,
+      "provenance": {
+        "kind": "inherited_from_artifact",
+        "source": "same asset: fish pos z=-0.026, table top z=-0.048+0.008=-0.040",
+        "note": "numerically equal to the live server's --trial-contact-height-m 0.014, which is therefore explained rather than chosen"
+      }
+    },
+    "jaw_tip_separation_mm_by_gripper_command": {
+      "provenance": {
+        "kind": "inherited_from_artifact",
+        "source": "FK of SO101MuJoCoKinematics.forward_anchors with state[5]=g, norm(anchors[1]-anchors[2]); the anchor pair gripper_capture_radius_m uses"
+      },
+      "table": {
+        "0.0": 6.237, "1.3140604496002197": 7.979, "5.0": 13.478, "10.0": 21.335,
+        "11.810118198394775": 24.207, "19.448095321655273": 36.321, "20.0": 37.193,
+        "24.375822067260742": 44.072, "31.603153228759766": 55.279, "50.0": 82.534, "100.0": 141.574
+      },
+      "local_gradient_mm_per_gripper_unit": {"near_closed": 1.4344, "range_10_to_20": 1.5858}
+    },
+    "demonstrated_gripper_range": {
+      "closed": 1.3140604496002197,
+      "open": 31.603153228759766,
+      "provenance": {
+        "kind": "inherited_from_artifact",
+        "source": "plan.json model_contract.gripper_calibration_positions, source field 'train-only gripper position percentiles 1/99'"
+      },
+      "implied_jaw_separation_mm": [7.979, 55.279]
+    }
+  },
+
+  "blocking_hardware_defect": {
+    "id": "GRIPPER_SCALE_DISPUTE",
+    "severity": "invalidates every absolute jaw-separation criterion",
+    "evidence_a": {
+      "source": "outputs/lerobot/so101/gripper_calibration_analysis.json",
+      "root_cause": "WRONG_ZERO",
+      "claim": "gripper range_min is 0 ticks but physical closed is ~700 ticks; range_max 1522 vs expected open 1900",
+      "implied_command_of_physical_closure": 45.99,
+      "caveat": "700 and 1900 are labelled 'expected_closed_raw'/'expected_open_raw', i.e. assumed, not measured on this robot. close_error_ticks is just 0 minus 700."
+    },
+    "evidence_b": {
+      "source": "plan.json model_contract.gripper_calibration_positions (train p1/p99)",
+      "claim": "the gripper empirically operates over command [1.31, 31.60] under the CURRENT calibration",
+      "conflict": "if physical closure were at command 46, a servo could never report 1.31. Evidence A and Evidence B cannot both be right."
+    },
+    "fix_status": "NOT APPLIED. /home/james/.cache/huggingface/lerobot/calibration/robots/so101_follower/myfollower01.json still carries gripper range_min 0, range_max 1522, homing_offset 87, verified 2026-08-13.",
+    "consequence_for_this_document": "no criterion reads an ABSOLUTE gripper value or an absolute FK jaw separation. The grasp decision is a DIFFERENCE against an in-session empty-close reference, which cancels any zero error and any span error common to both measurements."
+  },
+
+  "criterion_1_close_gate_entry": {
+    "id": "C1",
+    "statement": "The gripper may be commanded to close only when ALL sub-conditions hold, every one evaluated on the measured settled state.",
+    "gate_is_conjunctive": true,
+    "state_source": {
+      "primary": "command_journal event 'endpoint_miss_with_actual_state' -> key 'actual_state' (6-vector)",
+      "equivalent": "chunk record key 'settled_state'",
+      "path": "outputs/lerobot/so101/trial4_dual_jaw_real/command_journal/chunk_<id>/events.jsonl",
+      "forbidden": "commanded_state, target, or any planned waypoint. A commanded endpoint is not evidence of arrival.",
+      "accepts_miss": "endpoint_outcome == 'endpoint_miss_with_actual_state' is ACCEPTABLE; the gate judges where the arm actually is."
+    },
+    "sub_conditions": {
+      "C1a_planar_distance": {
+        "predicate": "planar XY distance from FK(actual_state) tool centre to the pickup point <= 16.0 mm",
+        "threshold_mm": 16.0,
+        "pickup_point_source": "plan.json key target.base_xyz, valid only when target.kind == 'pickup' and target.visible == true",
+        "provenance": {
+          "kind": "inherited_from_artifact",
+          "derivation": "min(existing pickup_near_m 18.0 mm, jaw geometric capture limit 16.64 mm at the demonstrated open position) rounded down to 16.0",
+          "existing_threshold": "plan.json model_contract.phase_thresholds.pickup_near_m = 0.018, also peg_clearance_m = 0.018"
+        },
+        "NOT_PROTECTIVE_ON_ITS_OWN": "This compares an accurate FK number against a vision-derived pickup point that carries the 17.4-24.7 mm error from section SCALE. Passing C1a therefore does NOT bound the true tool-to-fish offset. It is retained as necessary, not sufficient, and C1e plus C1f carry the actual protection. v1 of this document wrongly treated C1a as protective."
+      },
+      "C1b_height": {
+        "predicate": "|FK(actual_state) tool Z - contact height| <= 8.0 mm",
+        "threshold_mm": 8.0,
+        "contact_height_source": "plan.json key model_contract.contact_height_m (robot base frame). The CLI --trial-contact-height-m 0.014 is the table-relative equivalent.",
+        "provenance": {
+          "kind": "first_time_set",
+          "rationale": "the jaws must close around the capsule, whose vertical half-extent is the 11 mm fish radius; 8 mm leaves 3 mm for jaw tip thickness and FK error. No prior artifact states a Z tolerance for the close gate.",
+          "chosen_before_any_close_attempt": true
+        }
+      },
+      "C1c_target_freshness": {
+        "predicate": "plan.json target.visible == true AND targets.pickup_column.visible == true AND plan.json executable == true",
+        "provenance": {"kind": "inherited_from_artifact", "source": "existing plan.json fields; no new threshold"}
+      },
+      "C1d_endpoint_within_envelope": {
+        "predicate": "the settling that produced actual_state did NOT emit 'endpoint_miss_outside_envelope'",
+        "provenance": {"kind": "inherited_from_artifact", "source": "_resolve_stalled_endpoint raises and calls _hold_at_measured_pose on envelope violation"}
+      },
+      "C1e_gripper_pre_opened": {
+        "predicate": "actual_state[5] >= 30.0 before the close is issued",
+        "threshold_gripper_units": 30.0,
+        "provenance": {
+          "kind": "first_time_set",
+          "rationale": "requirement R1 of the sufficiency verdict. The demonstrated p99 open position is 31.60; 30.0 admits a small settling shortfall while still delivering essentially the full 16.64 mm budget instead of the 11.04 mm the reference round ran with. Approaching at a narrower opening throws away 51 percent of the capture budget for free.",
+          "chosen_before_any_close_attempt": true
+        }
+      },
+      "C1f_iterative_convergence": {
+        "predicate": "at least 3 consecutive planning rounds in which candidates[selected_index].cartesian_goal_cost strictly decreases, and the final value is <= 16.0 mm",
+        "thresholds": {"consecutive_decreasing_rounds": 3, "final_cartesian_goal_cost_mm": 16.0},
+        "provenance": {
+          "kind": "first_time_set",
+          "rationale": "requirement R3 of the sufficiency verdict. A single-frame estimate carrying a 17-25 mm error cannot be gated away, so the gate instead demands evidence that the servo loop is converging on the real target rather than resting on a biased estimate. 3 is the smallest count that distinguishes a trend from a single lucky frame; the planner's own bounded step is max_column_servo_step_m = 0.025 m so 3 rounds can traverse the error. No prior artifact defines a convergence requirement.",
+          "chosen_before_any_close_attempt": true
+        },
+        "read_path": "rounds/<round_id>/plan.json candidates[selected_index].cartesian_goal_cost, one value per round"
+      },
+      "C1g_wrist_alignment": {
+        "predicate": "DISABLED PENDING VALIDATION. Intended predicate: wrist pixel distance from targets.pickup_wrist.gripper_center_px to targets.pickup_wrist.centroid_px <= 33.0 px",
+        "intended_threshold_px": 33.0,
+        "intended_mm_equivalent": "33.0 px x 0.5008 mm/px = 16.5 mm, matching the 16.64 mm demonstrated-open budget",
+        "status": "MUST NOT BE ENABLED until the wrist view has been measured against hand-measured physical ground truth, as the column view now has. A 0.330 px correction magnitude is not an accuracy figure.",
+        "reference_round_value_px": 24.86,
+        "provenance": {
+          "kind": "first_time_set",
+          "rationale": "requirement R2 of the sufficiency verdict. Frozen now so that the threshold cannot be chosen after seeing wrist results, but explicitly disabled so it cannot be leaned on before it is validated.",
+          "chosen_before_any_close_attempt": true
+        }
+      }
+    },
+    "if_gate_fails": "Do NOT close. Replan from actual_state, which is what ENDPOINT_MISS_WITH_ACTUAL_STATE exists to enable. Gate failure is not a trial failure.",
+    "expected_outcome_given_the_verdict": "With C1g disabled and the column error at 17.4-24.7 mm against a 16.64 mm budget, C1 is expected to be satisfiable while the true alignment is still outside the capture budget. A first close attempt is therefore expected to be able to MISS, and an EMPTY verdict must be read as evidence about the approach, not as evidence about the gripper."
+  },
+
+  "criterion_2_grasp_success": {
+    "id": "C2",
+    "statement": "After exactly ONE close command, grasp success is decided from the SERVO gripper reading as a difference against an in-session empty-close reference. Vision is not used.",
+    "measurement": {
+      "quantity": "delta_stall = gripper_stall_with_object - gripper_stall_empty_reference",
+      "unit": "LeRobot normalized gripper position units, the same unit the settle tolerances use",
+      "read_path_object": "command_journal chunk_<id>/events.jsonl -> event 'endpoint_miss_with_actual_state' -> actual_state[5]; equivalently chunk record settled_state[5]",
+      "read_path_empty_reference": "the same field, recorded during the mandatory empty-close reference step C2-PRE",
+      "joint_index": 5,
+      "why_difference_not_absolute": "GRIPPER_SCALE_DISPUTE. A difference between two readings taken in one session under one calibration cancels the zero error and any common span error.",
+      "why_not_vision": "section SCALE and VERDICT. The column view cannot resolve a 14 mm change in jaw separation when its own anchor error is 17.4-24.7 mm and its decode grid quantises at 10.4-14.7 mm."
+    },
+    "C2_PRE_mandatory_empty_reference": {
+      "requirement": "Before the fish is placed within reach, execute ONE close-to-open-to-close cycle with nothing between the jaws and record the settled gripper position.",
+      "why": "without this reference the absolute scale dispute makes the grasp decision undecidable. This is a precondition, not an option.",
+      "expected_value_if_evidence_b_holds": 1.3140604496002197,
+      "expected_value_if_evidence_a_holds": 45.99,
+      "diagnostic_value": "whichever value appears RESOLVES GRIPPER_SCALE_DISPUTE. Record it either way; do not adjust anything mid-trial."
+    },
+    "decision_bands": {
+      "EMPTY": {
+        "predicate": "delta_stall <= 2.0",
+        "provenance": {
+          "kind": "inherited_from_artifact",
+          "source": "settle_position_tolerance = 2.0, the operator-declared per-sample change that is not real motion (--settle-position-tolerance 2.0; DIAGNOSTIC_INSTRUCTIONS.md 'keep at 2.0')"
+        }
+      },
+      "INDETERMINATE": {"predicate": "2.0 < delta_stall < 4.0", "action": "report as INDETERMINATE; may not be promoted to success"},
+      "GRASP_DETECTED": {
+        "predicate": "delta_stall >= 4.0",
+        "threshold": 4.0,
+        "jaw_separation_equivalent_mm": 5.74,
+        "provenance": {
+          "kind": "inherited_from_artifact",
+          "derivation": "2 x settle_position_tolerance, mirroring _endpoint_stalled which refuses to declare a stall on weaker evidence than a successful settle requires",
+          "corroboration": "the predicted fish-body signature is 9.8 units, so 4.0 sits 2.45x below the expectation and tolerates heavy compression of a soft body while remaining 2x above the declared noise floor"
+        }
+      },
+      "GRASP_CONSISTENT_WITH_FISH_BODY": {
+        "predicate": "7.0 <= delta_stall <= 13.0",
+        "provenance": {
+          "kind": "first_time_set",
+          "rationale": "the 9.8-unit predicted signature plus or minus roughly 3 units; a corroborating classification only",
+          "chosen_before_any_close_attempt": true
+        }
+      },
+      "OVER_THICK_ABORT": {"predicate": "delta_stall > 13.0", "meaning": "the jaws are held open by something thicker than the fish body, e.g. the box wall", "action": "abort per S4"}
+    },
+    "expected_signature": {
+      "fish_body_delta_units": 9.8,
+      "derivation": "(22.0 mm fish body - 7.979 mm empty-closure jaw separation) / 1.4344 mm per unit = 9.77",
+      "provenance": {"kind": "inherited_from_artifact", "source": "measured_constants; no free parameter"}
+    },
+    "mechanical_impossibility_note": {
+      "finding": "a tail-only grasp cannot be held: the tail is 6.0 mm thick but the jaws bottom out at 7.979 mm separation",
+      "consequence": "any delta_stall in the GRASP band implies body contact; there is no tail-grasp band to distinguish"
+    },
+    "vision_explicitly_rejected": {
+      "decision": "visual jaw separation is NOT used for the success decision",
+      "quantified_uncertainty": "column corrected anchor error 11.7 px = 17.4-24.7 mm against physical truth, plus a 14 px decode grid worth 10.4-14.7 mm, versus a 14 mm signal to resolve. The measurement noise exceeds the signal.",
+      "recorded_anyway": ["grounding.column.prior_source", "grounding.column.mean_total_correction_px", "grounding.wrist.prior_source", "grounding.wrist.mean_total_correction_px"]
+    }
+  },
+
+  "criterion_3_empty_grip_discrimination": {
+    "id": "C3",
+    "statement": "Without force feedback, empty versus grasped is discriminated by WHERE the gripper joint stopped, not by whether it stopped.",
+    "primary_discriminant": "C2 delta_stall against the C2-PRE empty reference",
+    "why_a_naive_stall_test_fails": {
+      "naive_test": "'the gripper stalled, therefore an object is present'",
+      "why_invalid": "under Evidence A the close command drives the motor past the mechanical stop, so an EMPTY gripper also stalls and also over-torques. DIAGNOSTIC_INSTRUCTIONS.md states 'Gripper jams/stalls/over-torques'. Stall presence carries no information; only stall POSITION does.",
+      "note": "the settle contract already declines to judge the gripper: joint_residual is computed over current_state[:5] only, with the comment 'A grasped object can stall the gripper'. C3 adds a measurement the contract deliberately omits and redefines nothing."
+    },
+    "corroborating_discriminants": {
+      "D2_arm_sag_on_lift": {"decision": "excluded", "reason": "lifting is transport; this round stops at grasp verification"},
+      "D3_gripper_reading_stability": {
+        "predicate": "after the close settles, the gripper reading drifts by <= 2.0 units over 5 consecutive samples",
+        "provenance": {"kind": "inherited_from_artifact", "source": "settle_position_tolerance 2.0 and the settle_samples quorum, reused unchanged"},
+        "role": "corroborating only; may not overturn C2"
+      },
+      "D4_fish_pixel_displacement": {
+        "predicate": "targets.pickup_column.centroid_px moves by more than grasp_roi_px (30.0) between the pre-close and post-close planning frames",
+        "provenance": {"kind": "inherited_from_artifact", "source": "model_contract.phase_thresholds.grasp_roi_px = 30.0"},
+        "role": "corroborating only. Note 30.0 px = 63 mm at S_task, so this only detects a gross disturbance, and it inherits the column degradation. May not overturn C2."
+      }
+    },
+    "verdict_table": {
+      "GRASP": "delta_stall >= 4.0",
+      "EMPTY": "delta_stall <= 2.0",
+      "INDETERMINATE": "2.0 < delta_stall < 4.0, or the C2-PRE reference is missing",
+      "rule": "a missing C2-PRE reference forces INDETERMINATE and may never be replaced by an assumed reference value"
+    },
+    "attribution_rule": {
+      "statement": "An EMPTY verdict does NOT imply the gripper failed. Given VERDICT, the expected failure mode is an approach that stopped outside the capture budget.",
+      "requirement": "every EMPTY verdict must be reported together with the C1a distance, the C1e gripper opening, and the C1f cost sequence, so that approach failure and grasp failure are not conflated."
+    }
+  },
+
+  "criterion_4_required_log_fields": {
+    "id": "C4",
+    "statement": "Fixed before the window opens so the attempt can be reconstructed afterwards. A missing mandatory field makes the attempt INDETERMINATE rather than successful.",
+    "mandatory": [
+      {"field": "endpoint_outcome", "path": "command_journal/chunk_<id>/events.jsonl"},
+      {"field": "actual_state", "path": "same, event endpoint_miss_with_actual_state", "note": "full 6-vector; [5] is the gripper"},
+      {"field": "commanded_state", "path": "same event", "note": "documents the miss; never a gate input"},
+      {"field": "settled_state", "path": "chunk record"},
+      {"field": "endpoint_joint_residual", "path": "chunk record", "note": "arm joints 0-4 only, by construction"},
+      {"field": "endpoint_tcp_miss_m", "path": "chunk record"},
+      {"field": "envelope_violations", "path": "endpoint_miss_* events"},
+      {"field": "quiet_samples", "path": "endpoint_miss_* events"},
+      {"field": "settle_samples_seen", "path": "endpoint_miss_* events"},
+      {"field": "step_delta", "path": "endpoint_miss_* events"},
+      {"field": "residual_improvement", "path": "endpoint_miss_* events"},
+      {"field": "gripper_stall_empty_reference", "path": "NEW, from step C2-PRE", "note": "must be written before the fish is in reach"},
+      {"field": "target.base_xyz", "path": "rounds/<round_id>/plan.json"},
+      {"field": "target.kind", "path": "plan.json", "note": "must be 'pickup'"},
+      {"field": "target.visible", "path": "plan.json"},
+      {"field": "target.planar_error_m", "path": "plan.json", "note": "numerator of the S_task scale; log every round so the scale can be re-derived per pose"},
+      {"field": "target.gripper_distance_m", "path": "plan.json"},
+      {"field": "target.raw_backprojection_xyz", "path": "plan.json"},
+      {"field": "candidates[selected_index].initial_pixel_error", "path": "plan.json", "note": "denominator of the S_task scale"},
+      {"field": "candidates[selected_index].kinematic_final_pixel_error", "path": "plan.json"},
+      {"field": "candidates[selected_index].cartesian_goal_cost", "path": "plan.json", "note": "the C1f convergence series"},
+      {"field": "selected_index", "path": "plan.json"},
+      {"field": "grounding.column.nominal", "path": "plan.json", "note": "3 anchors; anchors 1 and 2 give the per-pose S_grip scale"},
+      {"field": "grounding.column.corrected", "path": "plan.json"},
+      {"field": "grounding.column.prior_source", "path": "plan.json"},
+      {"field": "grounding.column.mean_total_correction_px", "path": "plan.json"},
+      {"field": "grounding.column.global_locator.quality", "path": "plan.json", "note": "carries maximum_motion_disagreement_px and maximum_tip_separation_px"},
+      {"field": "grounding.wrist.nominal", "path": "plan.json"},
+      {"field": "grounding.wrist.corrected", "path": "plan.json"},
+      {"field": "grounding.wrist.prior_source", "path": "plan.json"},
+      {"field": "grounding.wrist.mean_total_correction_px", "path": "plan.json"},
+      {"field": "targets.pickup_wrist.gripper_center_px", "path": "plan.json", "note": "needed to validate C1g later even though C1g is disabled now"},
+      {"field": "targets.pickup_wrist.centroid_px", "path": "plan.json"},
+      {"field": "targets.pickup_wrist.visible", "path": "plan.json"},
+      {"field": "targets.pickup_column.gripper_center_px", "path": "plan.json"},
+      {"field": "targets.pickup_column.centroid_px", "path": "plan.json"},
+      {"field": "current_state", "path": "plan.json", "note": "[5] gives the gripper opening, hence the per-round capture budget"},
+      {"field": "model_contract.contact_height_m", "path": "plan.json"},
+      {"field": "model_contract.phase_thresholds", "path": "plan.json", "note": "whole dict, to prove thresholds did not drift mid-trial"},
+      {"field": "model_contract.gripper_calibration_positions", "path": "plan.json"},
+      {"field": "model_contract.live_anchor_transforms_px", "path": "plan.json", "note": "records whether the live anchor transform was applied"},
+      {"field": "round_id", "path": "plan.json"},
+      {"field": "phase", "path": "plan.json"},
+      {"field": "phase_status", "path": "plan.json"},
+      {"field": "wrist_raw.jpg", "path": "rounds/<round_id>/", "note": "pre-close and post-close"},
+      {"field": "column_raw.jpg", "path": "rounds/<round_id>/", "note": "pre-close and post-close"}
+    ],
+    "derived_to_record": [
+      "C1a planar distance mm from FK(actual_state) to target.base_xyz",
+      "C1b |tool Z - contact height| mm",
+      "C1e gripper opening at close, and the capture budget it implies",
+      "C1f the cartesian_goal_cost series and whether it decreased 3 rounds running",
+      "per-round S_grip recomputed from grounding.column.nominal anchors 1 and 2 plus FK",
+      "per-round S_task recomputed from target.planar_error_m / initial_pixel_error",
+      "C2 delta_stall in gripper units and its mm equivalent at gradient 1.4344",
+      "C2 decision band name",
+      "C3 verdict plus the attribution_rule fields"
+    ]
+  },
+
+  "criterion_5_stop_conditions": {
+    "id": "C5",
+    "statement": "This round stops at grasp verification. Transport, place and release are out of scope and are not authorized by this document.",
+    "hard_stops": {
+      "S1_one_close_only": "Exactly ONE close command. If C2 returns EMPTY or INDETERMINATE, STOP and report. Do not retry in the same round; a second close changes the fish pose and destroys the C2-PRE reference.",
+      "S2_no_transport": "After the close, no command that raises or translates the tool. Verification uses only the settled state and the cameras.",
+      "S3_envelope_violation": "Any 'endpoint_miss_outside_envelope' event: the server already holds at the measured pose and raises. Do not re-arm.",
+      "S4_over_thick": "delta_stall > 13.0 units. Stop and inspect before any further command.",
+      "S5_missing_empty_reference": "C2-PRE reference absent or unreadable. Stop before closing; the grasp would be undecidable.",
+      "S6_gate_never_satisfied": "If C1 cannot be satisfied within the existing --max-autonomous-chunks 16 / --max-autonomous-duration-s 180.0 budget, stop and report the closest achieved C1a, C1b, C1e and C1f values.",
+      "S7_grounding_collapse": "grounding.column.prior_source absent, or target.visible false, or plan.json executable false. Stop; the pickup point is not trustworthy enough to close on.",
+      "S8_safe_hold_unverified": "SafeHoldVerificationError, or GOAL_READBACK_TOLERANCE 0.2 exceeded after SAFE_HOLD_VERIFY_ATTEMPTS 2. Escalate to the operator; torque stays enabled by design.",
+      "S9_wrist_gate_not_validated": "C1g must remain disabled until the wrist view has a hand-measured physical-truth residual. Enabling it on the strength of its 0.330 px correction magnitude alone is forbidden, for the same reason the 3.72 px locator figure is unusable.",
+      "S10_scale_drift": "If a round's recomputed S_task departs from 2.1071 mm/px by more than 25 percent, stop. The px-to-mm scale underpinning the sufficiency verdict no longer holds in that pose and the budget arithmetic must be redone before closing.",
+      "S11_pose_outside_verdict_scope": "The 11.7 px residual is scoped to the working pose. If the approach pose differs enough that the column anchor residual is unmeasured there, the sufficiency verdict does not apply and the close is not authorized."
+    },
+    "not_a_stop": "C1 gate failure alone is not a stop. Replanning from actual_state is the designed response and may continue within the S6 budget."
+  },
+
+  "explicitly_out_of_scope": [
+    "Any change to the gripper calibration file. GRIPPER_SCALE_DISPUTE is reported, not fixed.",
+    "Any change to EndpointEnvelope max_tcp_miss_m, despite the 2.56x over-permissiveness recorded above.",
+    "Sub-grid heatmap refinement (R4) and the wrist physical-truth measurement (R2). Both are prerequisites owned by other lines.",
+    "Any robot motion initiated by this document. It defines predicates only.",
+    "Transport, place, release, and any success criterion depending on them."
+  ],
+
+  "limitations": [
+    {"id": "L1", "issue": "Fish dimensions come from the MuJoCo asset, not from measuring the real fish. If the physical body is not 22 mm across, the 9.8-unit expected signature and the 11.0 mm fish radius in the budget both move. The 4.0-unit GRASP threshold is unaffected because it is anchored to the settle tolerance."},
+    {"id": "L2", "issue": "GRIPPER_SCALE_DISPUTE is unresolved. C2-PRE resolves it as a by-product, but until it runs the absolute gripper scale is unknown."},
+    {"id": "L3", "issue": "The 1.4344 mm per gripper unit gradient is read off the MuJoCo model and assumes the model's gripper joint shares the servo's normalized units. If the dispute resolves toward Evidence A this gradient is wrong, which is why the primary threshold is in native gripper units."},
+    {"id": "L4", "issue": "The column px-to-mm scale is bracketed, not pinned: 1.4871 to 2.1071 mm/px depending on the depth of the measured feature. The real column camera intrinsics are not calibrated in any artifact found, so the pinhole figure is a cross-check only."},
+    {"id": "L5", "issue": "The wrist view's accuracy against physical truth is entirely unmeasured. Its 4.21x finer pixel scale is a geometric fact; its accuracy is not. C1g is disabled for exactly this reason."},
+    {"id": "L6", "issue": "The 11.7 px residual is one pose. The same code yields 3.8 px in the calibration pose, so the verdict is pose-scoped and stated in the worst-case direction."},
+    {"id": "L7", "issue": "C1f's 3-round convergence requirement is untested. It is a first-time-set procedural gate, and it is possible that the loop oscillates rather than converges, in which case S6 will fire instead."},
+    {"id": "L8", "issue": "Single attempt. This document defines the verdict for one close; it establishes no success rate."}
+  ],
+
+  "amendment_log": [
+    {
+      "utc": "2026-08-13T09:50:00Z",
+      "from_schema_version": 1,
+      "to_schema_version": 2,
+      "trigger": "column anchor physical-truth residual 11.7 px handed over after the column-localisation fix was deployed to production server PID 825846",
+      "changes": [
+        "added column_pixel_to_mm_derivation with three independently derived scales",
+        "added capture_budget, recording that the advertised 70.79 mm capture radius overstates the reachable radius by 2.56x",
+        "added vision_sufficiency_verdict = NO, with the ratio table showing every reachable combination fails",
+        "demoted C1a to necessary-but-not-protective and said so explicitly, correcting v1",
+        "added C1e gripper pre-open 30.0, C1f 3-round convergence, C1g wrist gate frozen but DISABLED pending validation",
+        "added S9, S10, S11 stop conditions",
+        "expanded mandatory log fields from 31 to 46 so both scales can be recomputed per round",
+        "added C3 attribution_rule so an EMPTY verdict is not misread as gripper failure",
+        "recorded that the ViT locator's 3.72 px tips_median_px is unusable and appears in no threshold"
+      ],
+      "before_real_robot_window": true,
+      "before_any_close_attempt": true
+    }
+  ]
+}

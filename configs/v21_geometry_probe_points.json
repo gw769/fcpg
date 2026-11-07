@@ -1,0 +1,30 @@
+{
+  "schema": "v21-provisional-visible-landmark-v1",
+  "review": "v21-geometry-probe-20260927-TzdF0h/review/manifest.json",
+  "provenance": "Assistant visual review of original recorded-clock RGB images; not operator-verified ground truth",
+  "target": "wrist visible fish snout: center of the rounded leading silhouette opposite the tail, in letterbox224 pixel coordinates",
+  "not_target": "Not object centroid, mass center, F/G identity, grasp point or task success",
+  "uncertainty_px": 5,
+  "unlisted_points": "Unlabelled: out of view, clipped at the snout, occluded or ambiguous. Never infer from FK or DINO.",
+  "fit_episodes": [0, 1],
+  "development_episodes": [3],
+  "sealed_episode_2_read": false,
+  "points": {
+    "120": [128, 164], "150": [135, 180], "180": [132, 184],
+    "698": [112, 44], "728": [121, 148], "758": [158, 194],
+    "878": [162, 193], "968": [162, 182], "998": [167, 193],
+    "1028": [126, 193], "1058": [127, 192], "1088": [127, 180],
+    "1839": [199, 62], "1869": [201, 62], "1899": [153, 48],
+    "1929": [132, 187], "2079": [139, 173]
+  },
+  "probe": {
+    "components": 4,
+    "ridge": 1.0,
+    "selection_on_development": false,
+    "checkpoints": "Only final1000, selected as the completed diagnostic run, not best DEV",
+    "feature_paths": ["dino_fullpatch", "attention_readout", "scene_embedding", "q_only"],
+    "future_horizons": [10, 20, 40],
+    "new_world_model_training": false,
+    "candidate_for_deployment": false
+  }
+}

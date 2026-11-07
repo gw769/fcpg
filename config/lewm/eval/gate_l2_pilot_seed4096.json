@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "protocol": "fcpg_grounded_lewm_post_l1_l2_counterfactual_pilot",
+  "scope": {
+    "classification": "exploratory_conditional_post_l1_not_retroactive_gate_l2",
+    "retroactive_formal_gate_l2": false,
+    "training_allowed": false,
+    "claim_if_positive": "motivates a fresh preregistered confirmatory ranking study",
+    "claim_if_negative": "this frozen checkpoint, hindsight scorer, and seven-candidate protocol do not expose decision-useful FCPG gains"
+  },
+  "seed": 4096,
+  "device": "cuda:0",
+  "inputs": {
+    "lewm_checkpoints": {
+      "nominal": {
+        "path": "outputs/lewm_grounded/gate_l1_nominal_sig002_seed3072/lewm_grounded_latest.pt",
+        "sha256": "87c5023270b7e127a6b2a7ec8a81abeb34460b2c3cc8c7472839e3c82f2c582d"
+      },
+      "fcpg": {
+        "path": "outputs/lewm_grounded/gate_l1_fcpg_sig002_seed3072/lewm_grounded_latest.pt",
+        "sha256": "729f9f0f0d01c400f3736542f1a8ad5970deba21406541ae2fe8b13404ea306a"
+      }
+    },
+    "action_only_policy": {
+      "path": "outputs/action_chunk/lewm_stage1/shared_4task_seed0_lp0_sig0_b2048/fcpg_action_chunk_best.pt",
+      "sha256": "6e00a633703d2e2d1d0061e45f9a44293b550f3682ea409cf4d4c36a2039748f"
+    },
+    "fcpg_corrector": {
+      "path": "outputs/transformer_residual/lewm_stage1/shared_4task_seed0_sig0/fcpg_transformer_residual_best.pt",
+      "sha256": "3cfe621bbfb5b87962a3c569d6ebf9d4d702e0483adeebd45a4e00bb0a16ee79"
+    },
+    "oracle_target_encoder": {
+      "path": "data/oracle_target/lewm_gate_l1/oracle_target_encoder.pt",
+      "sha256": "7c8ce2120a592403c5908cb68733b7e8ee5ded79b9292d68ff78907c6ab91c31"
+    }
+  },
+  "oracle_vision": {
+    "model_name": "vit_base_patch16_224.augreg_in1k",
+    "selected_layer": 11,
+    "usage": "actual_outcome_and_goal_scoring_only"
+  },
+  "evaluation": {
+    "tasks": [
+      "pick-place-v3",
+      "button-press-v3",
+      "reach-v3",
+      "push-v3"
+    ],
+    "episodes_per_task": 2,
+    "snapshots_per_episode": 1,
+    "history_size": 3,
+    "frame_skip": 5,
+    "raw_action_steps": 25,
+    "action_dim": 4,
+    "transitions": 5,
+    "transition_action_dim": 20,
+    "horizons": [
+      1,
+      3,
+      5
+    ],
+    "noise_scales": [
+      0.05,
+      0.15,
+      0.3
+    ],
+    "random_count": 1,
+    "candidate_names": [
+      "expert",
+      "policy",
+      "expert_noise_0.05",
+      "expert_noise_0.15",
+      "expert_noise_0.3",
+      "same_task_shuffled",
+      "random_0"
+    ],
+    "top_k": 3,
+    "bootstrap_samples": 10000,
+    "progress_info_key": "in_place_reward",
+    "snapshot_include_process_rng": true,
+    "renderer_replay_rgb_atol_lsb": 1,
+    "renderer_replay_max_changed_fraction": 0.001
+  },
+  "conditions": {
+    "clean": {
+      "translation_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_world": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rotation_degrees": 0.0
+    },
+    "rotation5": {
+      "translation_world": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_axis_world": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rotation_degrees": 5.0
+    }
+  },
+  "environment": {
+    "camera": "corner",
+    "width": 224,
+    "height": 224,
+    "max_expert_steps": 120,
+    "benchmark_seed": 4096,
+    "env_seed_base": 20000,
+    "task_index_offset": 0
+  },
+  "smoke": {
+    "tasks": [
+      "reach-v3"
+    ],
+    "conditions": [
+      "clean",
+      "rotation5"
+    ],
+    "episodes_per_task": 2,
+    "snapshots_per_episode": 1,
+    "candidate_names": [
+      "expert",
+      "policy",
+      "expert_noise_0.05",
+      "expert_noise_0.15",
+      "expert_noise_0.3",
+      "same_task_shuffled",
+      "random_0"
+    ],
+    "checkpoints": [
+      "nominal",
+      "fcpg"
+    ],
+    "bootstrap_samples": 50
+  },
+  "output": {
+    "result": "outputs/lewm_counterfactual/gate_l2_pilot_seed4096.json",
+    "write_mode": "exclusive"
+  }
+}
